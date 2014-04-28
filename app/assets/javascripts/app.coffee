@@ -1,0 +1,2 @@
+resqueBrain = angular.module('resqueBrain',[
+])
