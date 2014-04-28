@@ -10,6 +10,7 @@ gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
 gem 'spring',        group: :development
 gem 'bower-rails'
+gem 'resque', git: 'https://github.com/stitchfix/resque.git', branch: 'resque-redis-interface'
 
 group :test, :development do
   gem "rspec"
