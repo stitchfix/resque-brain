@@ -11,6 +11,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'spring',        group: :development
 gem 'bower-rails'
 gem 'resque', git: 'https://github.com/stitchfix/resque.git', branch: 'resque-redis-interface'
+gem 'angular-rails-templates'
 
 group :test, :development do
   gem "rspec"

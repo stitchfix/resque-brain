@@ -39,6 +39,9 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    angular-rails-templates (0.0.7)
+      railties (>= 3.1)
+      sprockets
     arel (5.0.1.20140414130214)
     bower-rails (0.7.1)
     builder (3.2.2)
@@ -178,6 +181,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  angular-rails-templates
   bower-rails
   capybara
   coffee-rails (~> 4.0.0)
