@@ -34,6 +34,16 @@ This class encapsulates *all* Redis access by Resque.  Users of the class will n
 Resque uses inside Redis.  More importantly, this class can be given any instance of `Redis`, so that multiple instances can
 exist in the same VM to access data about different Resques.
 
+# UI
+
+![Overview](https://www.evernote.com/shard/s71/sh/851c6360-ff1e-4da0-b6e2-b912cb516ac7/cd1563e1c0ce730be61a63e69c3cf9c7/deep/0/Re squeBrain.png)
+
+![Jobs Running](https://www.evernote.com/shard/s71/sh/1c63c8b8-e4bc-484d-9711-bc19bcf618a4/d54b2c2b7ee60a24f7dfae3effb5089f/deep/0/ResqueBrain.png)
+
+![Jobs Waiting](https://www.evernote.com/shard/s71/sh/af317bd1-1008-49a7-896e-dbb7ed3e268a/dbe3572974b948cf35ba85abccd3f8ba/deep/0/ResqueBrain.png)
+
+![Failed Queue](https://www.evernote.com/shard/s71/sh/12da7bcf-82f3-49db-b846-f58787e85fc7/c49c5f965cc7ad4996101d29dfea329e/res/9c4b60dd-12c5-4f59-b626-0334c57080f0/skitch.png)
+
 
 # Notes
 
