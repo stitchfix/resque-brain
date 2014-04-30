@@ -10,7 +10,24 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.css
+ *= require bootstrap/dist/css/bootstrap
  *= require_tree .
  *= require_self
  */
+.container {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.mt-none {
+  margin-top: 0;
+}
+
+.mb-none {
+  margin-bottom: 0;
+}
+
+.payload {
+  color: black;
+  background: transparent;
+}
