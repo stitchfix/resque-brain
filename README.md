@@ -36,17 +36,43 @@ exist in the same VM to access data about different Resques.
 
 # UI
 
+## Overview of the Resque instance
+
+Just shows what you care about, namely have jobs failed and are any workers potentitally stuck.
+
 ![Overview](https://www.evernote.com/shard/s71/sh/393c9f46-8d55-42c3-bb40-ef8c3a1799cb/d40d83e1793239fc4e0df9edf793805f/deep/0/ResqueBrain.png)
+
+## Jobs currently running
+
+Again, we don't see a  bunch of queues with zeros next to them, instead we see just what's running, as well as any job that's been running for "too long"
 
 ![Jobs Running](https://www.evernote.com/shard/s71/sh/c8f014f0-220c-437e-ae9b-a04ae1fbf075/7d6108ee43e32052ba22a326751ffcf1/deep/0/ResqueBrain.png)
 
+### Killing a worker
+
+We can kill a worker through the UI without going into console.  Workers get stuck, and sometimes need killing.
+
 ![Killing Worker](https://www.evernote.com/shard/s71/sh/890e9060-ed2f-4a9c-ac87-6c26adeb2cd6/3344b1cca6ac698b70376ac98fa56373/deep/0/ResqueBrain.png)
+
+## Jobs waiting
+
+Here we see what's queued up.  Again, we don't see a bunch of zeros—just what's waiting to be processed.  We can also see if there are "too many" jobs of a certain type queued up.
 
 ![Jobs Waiting](https://www.evernote.com/shard/s71/sh/af317bd1-1008-49a7-896e-dbb7ed3e268a/dbe3572974b948cf35ba85abccd3f8ba/deep/0/ResqueBrain.png)
 
+## Failed queue
+
+We see a more readable summary of what's going on, along with direct links to search google for the problem.  We also have the ability to retry and clear at the same time.  So many newcomers to Resque think that retry does a clear, and are baffled when the job "fails again" (i.e. stays in the failed queue).
+
 ![Failed Queue](https://www.evernote.com/shard/s71/sh/392fa832-d624-4555-b0bf-234a938fb502/3a8d37b12e7e350e75289bf3859a2d75/deep/0/ResqueBrain.png)
 
+We can expand to see exceptions
+
 ![Exception View](https://www.evernote.com/shard/s71/sh/db773b9f-863d-4e63-9f42-f4fe0044b6e0/5b05e134319b90e5921b619de34d01db/deep/0/ResqueBrain.png)
+
+### Mobile View
+
+*And* it doesn't look like crap on mobile.  So, you can tend to your queueus on the go with one hand.
 
 ![Mobile View](https://www.evernote.com/shard/s71/sh/83a464b0-ed1a-410d-9929-da39e7dcca75/5867da4b8a4ff3087c718e8ed45d74bf/deep/0/ResqueBrain.png)
 
