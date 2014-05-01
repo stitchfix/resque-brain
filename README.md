@@ -36,14 +36,19 @@ exist in the same VM to access data about different Resques.
 
 # UI
 
-![Overview](https://www.evernote.com/shard/s71/sh/851c6360-ff1e-4da0-b6e2-b912cb516ac7/cd1563e1c0ce730be61a63e69c3cf9c7/deep/0/Re squeBrain.png)
+![Overview](https://www.evernote.com/shard/s71/sh/393c9f46-8d55-42c3-bb40-ef8c3a1799cb/d40d83e1793239fc4e0df9edf793805f/deep/0/ResqueBrain.png)
 
-![Jobs Running](https://www.evernote.com/shard/s71/sh/1c63c8b8-e4bc-484d-9711-bc19bcf618a4/d54b2c2b7ee60a24f7dfae3effb5089f/deep/0/ResqueBrain.png)
+![Jobs Running](https://www.evernote.com/shard/s71/sh/c8f014f0-220c-437e-ae9b-a04ae1fbf075/7d6108ee43e32052ba22a326751ffcf1/deep/0/ResqueBrain.png)
+
+![Killing Worker](https://www.evernote.com/shard/s71/sh/890e9060-ed2f-4a9c-ac87-6c26adeb2cd6/3344b1cca6ac698b70376ac98fa56373/deep/0/ResqueBrain.png)
 
 ![Jobs Waiting](https://www.evernote.com/shard/s71/sh/af317bd1-1008-49a7-896e-dbb7ed3e268a/dbe3572974b948cf35ba85abccd3f8ba/deep/0/ResqueBrain.png)
 
-![Failed Queue](https://www.evernote.com/shard/s71/sh/12da7bcf-82f3-49db-b846-f58787e85fc7/c49c5f965cc7ad4996101d29dfea329e/res/9c4b60dd-12c5-4f59-b626-0334c57080f0/skitch.png)
+![Failed Queue](https://www.evernote.com/shard/s71/sh/392fa832-d624-4555-b0bf-234a938fb502/3a8d37b12e7e350e75289bf3859a2d75/deep/0/ResqueBrain.png)
 
+![Exception View](https://www.evernote.com/shard/s71/sh/db773b9f-863d-4e63-9f42-f4fe0044b6e0/5b05e134319b90e5921b619de34d01db/deep/0/ResqueBrain.png)
+
+![Mobile View](https://www.evernote.com/shard/s71/sh/83a464b0-ed1a-410d-9929-da39e7dcca75/5867da4b8a4ff3087c718e8ed45d74bf/deep/0/ResqueBrain.png)
 
 # Notes
 

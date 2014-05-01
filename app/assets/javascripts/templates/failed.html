@@ -15,7 +15,7 @@
     <hr>
     <article>
       <header>
-        <h1 class="h3 mt-none">UserWelcomeMailerJob</h1>
+        <h1 class="h3 mt-none">UserWelcomeMailerJob<br class="visible-xs"> <small>Failed at 5/01/2014 12:34PM EST</small></h1>
         <h2 class="h4 mt-none"><a href="https://www.google.com/search?q=Resque::TermException%20SIGTERM" target='google'>Resque::TermException - SIGTERM</a></h2>
       </header>
       <p>
@@ -29,20 +29,43 @@
           <button type="button" class="btn btn-sm btn-default">Retry</button>
           <button type="button" class="btn btn-sm btn-default">Clear</button>
         </div>
+        <div class="visible-xs mt-1">&nbsp;</div>
         <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-info"><i aria-hidden="true" class="glyphicon glyphicon-info-sign"></i> Details…</button>
+          <a href="" ng-click="" class="btn btn-sm btn-default"><i aria-hidden="true" class="glyphicon glyphicon-envelope"></i> Email</a>
+          <a href="" ng-click="showDetails()" class="btn btn-sm btn-warning">
+            Backtrace
+            <i aria-hidden="true" ng-if="exceptionCollapsed" class="glyphicon glyphicon-chevron-right"></i> 
+            <i aria-hidden="true" ng-if="!exceptionCollapsed" class="glyphicon glyphicon-chevron-down"></i> 
+          </a>
         </div>
+      </div>
+      <div collapse="exceptionCollapsed" class="mt-1">
+        <pre class="well pre-scroll-horizontal">
+/Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:401:in `wait2': Interrupt
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:401:in `watch_for_termination'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:60:in `start'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/cli.rb:41:in `start'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/command.rb:27:in `run'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/invocation.rb:126:in `invoke_command'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor.rb:359:in `dispatch'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/base.rb:440:in `start'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/bin/foreman:7:in `&lt;top (required)&gt;'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/foreman:23:in `load'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/foreman:23:in `&lt;main&gt;'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/ruby_executable_hooks:15:in `eval'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/ruby_executable_hooks:15:in `&lt;main&gt;'
+        </pre>
       </div>
     </article>
     <hr>
     <article>
       <header>
-        <h1 class="h3 mt-none">UserWelcomeMailerJob</h1>
+        <h1 class="h3 mt-none">UserWelcomeMailerJob<br class="visible-xs"> <small>Failed at 5/01/2014 12:34PM EST</small></h1>
         <h2 class="h4 mt-none"><a href="https://www.google.com/search?q=Resque::TermException%20SIGTERM" target='google'>Resque::TermException - SIGTERM</a></h2>
       </header>
       <p>
         <code class="payload">
-          [ 12346, 7683 ]
+          [ 12345, 7683 ]
         </code>
       </p>
       <div class="btn-toolbar" role="toolbar">
@@ -51,9 +74,32 @@
           <button type="button" class="btn btn-sm btn-default">Retry</button>
           <button type="button" class="btn btn-sm btn-default">Clear</button>
         </div>
+        <div class="visible-xs mt-1">&nbsp;</div>
         <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-info"><i aria-hidden="true" class="glyphicon glyphicon-info-sign"></i> Details…</button>
+          <a href="" ng-click="" class="btn btn-sm btn-default"><i aria-hidden="true" class="glyphicon glyphicon-envelope"></i> Email</a>
+          <a href="" ng-click="showDetails()" class="btn btn-sm btn-warning">
+            Backtrace
+            <i aria-hidden="true" ng-if="exceptionCollapsed" class="glyphicon glyphicon-chevron-right"></i> 
+            <i aria-hidden="true" ng-if="!exceptionCollapsed" class="glyphicon glyphicon-chevron-down"></i> 
+          </a>
         </div>
+      </div>
+      <div collapse="exceptionCollapsed" class="mt-1">
+        <pre class="well pre-scroll-horizontal">
+/Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:401:in `wait2': Interrupt
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:401:in `watch_for_termination'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:60:in `start'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/cli.rb:41:in `start'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/command.rb:27:in `run'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/invocation.rb:126:in `invoke_command'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor.rb:359:in `dispatch'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/base.rb:440:in `start'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/bin/foreman:7:in `&lt;top (required)&gt;'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/foreman:23:in `load'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/foreman:23:in `&lt;main&gt;'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/ruby_executable_hooks:15:in `eval'
+  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/ruby_executable_hooks:15:in `&lt;main&gt;'
+        </pre>
       </div>
     </article>
     <hr>

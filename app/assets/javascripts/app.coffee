@@ -31,8 +31,8 @@ controllers = angular.module('controllers',[])
 directives  = angular.module('directives',[])
 
 controllers.controller("DashboardController", [
-  '$scope', '$location',
-  ($scope ,  $location)->
+  '$scope', '$location', '$modal',
+  ($scope ,  $location ,  $modal)->
     $scope.navCollapsed = true
 
     $scope.viewOverview = -> $location.path("/")
@@ -51,5 +51,16 @@ controllers.controller("DashboardController", [
         'active'
       else
         ''
+
+    $scope.exceptionCollapsed = true
+    $scope.showDetails = ->
+      $scope.exceptionCollapsed = !$scope.exceptionCollapsed
+
+    $scope.killWorker = ->
+      $modal.open(
+        templateUrl: "confirmKillWorker.html"
+        controller: 'DashboardController'
+        backdrop: true
+      )
 
 ])

@@ -23,6 +23,10 @@
   margin-top: 0;
 }
 
+.mt-1 {
+  margin-top: 20px;
+}
+
 .mb-none {
   margin-bottom: 0;
 }
@@ -30,4 +34,10 @@
 .payload {
   color: black;
   background: transparent;
+}
+
+.pre-scroll-horizontal {
+  overflow: auto; 
+  word-wrap: normal; 
+  white-space: pre;
 }
