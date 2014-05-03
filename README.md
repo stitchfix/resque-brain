@@ -80,11 +80,11 @@ We can expand to see exceptions
 
 ![Mobile View](https://www.evernote.com/shard/s71/sh/83a464b0-ed1a-410d-9929-da39e7dcca75/5867da4b8a4ff3087c718e8ed45d74bf/deep/0/ResqueBrain.png)
 
-# API
+## API
 
 The app is an AngularJS app, so the back-end needs an API:
 
-## Resques `/resques`
+### Resques `/resques`
 
 ```json
 [
@@ -97,7 +97,7 @@ The app is an AngularJS app, so the back-end needs an API:
 ]
 ```
 
-## Overview `/resques/:resque`
+### Overview `/resques/:resque`
 
 ```json
 {
@@ -110,7 +110,7 @@ The app is an AngularJS app, so the back-end needs an API:
 }
 ```
 
-## Running `/resques/:resque/jobs/running`
+### Running `/resques/:resque/jobs/running`
 
 ```json
 [
@@ -127,11 +127,11 @@ The app is an AngularJS app, so the back-end needs an API:
 ]
 ```
 
-## Kill worker `/resques/:resque/workers/:worker
+### Kill worker `/resques/:resque/workers/:worker`
 
 DELETE
 
-## Waiting `/resques/:resque/jobs/waiting`
+### Waiting `/resques/:resque/jobs/waiting`
 
 ```json
 [
@@ -142,7 +142,7 @@ DELETE
 ]
 ```
 
-## Failed `/resques/:resque/jobs/failed?start=0&pageSize=10`
+### Failed `/resques/:resque/jobs/failed?start=0&pageSize=10`
 
 ```json
 [
