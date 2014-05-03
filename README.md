@@ -36,6 +36,10 @@ exist in the same VM to access data about different Resques.
 
 # UI
 
+## Summary of all monitored Resques
+
+![Summary](https://www.evernote.com/shard/s71/sh/d22d92df-e4e4-42a0-910e-d54ee5b80c30/1c59f8c50613f8d513495e03f019ef00/deep/0/Cursor-and-ResqueBrain-and-nav.coffee-(--Projects-resque-brain-app-assets-javascripts)---VIM1.png)
+
 ## Overview of the Resque instance
 
 Just shows what you care about, namely have jobs failed and are any workers potentitally stuck.
@@ -46,7 +50,7 @@ Just shows what you care about, namely have jobs failed and are any workers pote
 
 Again, we don't see a  bunch of queues with zeros next to them, instead we see just what's running, as well as any job that's been running for "too long"
 
-![Jobs Running](https://www.evernote.com/shard/s71/sh/c8f014f0-220c-437e-ae9b-a04ae1fbf075/7d6108ee43e32052ba22a326751ffcf1/deep/0/ResqueBrain.png)
+![Jobs Running](https://www.evernote.com/shard/s71/sh/cc02a3a2-be7e-4c7e-a6bb-97cb2e8984b1/5da89167a60f706160ef6279404b17db/deep/0/ResqueBrain-and-README.md-(--Projects-resque-brain)---VIM1.png)
 
 ### Killing a worker
 
