@@ -3,25 +3,30 @@ resqueBrain = angular.module('resqueBrain',[
   'ngRoute',
   'ui.bootstrap',
   'controllers',
-  'directives'
+  'directives',
+  'services'
 ])
 
 resqueBrain.config([ '$routeProvider',
   ($routeProvider)->
     $routeProvider
       .when('/',
-        templateUrl: "index.html"
+        templateUrl: "summary.html"
         controller: 'DashboardController'
       )
-      .when('/running',
+      .when('/:resque',
+        templateUrl: "overview.html"
+        controller: 'DashboardController'
+      )
+      .when('/:resque/running',
         templateUrl: "running.html"
         controller: 'DashboardController'
       )
-      .when('/waiting',
+      .when('/:resque/waiting',
         templateUrl: "waiting.html"
         controller: 'DashboardController'
       )
-      .when('/failed',
+      .when('/:resque/failed',
         templateUrl: "failed.html"
         controller: 'DashboardController'
       )
@@ -29,33 +34,19 @@ resqueBrain.config([ '$routeProvider',
 
 controllers = angular.module('controllers',[])
 directives  = angular.module('directives',[])
+services    = angular.module('services',[])
 
 controllers.controller("DashboardController", [
-  '$scope', '$location', '$modal',
-  ($scope ,  $location ,  $modal)->
-    $scope.navCollapsed = true
+  '$scope', '$location', '$modal', '$route', 'resques',
+  ($scope ,  $location ,  $modal ,  $route ,  resques)->
 
-    $scope.viewOverview = -> $location.path("/")
-    $scope.viewRunning  = -> $location.path("/running")
-    $scope.viewWaiting  = -> $location.path("/waiting")
-    $scope.viewFailed   = -> $location.path("/failed")
-
-    $scope.navElementClass = (name)->
-      if name == 'overview' and $location.path() == '/'
-        'active'
-      else if name == 'running' and $location.path() == '/running'
-        'active'
-      else if name == 'waiting' and $location.path() == '/waiting'
-        'active'
-      else if name == 'failed' and $location.path() == '/failed'
-        'active'
-      else
-        ''
 
     $scope.exceptionCollapsed = true
     $scope.showDetails = ->
       $scope.exceptionCollapsed = !$scope.exceptionCollapsed
 
+    $scope.allResques = resques.all
+    
     $scope.killWorker = ->
       $modal.open(
         templateUrl: "confirmKillWorker.html"

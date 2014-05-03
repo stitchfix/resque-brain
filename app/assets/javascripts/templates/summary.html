@@ -1,0 +1,92 @@
+<div rb-nav></div>
+<div class="container">
+  <section class="row">
+    <header class="col-md-12">
+      <h1 class="text-center">Overview</h1>
+    </header>
+  </section>
+  <article class="col-md-4 col-sm-12 col-xs-12">
+    <section class="panel panel-danger">
+      <header class="panel-heading">
+        <h1 class="h3 mt-none mb-none">
+          <i aria-hidden='true' class="glyphicon glyphicon-ban-circle"></i>
+          12 Jobs Failed
+        </h1>
+      </header>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Resque</th>
+            <th>Failed</th>
+            <th><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="resque in allResques">
+            <td>{{resque.name}}</td>
+            <td>4</td>
+            <td>
+              <a href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  </section>
+  <article class="col-md-4 col-sm-12 col-xs-12">
+    <section class="panel panel-info">
+      <header class="panel-heading">
+        <h1 class="h3 mt-none mb-none">
+          51 Jobs Running
+        </h1>
+      </header>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Resque</th>
+            <th>Running</th>
+            <th>Too Long</th>
+            <th><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="resque in allResques">
+            <td>{{resque.name}}</td>
+            <td>4</td>
+            <td>0</td>
+            <td>
+              <a href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  </section>
+  <article class="col-md-4 col-sm-12 col-xs-12">
+    <section class="panel panel-info">
+      <header class="panel-heading">
+        <h1 class="h3 mt-none mb-none">
+          145 Jobs Waiting
+        </h1>
+      </header>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Resque</th>
+            <th>Waiting</th>
+            <th><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="resque in allResques">
+            <td>{{resque.name}}</td>
+            <td>4</td>
+            <td>
+              <a href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  </section>
+</div>

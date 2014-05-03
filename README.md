@@ -76,6 +76,74 @@ We can expand to see exceptions
 
 ![Mobile View](https://www.evernote.com/shard/s71/sh/83a464b0-ed1a-410d-9929-da39e7dcca75/5867da4b8a4ff3087c718e8ed45d74bf/deep/0/ResqueBrain.png)
 
+# API
+
+The app is an AngularJS app, so the back-end needs an API:
+
+## Resques `/resques`
+
+```json
+[
+  { 
+    name: "www"
+  },
+  { 
+    name: "admin"
+  }
+]
+```
+
+## Overview `/resques/:resque`
+
+```json
+{
+  failed: 5,
+  running: {
+    total: 24,
+    tooLong: 3
+  }
+  waiting: 145
+}
+```
+
+## Running `/resques/:resque/jobs/running`
+
+```json
+[
+  { 
+    queue: "mail",
+    job: {
+      name: "WelcomeMailer",
+      started: 398454809843,
+      payload: [ 1234, 5688 ],
+    },
+    worker: "as2048tgeorjgnsdfg",
+  },
+  // ...
+]
+```
+
+## Kill worker `/resques/:resque/workers/:worker
+
+DELETE
+
+## Waiting `/resques/:resque/jobs/waiting`
+
+[
+  {
+    queue: "mail",
+    numJobs: 45
+  },
+]
+
+## Failed `/resques/:resque/jobs/failed?start=0&pageSize=10`
+
+[
+  {
+    // resque failed queue payload
+  },
+]
+
 # Notes
 
 
