@@ -89,10 +89,10 @@ The app is an AngularJS app, so the back-end needs an API:
 ```json
 [
   { 
-    name: "www"
+    "name": "www"
   },
   { 
-    name: "admin"
+    "name": "admin"
   }
 ]
 ```
@@ -101,12 +101,12 @@ The app is an AngularJS app, so the back-end needs an API:
 
 ```json
 {
-  failed: 5,
-  running: {
-    total: 24,
-    tooLong: 3
+  "failed": 5,
+  "running": {
+    "total": 24,
+    "tooLong": 3
   }
-  waiting: 145
+  "waiting": 145
 }
 ```
 
@@ -115,13 +115,13 @@ The app is an AngularJS app, so the back-end needs an API:
 ```json
 [
   { 
-    queue: "mail",
-    job: {
-      name: "WelcomeMailer",
-      started: 398454809843,
-      payload: [ 1234, 5688 ],
+    "queue": "mail",
+    "job": {
+      "name": "WelcomeMailer",
+      "started": 398454809843,
+      "payload": [ 1234, 5688 ],
     },
-    worker: "as2048tgeorjgnsdfg",
+    "worker": "as2048tgeorjgnsdfg",
   },
   // ...
 ]
@@ -133,20 +133,24 @@ DELETE
 
 ## Waiting `/resques/:resque/jobs/waiting`
 
+```json
 [
   {
-    queue: "mail",
-    numJobs: 45
+    "queue": "mail",
+    "numJobs": 45
   },
 ]
+```
 
 ## Failed `/resques/:resque/jobs/failed?start=0&pageSize=10`
 
+```json
 [
   {
     // resque failed queue payload
   },
 ]
+```
 
 # Notes
 
