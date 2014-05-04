@@ -24,7 +24,7 @@
         <tbody>
           <tr ng-repeat="resque in allResques">
             <td>{{resque.name}}</td>
-            <td>4</td>
+            <td>{{resque.failed}}</td>
             <td>
               <a href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>
@@ -52,8 +52,8 @@
         <tbody>
           <tr ng-repeat="resque in allResques">
             <td>{{resque.name}}</td>
-            <td>4</td>
-            <td>0</td>
+            <td>{{resque.running}}</td>
+            <td>{{resque.runningTooLong}}</td>
             <td>
               <a href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>
@@ -80,7 +80,7 @@
         <tbody>
           <tr ng-repeat="resque in allResques">
             <td>{{resque.name}}</td>
-            <td>4</td>
+            <td>{{resque.waiting}}</td>
             <td>
               <a href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>

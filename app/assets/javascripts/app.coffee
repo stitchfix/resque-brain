@@ -1,6 +1,7 @@
 resqueBrain = angular.module('resqueBrain',[
   'templates',
   'ngRoute',
+  'ngResource',
   'ui.bootstrap',
   'controllers',
   'directives',
@@ -12,7 +13,7 @@ resqueBrain.config([ '$routeProvider',
     $routeProvider
       .when('/',
         templateUrl: "summary.html"
-        controller: 'DashboardController'
+        controller: 'SummaryController'
       )
       .when('/:resque',
         templateUrl: "overview.html"
@@ -37,7 +38,7 @@ directives  = angular.module('directives',[])
 services    = angular.module('services',[])
 
 controllers.controller("DashboardController", [
-  '$scope', '$location', '$modal', '$route', 'resques',
+  '$scope', '$location', '$modal', '$route', 'Resques',
   ($scope ,  $location ,  $modal ,  $route ,  resques)->
 
 

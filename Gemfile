@@ -16,6 +16,8 @@ gem 'angular-rails-templates'
 group :test, :development do
   gem "capybara"
   gem "selenium-webdriver"
+  gem "teaspoon"
+  gem "phantomjs"
 end
 
 gem "foreman"

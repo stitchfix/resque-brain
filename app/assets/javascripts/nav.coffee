@@ -1,6 +1,6 @@
 angular.module("directives").directive("rbNav", [
-  "$location","resques",
-  ($location , resques)->
+  "$location","Resques",
+  ($location , Resques)->
     templateUrl: "nav.html"
     link: (scope) ->
 
@@ -11,7 +11,10 @@ angular.module("directives").directive("rbNav", [
       scope.viewFailed   =          -> $location.path("/#{scope.resqueSelected}/failed")
       scope.viewSummary  =          -> $location.path("/")
 
-      scope.resques = resques.all
+      Resques.all(
+        ( (resques)-> scope.resques = resques ),
+        ( (httpResponse)-> alert("Something busted, yo"))
+      )
 
       scope.navCollapsed = true
 

@@ -14,5 +14,7 @@
 //= require jquery_ujs
 //= require angular/angular
 //= require angular-route/angular-route
+//= require angular-resource/angular-resource
 //= require angular-ui-bootstrap-bower
+//= require lodash/dist/lodash
 //= require_tree .

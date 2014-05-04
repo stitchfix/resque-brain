@@ -4,6 +4,9 @@
     "angular": "latest",
     "bootstrap": "latest",
     "angular-route": "latest",
-    "angular-ui-bootstrap-bower": "latest"
+    "angular-ui-bootstrap-bower": "latest",
+    "angular-mocks": "latest",
+    "angular-resource": "latest",
+    "lodash": "latest"
   }
 }

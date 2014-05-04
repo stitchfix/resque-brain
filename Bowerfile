@@ -2,4 +2,7 @@ asset 'angular'
 asset 'bootstrap'
 asset 'angular-route'
 asset 'angular-ui-bootstrap-bower'
+asset 'angular-mocks'
+asset 'angular-resource'
+asset 'lodash'
 # vim: ft=ruby
