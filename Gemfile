@@ -14,8 +14,6 @@ gem 'resque', git: 'https://github.com/stitchfix/resque.git', branch: 'resque-re
 gem 'angular-rails-templates'
 
 group :test, :development do
-  gem "rspec"
-  gem "rspec-rails", "~> 2.0"
   gem "capybara"
   gem "selenium-webdriver"
 end

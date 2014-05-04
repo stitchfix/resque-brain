@@ -152,6 +152,14 @@ DELETE
 ]
 ```
 
+### Retry `/resques/:resque/jobs/failed/:id/retry`
+
+Optional argument `clear=true` will then destroy the job
+
+### Clear `/resques/:resque/jobs/failed/:id`
+
+DELETE
+
 # Notes
 
 
