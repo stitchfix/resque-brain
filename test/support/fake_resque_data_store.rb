@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'resque/data_store'
 
 class FakeResqueDataStore

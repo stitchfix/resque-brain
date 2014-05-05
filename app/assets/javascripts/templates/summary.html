@@ -22,7 +22,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="resque in allResques">
+          <tr ng-repeat="resque in allResques" ng-class="{'danger': resque.failed > 0}">
             <td>{{resque.name}}</td>
             <td>{{resque.failed}}</td>
             <td>
