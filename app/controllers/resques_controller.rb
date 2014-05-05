@@ -1,6 +1,9 @@
 class ResquesController < ApplicationController
   def index
     @resques = ResqueInstance.all
+    @resques.each do |resque|
+      Rails.logger.info "Resque: #{resque.name} configured for #{resque.resque_data_store}"
+    end
   end
 
   def show

@@ -12,15 +12,17 @@ gem 'spring',        group: :development
 gem 'bower-rails'
 gem 'resque', git: 'https://github.com/stitchfix/resque.git', branch: 'resque-redis-interface'
 gem 'angular-rails-templates'
+gem 'unicorn'
+gem "foreman"
 
 group :test, :development do
   gem "capybara"
   gem "selenium-webdriver"
   gem "teaspoon"
   gem "phantomjs"
+  gem "dotenv-rails"
 end
 
-gem "foreman"
 group :production, :staging do
     gem "rails_12factor"
     gem "rails_stdout_logging"

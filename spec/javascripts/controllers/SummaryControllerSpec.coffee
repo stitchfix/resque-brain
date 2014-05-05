@@ -22,8 +22,7 @@ describe "SummaryController", ->
     inject((Resques, $rootScope, $controller)->
       scope   = $rootScope.$new()
       resques = Resques
-      spyOn(resques,"all").andCallFake( (success,failure)-> success(fakeResques))
-      spyOn(resques,"get").andCallFake( (resqueName,success,failure)-> success(adminResque))
+      spyOn(resques,"summary").andCallFake( (success,failure)-> success([adminResque,adminResque,adminResque]))
 
       ctrl    = $controller('SummaryController', $scope: scope)
     )

@@ -26,7 +26,7 @@ describe "Resques", ->
     httpBackend.verifyNoOutstandingExpectation()
     httpBackend.verifyNoOutstandingRequest()
 
-  describe 'all', ->
+  describe 'summary', ->
     receivedResques = null
     errorResponse   = null
 
@@ -40,49 +40,64 @@ describe "Resques", ->
 
     it 'returns from the backend and calls success', ->
       httpBackend.expectGET(/\/resques/).respond(fakeResques)
+      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[0].name}")).respond(adminResque)
+      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[1].name}")).respond(adminResque)
+      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[2].name}")).respond(adminResque)
 
-      service.all(success,failure)
+      service.summary(success,failure)
 
       httpBackend.flush()
 
-      expect(receivedResques).toEqualData(receivedResques)
+      expect(receivedResques).toEqualData([adminResque,adminResque,adminResque])
       expect(errorResponse).toBe(null)
 
     it 'returns from the backend and calls failure', ->
       httpBackend.expectGET(/\/resques/).respond(500)
-
-      service.all(success,failure)
+      
+      service.summary(success,failure)
       httpBackend.flush()
 
       expect(receivedResques).toBe(null)
       expect(errorResponse).toNotBe(null)
 
-  describe 'get', ->
-    receivedResque = null
-    errorResponse  = null
-
-    success = (resque)       -> receivedResque = resque
-    failure = (httpResponse) -> errorResponse = httpResponse
-
-    beforeEach ->
-      receivedResque = null
-      errorResponse  = null
-
-    it 'returns from the backend and calls success', ->
-      httpBackend.expectGET(/\/resques\/admin/).respond(adminResque)
-
-      service.get("admin",success,failure)
-
+    it 'returns only those it fetched', ->
+      httpBackend.expectGET(/\/resques/).respond(fakeResques)
+      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[0].name}")).respond(adminResque)
+      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[1].name}")).respond(500)
+      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[2].name}")).respond(adminResque)
+      
+      service.summary(success,failure)
       httpBackend.flush()
 
-      expect(receivedResque).toEqualData(adminResque)
+      expect(receivedResques).toEqualData([adminResque,{name: fakeResques[1].name, error: "Problem retreiving #{fakeResques[1].name}"},adminResque])
       expect(errorResponse).toBe(null)
-
-    it 'returns from the backend and calls failure', ->
-      httpBackend.expectGET(/\/resques/).respond(500)
-
-      service.get("admin",success,failure)
-      httpBackend.flush()
-
-      expect(receivedResque).toBe(null)
-      expect(errorResponse).toNotBe(null)
+      
+#  describe 'get', ->
+#    receivedResque = null
+#    errorResponse  = null
+#
+#    success = (resque)       -> receivedResque = resque
+#    failure = (httpResponse) -> errorResponse = httpResponse
+#
+#    beforeEach ->
+#      receivedResque = null
+#      errorResponse  = null
+#
+#    it 'returns from the backend and calls success', ->
+#      httpBackend.expectGET(/\/resques\/admin/).respond(adminResque)
+#
+#      service.get("admin",success,failure)
+#
+#      httpBackend.flush()
+#
+#      expect(receivedResque).toEqualData(adminResque)
+#      expect(errorResponse).toBe(null)
+#
+#    it 'returns from the backend and calls failure', ->
+#      httpBackend.expectGET(/\/resques/).respond(500)
+#
+#      service.get("admin",success,failure)
+#      httpBackend.flush()
+#
+#      expect(receivedResque).toBe(null)
+#      expect(errorResponse).toNotBe(null)

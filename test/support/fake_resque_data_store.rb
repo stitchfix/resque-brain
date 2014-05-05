@@ -23,9 +23,10 @@ class FakeResqueDataStore
 
   WORKERS = {
           mail: nil,
-         cache: { "queue" => :cache,      "payload" => "whatever", "run_at" => Time.now - (3600) },
-     generator: { "queue" => :generator,  "payload" => "yupyup",   "run_at" => Time.now - (60) },
-    purchasing: { "queue" => :purchasing, "payload" => "blah",     "run_at" => Time.now },
+         cache: { "queue" => :cache,      "payload" => "whatever", "run_at" => (Time.now - (3600)).iso8601 },
+     generator: { "queue" => :generator,  "payload" => "yupyup",   "run_at" => (Time.now - (60)).iso8601 },
+    purchasing: { "queue" => :purchasing, "payload" => "blah",     "run_at" => Time.now.iso8601 },
+      indexing: { "queue" => :indexing,   "payload" => "blah",     "run_at" => "mangled timestamp" },
   }
 
   implement! def queue_names

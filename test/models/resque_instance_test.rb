@@ -4,6 +4,7 @@ require 'support/fake_resque_data_store'
 
 class ResqueInstanceTest < MiniTest::Test
   def setup
+    ResqueInstance.unregister_all!
     ResqueInstance.register_instance(name: "test1", resque_data_store: FakeResqueDataStore.new)
     ResqueInstance.register_instance(name: "test2", resque_data_store: FakeResqueDataStore.new)
   end
@@ -33,7 +34,7 @@ class ResqueInstanceTest < MiniTest::Test
   end
 
   def test_running
-    assert_equal 3,ResqueInstance.find("test1").running
+    assert_equal 4,ResqueInstance.find("test1").running
   end
 
   def test_running_too_long
@@ -52,30 +53,28 @@ class ResqueInstanceTest < MiniTest::Test
   def test_from_environment
     ResqueInstance.unregister_all!
     ENV["RESQUE_BRAIN_INSTANCES"] = "env1,env2"
-    ENV["RESQUE_BRAIN_INSTANCES_env1"] = "redis://localhost:1234"
-    ENV["RESQUE_BRAIN_INSTANCES_env2"] = "redis://10.0.0.1:4567"
+    ENV["RESQUE_BRAIN_INSTANCES_env1"] = "redis://whatever:supersecret@localhost:1234"
+    ENV["RESQUE_BRAIN_INSTANCES_env2"] = "redis://whatever:megasecret@10.0.0.1:4567"
 
-    parsed_redises = { }
-    ResqueInstance.init_from_env! do |instance_name,uri|
-      parsed_redises[instance_name] = {
-        port: uri.port,
-        host: uri.host
-      }
-      {
-        name: instance_name,
-        resque_data_store: FakeResqueDataStore.new
-      }
-    end
+    ResqueInstance.init_from_env!
 
     assert_equal 2, ResqueInstance.all.size
     refute_nil ResqueInstance.find("env1")
     refute_nil ResqueInstance.find("env2")
 
-    assert_equal 2, parsed_redises.size
-    assert_equal 1234, parsed_redises["env1"][:port]
-    assert_equal 4567, parsed_redises["env2"][:port]
-    assert_equal "localhost", parsed_redises["env1"][:host]
-    assert_equal "10.0.0.1", parsed_redises["env2"][:host]
+    redis_namespace = ResqueInstance.find("env1").resque_data_store.instance_variable_get("@redis")
+    assert       redis_namespace.kind_of?(Redis::Namespace)
+    assert_equal :resque       , redis_namespace.namespace
+    assert_equal 1234          , redis_namespace.redis.client.port
+    assert_equal "localhost"   , redis_namespace.redis.client.host
+    assert_equal "supersecret" , redis_namespace.redis.client.password
+
+    redis_namespace = ResqueInstance.find("env2").resque_data_store.instance_variable_get("@redis")
+    assert       redis_namespace.kind_of?(Redis::Namespace)
+    assert_equal :resque       , redis_namespace.namespace
+    assert_equal 4567          , redis_namespace.redis.client.port
+    assert_equal "10.0.0.1"    , redis_namespace.redis.client.host
+    assert_equal "megasecret"  , redis_namespace.redis.client.password
   end
 
   def test_from_environment_missing_config
@@ -85,23 +84,16 @@ class ResqueInstanceTest < MiniTest::Test
     ENV["RESQUE_BRAIN_INSTANCES_env2"] = nil
 
     assert_raises(ResqueInstance::MissingResqueConfigurationError) do
-      ResqueInstance.init_from_env! do |instance_name,uri|
-        { 
-          name: instance_name,
-          resque_data_store: FakeResqueDataStore.new
-        }
-      end
+      ResqueInstance.init_from_env!
     end
   end
 
-  def test_data_store_creation
-    resque_data_store = ResqueInstance.create_data_store(URI.parse("redis://10.0.0.1:6378"))
+  def test_from_environment_missing_instance_list
+    ResqueInstance.unregister_all!
+    ENV["RESQUE_BRAIN_INSTANCES"] = nil
 
-    redis_namespace = resque_data_store.instance_variable_get("@redis")
-
-    assert       redis_namespace.kind_of?(Redis::Namespace)
-    assert_equal :resque    , redis_namespace.namespace
-    assert_equal 6378       , redis_namespace.redis.client.port
-    assert_equal "10.0.0.1" , redis_namespace.redis.client.host
+    assert_raises(ResqueInstance::MissingResqueConfigurationError) do
+      ResqueInstance.init_from_env!
+    end
   end
 end
