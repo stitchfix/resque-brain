@@ -21,6 +21,7 @@ group :test, :development do
   gem "teaspoon"
   gem "phantomjs"
   gem "dotenv-rails"
+  gem "poltergeist"
 end
 
 group :production, :staging do

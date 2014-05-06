@@ -60,14 +60,6 @@ class ResquesTest < MiniTest::Test
     end
   end
 
-  def test_from_environment_missing_instance_list
-    ENV["RESQUE_BRAIN_INSTANCES"] = nil
-
-    assert_raises(Resques::MissingResqueConfigurationError) do
-      Resques.from_environment
-    end
-  end
-
 private
 
   def create_test_resques

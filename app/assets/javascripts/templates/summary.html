@@ -10,7 +10,7 @@
       <header class="panel-heading">
         <h1 class="h3 mt-none mb-none">
           <i aria-hidden='true' class="glyphicon glyphicon-ban-circle"></i>
-          12 Jobs Failed
+          {{totalFailed}} Job<span ng-if="totalFailed != 1">s</span> Failed
         </h1>
       </header>
       <table class="table">
@@ -37,7 +37,7 @@
     <section class="panel panel-info">
       <header class="panel-heading">
         <h1 class="h3 mt-none mb-none">
-          51 Jobs Running
+          {{totalRunning}} Job<span ng-if="totalRunning != 1">s</span> Running
         </h1>
       </header>
       <table class="table">
@@ -66,7 +66,7 @@
     <section class="panel panel-info">
       <header class="panel-heading">
         <h1 class="h3 mt-none mb-none">
-          145 Jobs Waiting
+          {{totalWaiting}} Job<span ng-if="totalWaiting != 1">s</span> Waiting
         </h1>
       </header>
       <table class="table">
