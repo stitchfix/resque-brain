@@ -3,8 +3,11 @@ require 'support/fake_resque_data_store'
 
 class ResquesControllerTest < ActionController::TestCase
   setup do
-    ResqueInstance.register_instance(name: "test1", resque_data_store: FakeResqueDataStore.new)
-    ResqueInstance.register_instance(name: "test2", resque_data_store: FakeResqueDataStore.new)
+    @resques = Resques.new([
+      ResqueInstance.new(name: "test1", resque_data_store: FakeResqueDataStore.new),
+      ResqueInstance.new(name: "test2", resque_data_store: FakeResqueDataStore.new),
+    ])
+    ResquesController.resques = @resques
   end
   test "index" do
     get :index, format: :json
@@ -27,7 +30,7 @@ class ResquesControllerTest < ActionController::TestCase
 
     assert_response :success
 
-    resque_instance = ResqueInstance.find("test1")
+    resque_instance = @resques.find("test1")
 
     result = JSON.parse(response.body)
 

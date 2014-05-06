@@ -1,1 +1,1 @@
-ResqueInstance.init_from_env!
+RESQUES = Resques.from_environment
