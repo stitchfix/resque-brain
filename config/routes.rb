@@ -8,8 +8,10 @@ Rails.application.routes.draw do
           post 'retry'
         end
       end
-      resource :running, only: [ :show ]
-      resource :waiting, only: [ :show ]
+      member do
+        get 'running'
+        get 'waiting'
+      end
     end
     resources :workers, only: [ :destroy ]
   end

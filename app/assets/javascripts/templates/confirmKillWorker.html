@@ -1,6 +1,7 @@
 <aside>
   <header class="modal-header">
-    <h1 class="h3">Really Kill this Worker?</h1>
+    <h1 class="h3">Really Kill {{job.payload.class}}?</h1>
+    <h2 class="h4"><code class="paylod">{{job.payload.args}}</code></h2>
   </header>
   <p class="modal-body">
     This will terminate the worker and <strong>fail the job it's working on</strong>.

@@ -21,7 +21,7 @@ resqueBrain.config([ '$routeProvider',
       )
       .when('/:resque/running',
         templateUrl: "running.html"
-        controller: 'DashboardController'
+        controller: 'RunningController'
       )
       .when('/:resque/waiting',
         templateUrl: "waiting.html"
@@ -45,14 +45,5 @@ controllers.controller("DashboardController", [
     $scope.exceptionCollapsed = true
     $scope.showDetails = ->
       $scope.exceptionCollapsed = !$scope.exceptionCollapsed
-
-    $scope.allResques = resques.all
-    
-    $scope.killWorker = ->
-      $modal.open(
-        templateUrl: "confirmKillWorker.html"
-        controller: 'DashboardController'
-        backdrop: true
-      )
 
 ])

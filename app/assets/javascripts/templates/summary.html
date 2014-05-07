@@ -5,7 +5,7 @@
       <h1 class="text-center">Overview</h1>
     </header>
   </section>
-  <article class="col-md-4 col-sm-12 col-xs-12">
+  <article class="col-md-4 col-sm-12 col-xs-12 summary-failed">
     <section class="panel panel-danger">
       <header class="panel-heading">
         <h1 class="h3 mt-none mb-none">
@@ -26,14 +26,14 @@
             <td>{{resque.name}}</td>
             <td>{{resque.failed}}</td>
             <td>
-              <a ng-click="viewResque(resque,'failed')" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+              <a ng-click="viewResque(resque,'failed')" title="View Failed Jobs" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>
           </tr>
         </tbody>
       </table>
     </article>
   </section>
-  <article class="col-md-4 col-sm-12 col-xs-12">
+  <article class="col-md-4 col-sm-12 col-xs-12 summary-running">
     <section class="panel panel-info">
       <header class="panel-heading">
         <h1 class="h3 mt-none mb-none">
@@ -55,14 +55,14 @@
             <td>{{resque.running}}</td>
             <td>{{resque.runningTooLong}}</td>
             <td>
-              <a ng-click="viewResque(resque,'running')" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+              <a ng-click="viewResque(resque,'running')" title="View Running Jobs" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>
           </tr>
         </tbody>
       </table>
     </article>
   </section>
-  <article class="col-md-4 col-sm-12 col-xs-12">
+  <article class="col-md-4 col-sm-12 col-xs-12 summary-waiting">
     <section class="panel panel-info">
       <header class="panel-heading">
         <h1 class="h3 mt-none mb-none">
@@ -82,7 +82,7 @@
             <td>{{resque.name}}</td>
             <td>{{resque.waiting}}</td>
             <td>
-              <a ng-click="viewResque(resque,'waiting')" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+              <a ng-click="viewResque(resque,'waiting')" title="View Waiting Jobs" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>
           </tr>
         </tbody>

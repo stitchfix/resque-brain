@@ -5,10 +5,12 @@ services.factory("Resques", [
   ($resource ,  $q)->
     summary = []
     Resques = $resource("/resques/:resqueName", { "format": "json" })
+    ResqueJobs = $resource("/resques/:resqueName/jobs/:jobType", { "format" : "json" })
 
     all = (success,failure)              -> Resques.query(success,failure)
     get = (resqueName,success,failure)   -> Resques.get({"resqueName": resqueName},success,failure)
     refreshSummaries = (success,failure) ->
+      summary = []
       all(
         ( (resques)->
           promises = _.chain(resques).map( (resque)->
@@ -26,10 +28,13 @@ services.factory("Resques", [
     {
       all: all
       get: get
-      summary: (success,failure)->
-        if summary.length > 0
-          success(summary)
-        else
+      summary: (success,failure,flush)->
+        if summary.length <= 0 or flush == "flush"
           refreshSummaries(success,failure)
+        else
+          success(summary)
+
+      jobsRunning: (resque,success,failure)->
+        ResqueJobs.query({ "resqueName": resque.name, "jobType": "running" }, success, failure)
     }
 ])

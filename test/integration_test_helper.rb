@@ -8,7 +8,7 @@ class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
   include Capybara::DSL
 
-  def self.sanity_check(&block)
+  def sanity_check(&block)
     block.call
   end
 end

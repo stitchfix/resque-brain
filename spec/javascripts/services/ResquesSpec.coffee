@@ -16,6 +16,35 @@ describe "Resques", ->
     runningTooLong: 3
     waiting: 123
 
+  fakeJobs = [
+    queue: "mail",
+    payload: {
+      class: "UserWelcomeMailer",
+      args: [ 12345 ]
+    }
+    startedAt: (new Date()).getTime()
+    worker: "p9e942asfhjsfg"
+    tooLong: false
+  ,
+    queue: "pdf",
+    payload: {
+      class: "GeneratePackInMaterialsJob",
+      args: [ 947382, true ]
+    }
+    startedAt: (new Date()).getTime()
+    worker: "er0ghq3rdfgsefg"
+    tooLong: true
+  ,
+    queue: "purchasing",
+    payload: {
+      class: "ChargePurchaseJob",
+      args: [ 12345, 84762 ]
+    }
+    startedAt: (new Date()).getTime()
+    worker: "9seriudfosdfgkl"
+    tooLong: false
+  ]
+
   beforeEach(module("resqueBrain"))
   beforeEach(inject(($httpBackend, $injector)->
     httpBackend = $httpBackend
@@ -71,33 +100,68 @@ describe "Resques", ->
 
       expect(receivedResques).toEqualData([adminResque,{name: fakeResques[1].name, error: "Problem retreiving #{fakeResques[1].name}"},adminResque])
       expect(errorResponse).toBe(null)
+
+    describe 'when we have already fetched them', ->
+      beforeEach ->
+        httpBackend.expectGET(/\/resques/).respond(fakeResques)
+        httpBackend.expectGET(new RegExp("/resques/#{fakeResques[0].name}")).respond(adminResque)
+        httpBackend.expectGET(new RegExp("/resques/#{fakeResques[1].name}")).respond(adminResque)
+        httpBackend.expectGET(new RegExp("/resques/#{fakeResques[2].name}")).respond(adminResque)
+
+        service.summary(success,failure)
+
+        httpBackend.flush()
+
+      describe 'and we do not ask to re-fetch', ->
+        it 'does not request again', ->
+          receivedResques = null
+
+          service.summary(success,failure)
+
+          expect(receivedResques).toEqualData([adminResque,adminResque,adminResque])
+          expect(errorResponse).toBe(null)
+
+      describe 'and we ask to re-fetch', ->
+        it 'does requests again', ->
+          receivedResques = null
+
+          httpBackend.expectGET(/\/resques/).respond([ fakeResques[0] ])
+          httpBackend.expectGET(new RegExp("/resques/#{fakeResques[0].name}")).respond(adminResque)
+
+          service.summary(success,failure,"flush")
+
+          httpBackend.flush()
+
+          expect(receivedResques).toEqualData([adminResque])
+          expect(errorResponse).toBe(null)
+
+  describe 'jobsRunning', ->
+    receivedJobs  = null
+    errorResponse = null
+
+    success = (jobs)         -> receivedJobs = jobs
+    failure = (httpResponse) -> errorResponse = httpResponse
+
+    beforeEach ->
+      receivedJobs  = null
+      errorResponse = null
+
+
+    it 'returns from the backend and calls success', ->
+      httpBackend.expectGET(/\/resques\/foobar\/jobs\/running/).respond(fakeJobs)
+
+      service.jobsRunning({ name: "foobar"},success,failure)
+
+      httpBackend.flush()
+
+      expect(receivedJobs).toEqualData(fakeJobs)
+      expect(errorResponse).toBe(null)
+
+    it 'returns from the backend and calls failure', ->
+      httpBackend.expectGET(/\/resques/).respond(500)
       
-#  describe 'get', ->
-#    receivedResque = null
-#    errorResponse  = null
-#
-#    success = (resque)       -> receivedResque = resque
-#    failure = (httpResponse) -> errorResponse = httpResponse
-#
-#    beforeEach ->
-#      receivedResque = null
-#      errorResponse  = null
-#
-#    it 'returns from the backend and calls success', ->
-#      httpBackend.expectGET(/\/resques\/admin/).respond(adminResque)
-#
-#      service.get("admin",success,failure)
-#
-#      httpBackend.flush()
-#
-#      expect(receivedResque).toEqualData(adminResque)
-#      expect(errorResponse).toBe(null)
-#
-#    it 'returns from the backend and calls failure', ->
-#      httpBackend.expectGET(/\/resques/).respond(500)
-#
-#      service.get("admin",success,failure)
-#      httpBackend.flush()
-#
-#      expect(receivedResque).toBe(null)
-#      expect(errorResponse).toNotBe(null)
+      service.summary(success,failure)
+      httpBackend.flush()
+
+      expect(receivedJobs).toBe(null)
+      expect(errorResponse).toNotBe(null)
