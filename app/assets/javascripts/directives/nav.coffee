@@ -4,7 +4,15 @@ angular.module("directives").directive("rbNav", [
     templateUrl: "nav.html"
     link: (scope) ->
 
-      scope.viewResque   = (resque) -> $location.path("/#{resque.name}")
+      scope.viewResque   = (resque,section='overview') ->
+        path = {
+          overview: ''
+          running: '/running'
+          waiting: '/waiting'
+          failed:  '/failed'
+        }[section] or ''
+        $location.path("/#{resque.name}#{path}")
+
       scope.viewOverview =          -> $location.path("/#{scope.resqueSelected}")
       scope.viewRunning  =          -> $location.path("/#{scope.resqueSelected}/running")
       scope.viewWaiting  =          -> $location.path("/#{scope.resqueSelected}/waiting")

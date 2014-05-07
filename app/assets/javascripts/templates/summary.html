@@ -26,7 +26,7 @@
             <td>{{resque.name}}</td>
             <td>{{resque.failed}}</td>
             <td>
-              <a href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+              <a ng-click="viewResque(resque,'failed')" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>
           </tr>
         </tbody>
@@ -55,7 +55,7 @@
             <td>{{resque.running}}</td>
             <td>{{resque.runningTooLong}}</td>
             <td>
-              <a href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+              <a ng-click="viewResque(resque,'running')" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>
           </tr>
         </tbody>
@@ -82,7 +82,7 @@
             <td>{{resque.name}}</td>
             <td>{{resque.waiting}}</td>
             <td>
-              <a href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+              <a ng-click="viewResque(resque,'waiting')" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>
           </tr>
         </tbody>
