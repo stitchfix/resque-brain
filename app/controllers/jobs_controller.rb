@@ -5,8 +5,10 @@ class JobsController < ApplicationController
   end
 
   def running
+    @jobs = resques.find(params[:resque_id]).jobs_running.sort_by { |job| job.queue }
   end
 
   def waiting
+    @jobs_waiting_by_queue = resques.find(params[:resque_id]).jobs_waiting
   end
 end

@@ -2,7 +2,7 @@
 <div class="container">
   <section class="row">
     <header class="col-md-12">
-      <h1 class="text-center">Waiting <small>{{resqueSelected}}</small></h1>
+      <h1 class="text-center">{{totalJobsWaiting}} Job<span ng-if="totalJobsWaiting != 1">s</span> Waiting <small>{{resqueSelected}}</small></h1>
     </header>
     <div class="col-md-6 col-md-offset-3">
       <div class="table-responsive">
@@ -14,20 +14,9 @@
             </tr>
             <thead>
               <tbody>
-                <tr class="success">
-                  <td>mail</td>
-                  <td>0</td>
-                </tr>
-                <tr class="warning">
-                  <td>cache</td>
-                  <td>
-                    123
-                    <i aria-hidden='true' class="glyphicon glyphicon-warning-sign"></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td>pdf</td>
-                  <td>3</td>
+                <tr ng-repeat="jobsInQueue in jobsWaiting">
+                  <td>{{ jobsInQueue.queue }}</td>
+                  <td>{{ jobsInQueue.jobs.length }}</td>
                 </tr>
               </tbody>
             </table>

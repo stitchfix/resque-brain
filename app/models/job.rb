@@ -14,4 +14,8 @@ class Job
     @too_long = attributes[:too_long]
   end
 
+  def too_long?
+    @too_long
+  end
+
 end

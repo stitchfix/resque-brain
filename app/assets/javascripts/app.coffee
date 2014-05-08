@@ -25,7 +25,7 @@ resqueBrain.config([ '$routeProvider',
       )
       .when('/:resque/waiting',
         templateUrl: "waiting.html"
-        controller: 'DashboardController'
+        controller: 'WaitingController'
       )
       .when('/:resque/failed',
         templateUrl: "failed.html"

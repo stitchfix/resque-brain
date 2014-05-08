@@ -36,5 +36,7 @@ services.factory("Resques", [
 
       jobsRunning: (resque,success,failure)->
         ResqueJobs.query({ "resqueName": resque.name, "jobType": "running" }, success, failure)
+      jobsWaiting: (resque,success,failure)->
+        ResqueJobs.query({ "resqueName": resque.name, "jobType": "waiting" }, success, failure)
     }
 ])

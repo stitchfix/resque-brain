@@ -158,9 +158,41 @@ describe "Resques", ->
       expect(errorResponse).toBe(null)
 
     it 'returns from the backend and calls failure', ->
-      httpBackend.expectGET(/\/resques/).respond(500)
+      httpBackend.expectGET(/\/resques\/foobar\/jobs\/running/).respond(500)
       
-      service.summary(success,failure)
+      service.jobsRunning({ name: "foobar" },success,failure)
+      httpBackend.flush()
+
+      expect(receivedJobs).toBe(null)
+      expect(errorResponse).toNotBe(null)
+
+  describe 'jobsWaiting', ->
+    receivedJobs  = null
+    errorResponse = null
+
+    success = (jobs)         -> receivedJobs = jobs
+    failure = (httpResponse) -> errorResponse = httpResponse
+
+    beforeEach ->
+      receivedJobs  = null
+      errorResponse = null
+
+
+    it 'returns from the backend and calls success', ->
+      byQueue = _.chain(fakeJobs).groupBy("queue").map( (queue,jobs)-> { queue: queue, jobs: jobs }).value()
+      httpBackend.expectGET(/\/resques\/foobar\/jobs\/waiting/).respond(byQueue)
+
+      service.jobsWaiting({ name: "foobar"},success,failure)
+
+      httpBackend.flush()
+
+      expect(receivedJobs).toEqualData(byQueue)
+      expect(errorResponse).toBe(null)
+
+    it 'returns from the backend and calls failure', ->
+      httpBackend.expectGET(/\/resques\/foobar\/jobs\/waiting/).respond(500)
+      
+      service.jobsWaiting({ name: "foobar" },success,failure)
       httpBackend.flush()
 
       expect(receivedJobs).toBe(null)

@@ -71,9 +71,9 @@ class GetSummaryTest < ActionDispatch::IntegrationTest
   test "can click through to the waiting page of that resque" do
     visit("/")
     click_link "View Waiting Jobs"
-    assert page.has_text?("3 Jobs Waiting")  , page.html
-    assert page.has_text?("localhost")       , page.html
-    assert page.has_text?("WaitingTypeJob")  , page.html
+    assert page.has_text?("3 Jobs Waiting") , page.html
+    assert page.has_text?("localhost")      , page.html
+    assert page.has_text?("mail")           , page.html
   end
 
   def click_on_link_text(link_text)
