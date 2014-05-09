@@ -57,7 +57,12 @@ class JobsControllerTest < ActionController::TestCase
                              jobs_running: @jobs_running_unsorted,
                              jobs_waiting: jobs_waiting)
     ])
+    @original_resques = JobsController.resques
     JobsController.resques = resques
+  end
+
+  teardown do
+    JobsController.resques = @original_resques
   end
 
   test "running" do

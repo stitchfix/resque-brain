@@ -7,8 +7,14 @@ class ResquesControllerTest < ActionController::TestCase
       ResqueInstance.new(name: "test1", resque_data_store: FakeResqueDataStore.new),
       ResqueInstance.new(name: "test2", resque_data_store: FakeResqueDataStore.new),
     ])
+    @original_resques = ResquesController.resques
     ResquesController.resques = @resques
   end
+
+  teardown do
+    ResquesController.resques = @original_resques
+  end
+
   test "index" do
     get :index, format: :json
 

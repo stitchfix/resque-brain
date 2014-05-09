@@ -49,7 +49,12 @@ class FailedControllerTest < ActionController::TestCase
       FakeResqueInstance.new(name: "test1",
                              jobs_failed: @jobs_failed_unsorted)
     ])
+    @original_resques = FailedController.resques
     FailedController.resques = resques
+  end
+
+  teardown do
+    FailedController.resques = @original_resques
   end
 
   test "index" do

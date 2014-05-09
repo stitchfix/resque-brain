@@ -37,48 +37,47 @@ class GetSummaryTest < ActionDispatch::IntegrationTest
     end
     sanity_check do
       resque_instance = ResqueInstance.new(resque_data_store: @resque_data_store)
-      raise "WTF" unless resque_instance.failed  == 2
-      raise "WTF" unless resque_instance.waiting == 3
-      raise "WTF" unless resque_instance.running == 1
+      raise "Got #{resque_instance.failed} instead of 2 failing jobs"  unless resque_instance.failed  == 2
+      raise "Got #{resque_instance.waiting} instead of 3 waiting jobs" unless resque_instance.waiting == 3
+      raise "Got #{resque_instance.running} instead of 1 running job"  unless resque_instance.running == 1
     end
   end
 
   test "shows the summary" do
     visit("/")
-    assert page.has_text?("2 Jobs Failed")  , page.html
-    assert page.has_text?("3 Jobs Waiting") , page.html
-    assert page.has_text?("1 Job Running")  , page.html
-    assert page.has_text?("localhost")      , page.html
+    assert page.has_text?("2 Jobs Failed")  , page_assertion_error_message(page)
+    assert page.has_text?("3 Jobs Waiting") , page_assertion_error_message(page)
+    assert page.has_text?("1 Job Running")  , page_assertion_error_message(page)
+    assert page.has_text?("localhost")      , page_assertion_error_message(page)
   end
     
 
   test "can click through to the failed page of that resque" do
     visit("/")
     click_link "View Failed Jobs"
-    assert page.has_text?("2 Failed Jobs")         , page.html
-    assert page.has_text?("localhost")             , page.html
-    assert page.has_text?("Resque::TermException") , page.html
+    assert page.has_text?("2 Failed Jobs")         , page_assertion_error_message(page)
+    assert page.has_text?("localhost")             , page_assertion_error_message(page)
+    assert page.has_text?("Resque::TermException") , page_assertion_error_message(page)
+    assert page.has_text?("Baz")                   , page_assertion_error_message(page)
   end
 
   test "can click through to the running page of that resque" do
     visit("/")
     click_link "View Running Jobs"
-    assert page.has_text?("1 Job Running")  , page.html
-    assert page.has_text?("localhost")      , page.html
-    assert page.has_text?("RunningTypeJob") , page.html
+    assert page.has_text?("1 Job Running")  , page_assertion_error_message(page)
+    assert page.has_text?("localhost")      , page_assertion_error_message(page)
+    assert page.has_text?("RunningTypeJob") , page_assertion_error_message(page)
   end
 
   test "can click through to the waiting page of that resque" do
     visit("/")
     click_link "View Waiting Jobs"
-    assert page.has_text?("3 Jobs Waiting") , page.html
-    assert page.has_text?("localhost")      , page.html
-    assert page.has_text?("mail")           , page.html
+    assert page.has_text?("3 Jobs Waiting") , page_assertion_error_message(page)
+    assert page.has_text?("localhost")      , page_assertion_error_message(page)
+    assert page.has_text?("mail")           , page_assertion_error_message(page)
   end
 
-  def click_on_link_text(link_text)
-    # Capybara requires <a> elements to have an href in order to
-    # click on them.  That is terrible.
-    find(:xpath,"//a[contains(text(),'#{link_text}')]").click
+  def page_assertion_error_message(page)
+    page.html
   end
 end
