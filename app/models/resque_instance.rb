@@ -41,11 +41,11 @@ class ResqueInstance
     return [] if worker_ids.empty?
     workers_map(worker_ids).reject { |_,worker_info| worker_info.nil?  }.map { |id,worker_info| 
       start_time = WorkerStartTime.new(worker_info,@stale_worker_seconds)
-      Job.new(worker: id,
-             payload: worker_info["payload"],
-          started_at: start_time.started_at,
-            too_long: start_time.too_long?,
-               queue: worker_info["queue"])
+      RunningJob.new(worker: id,
+                    payload: worker_info["payload"],
+                 started_at: start_time.started_at,
+                   too_long: start_time.too_long?,
+                      queue: worker_info["queue"])
     }
   end
 
@@ -60,6 +60,10 @@ class ResqueInstance
         }
       ]
     }]
+  end
+
+  def jobs_failed
+    raise
   end
 
 private

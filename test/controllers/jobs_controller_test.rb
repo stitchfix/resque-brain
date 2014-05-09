@@ -1,42 +1,31 @@
 require 'test_helper'
-require 'support/fake_resque_data_store'
+require 'support/fake_resque_instance'
 
-class FakeResqueInstance
-  attr_reader :jobs_running
-  attr_reader :jobs_waiting
-
-  attr_reader :name
-  def initialize(name,jobs_running,jobs_waiting)
-    @name         = name
-    @jobs_running = jobs_running
-    @jobs_waiting = jobs_waiting
-  end
-end
 class JobsControllerTest < ActionController::TestCase
   setup do
     @jobs_running_unsorted = [
-      Job.new(
+      RunningJob.new(
         queue: "pdf",
         payload: {
           class: "GeneratePackInMaterialsJob",
           args: [ 86484, true ],
         },
-        started_at: (Time.now.utc - 1.hour).iso8601,
+        started_at: (Time.now.utc - 1.hour),
         worker: "p9e942asfhjsfg",
         too_long: false,
       ),
-      Job.new(
+      RunningJob.new(
         queue: "mail",
         payload: {
           class: "UserWelcomeMailer",
           args: [ 12345 ],
         },
-        started_at: Time.now.utc.iso8601,
+        started_at: Time.now.utc,
         worker: "p9e942asfhjsfg",
         too_long: false,
       ),
     ]
-    @jobs_waiting = {
+    jobs_waiting = {
       "pdf" => [
         Job.new(
           queue: "pdf",
@@ -64,7 +53,9 @@ class JobsControllerTest < ActionController::TestCase
       ]
     }
     resques = Resques.new([
-      FakeResqueInstance.new("test1",@jobs_running_unsorted,@jobs_waiting)
+      FakeResqueInstance.new(name: "test1",
+                             jobs_running: @jobs_running_unsorted,
+                             jobs_waiting: jobs_waiting)
     ])
     JobsController.resques = resques
   end

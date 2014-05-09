@@ -3,6 +3,7 @@ require 'minitest/autorun'
 require 'support/fake_resque_data_store'
 rails_require 'models/resque_instance'
 rails_require 'models/job'
+rails_require 'models/running_job'
 
 class ResqueInstanceTest < MiniTest::Test
   def test_failed
@@ -50,9 +51,6 @@ class ResqueInstanceTest < MiniTest::Test
     
     jobs_waiting["foo"].each_with_index do |job,index|
 
-      assert_nil              job.worker
-      assert_nil              job.started_at
-      refute                  job.too_long?
       assert_equal index+1  , job.payload["args"][0]
       assert_equal "FooJob" , job.payload["class"]
 
@@ -62,9 +60,6 @@ class ResqueInstanceTest < MiniTest::Test
 
     jobs_waiting["bar"].each_with_index do |job,index|
 
-      assert_nil              job.worker
-      assert_nil              job.started_at
-      refute                  job.too_long?
       assert_equal index+1  , job.payload["args"][0]
       assert_equal "BarJob" , job.payload["class"]
 

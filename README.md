@@ -84,73 +84,10 @@ We can expand to see exceptions
 
 The app is an AngularJS app, so the back-end needs an API:
 
-### Resques `/resques`
-
-```json
-[
-  { 
-    "name": "www"
-  },
-  { 
-    "name": "admin"
-  }
-]
-```
-
-### Overview `/resques/:resque`
-
-```json
-{
-  "failed": 5,
-  "running": {
-    "total": 24,
-    "tooLong": 3
-  }
-  "waiting": 145
-}
-```
-
-### Running `/resques/:resque/jobs/running`
-
-```json
-[
-  { 
-    "queue": "mail",
-    "job": {
-      "name": "WelcomeMailer",
-      "started": 398454809843,
-      "payload": [ 1234, 5688 ],
-    },
-    "worker": "as2048tgeorjgnsdfg",
-  },
-  // ...
-]
-```
 
 ### Kill worker `/resques/:resque/workers/:worker`
 
 DELETE
-
-### Waiting `/resques/:resque/jobs/waiting`
-
-```json
-[
-  {
-    "queue": "mail",
-    "numJobs": 45
-  },
-]
-```
-
-### Failed `/resques/:resque/jobs/failed?start=0&pageSize=10`
-
-```json
-[
-  {
-    // resque failed queue payload
-  },
-]
-```
 
 ### Retry `/resques/:resque/jobs/failed/:id/retry`
 
