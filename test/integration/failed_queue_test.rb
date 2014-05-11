@@ -37,10 +37,10 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
     assert page.has_content?("worker1"), page_assertion_error_message(page)
     refute page.has_content?("worker10"), page_assertion_error_message(page)
 
-    click_link "Page 2 of Results"
+    first("[title='Page 2 of Results']").click
     assert_equal 10, page.all("article.failed-job").count, page_assertion_error_message(page)
     refute page.has_content?("worker0"), page_assertion_error_message(page)
-    refute page.has_content?("worker1"), page_assertion_error_message(page)
+    refute page.has_content?("worker2"), page_assertion_error_message(page)
     assert page.has_content?("worker10"), page_assertion_error_message(page)
     assert page.has_content?("worker19"), page_assertion_error_message(page)
     refute page.has_content?("worker20"), page_assertion_error_message(page)

@@ -5,11 +5,25 @@
       <h1 class="text-center">{{numJobsFailed}} Job<span ng-if="numJobsFailed != 1">s</span> Failed <small>{{resqueSelected}}</small></h1>
     </header>
     <div class="pull-right">
-      <div class="btn-group">
-        <button type="button" class="btn btn-default">Retry ALL</button>
-        <button type="button" class="btn btn-default">Clear ALL</button>
-        <button type="button" class="btn btn-primary"><i aria-hidden="true" class="glyphicon glyphicon-repeat"></i> Retry &amp; Clear ALL</button>
+      <div class="btn-toolbar">
+        <div class="btn-group">
+          <button type="button" class="btn btn-warning">
+            <i aria-hidden='true' class='glyphicon glyphicon-refresh'></i>
+            Retry ALL
+          </button>
+          <button type="button" class="btn btn-warning">
+            <i aria-hidden='true' class='glyphicon glyphicon-trash'></i>
+            Clear ALL
+          </button>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-danger"><i aria-hidden="true" class="glyphicon glyphicon-repeat"></i> Retry &amp; Clear ALL</button>
+        </div>
       </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="text-center">
+      <div rb-failed-pagination></div>
     </div>
     <div class="clearfix"></div>
     <hr>
@@ -28,32 +42,33 @@
       </p>
       <div class="btn-toolbar" role="toolbar">
         <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-primary"><i aria-hidden="true" class="glyphicon glyphicon-repeat"></i> Retry &amp; Clear</button>
-          <button type="button" class="btn btn-sm btn-default">Retry</button>
-          <button type="button" class="btn btn-sm btn-default">Clear</button>
-        </div>
-        <div class="visible-xs mt-1">&nbsp;</div>
-        <div class="btn-group">
-          <a href="" ng-click="" class="btn btn-sm btn-default"><i aria-hidden="true" class="glyphicon glyphicon-envelope"></i> Email</a>
-          <a href="" ng-click="toggleBacktrace(job)" class="btn btn-sm btn-warning">
+          <a href="" ng-click="toggleBacktrace(job)" class="btn btn-sm btn-primary">
             Backtrace
             <i aria-hidden="true" ng-if="!backtraceShowing(job)" class="glyphicon glyphicon-chevron-right"></i> 
             <i aria-hidden="true" ng-if="backtraceShowing(job)" class="glyphicon glyphicon-chevron-down"></i> 
           </a>
         </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-default">
+          <i aria-hidden='true' class='glyphicon glyphicon-refresh'></i>
+            Retry
+          </button>
+          <button type="button" class="btn btn-sm btn-warning">
+          <i aria-hidden='true' class='glyphicon glyphicon-trash'></i>
+            Clear
+          </button>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-default"><i aria-hidden="true" class="glyphicon glyphicon-repeat"></i> Retry &amp; Clear</button>
+        </div>
+        <div class="visible-xs mt-1">&nbsp;</div>
       </div>
       <div collapse="!backtraceShowing(job)" class="mt-1">
         <pre class="well pre-scroll-horizontal mb-none">{{job.backtrace | join }}</pre>
       </div>
     </article>
-    <footer class="text-center" ng-if="pages.length > 1">
-      <nav>
-        <ul class="pagination">
-          <li><a href="#">&laquo;</a></li>
-          <li ng-repeat="page in pages" ng-class="{ 'active': page.page == currentPage }"><a href="" ng-click="goToPage(page)" title="Page {{page.page}} of Results">{{page.page}}</a></li>
-          <li><a href="#">&raquo;</a></li>
-        </ul>
-      </nav>
+    <footer class="text-center">
+      <div rb-failed-pagination></div>
     </footer>
   </section>
 </div>

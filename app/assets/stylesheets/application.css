@@ -19,17 +19,12 @@
   padding-right: 20px;
 }
 
-.mt-none {
-  margin-top: 0;
-}
+.pt-1 { padding-top: 20px; }
+.pb-1 { padding-bottom: 20px; }
 
-.mt-1 {
-  margin-top: 20px;
-}
-
-.mb-none {
-  margin-bottom: 0;
-}
+.mt-none { margin-top: 0; }
+.mt-1    { margin-top: 20px; }
+.mb-none { margin-bottom: 0; }
 
 .payload {
   color: black;

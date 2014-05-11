@@ -13,7 +13,6 @@ controllers.controller("FailedController", [
 
     $scope.toggleBacktrace = (job)->
       index = _.indexOf($scope.jobsFailed,job)
-      console.log(index)
       backtracesShowing[index] = if backtracesShowing[index] == true
         false
       else if backtracesShowing[index] == false
@@ -21,19 +20,17 @@ controllers.controller("FailedController", [
       else
         true
 
-    $scope.goToPage = (page)->
-      $scope.currentPage = page.page
-      $scope.start = page.start
+    $scope.pages = []
 
-      Resques.jobsFailed( { name: $routeParams.resque },$scope.start,PAGE_SIZE,
-        ( (jobs)->
-          $scope.jobsFailed = jobs
-          $location.hash = "top"
-          $anchorScroll()
-        ),
-        ( (httpResponse)-> alert("Problem") )
-      )
-    $scope.goToPage({ page: 1, start: 0 })
+    $scope.goToPage = (page)->
+      if page > 0 and page <= $scope.pages.length
+        $location.search( page: page )
+
+    $scope.currentPage = parseInt($routeParams.page or "1")
+    Resques.jobsFailed( { name: $routeParams.resque },($scope.currentPage - 1) * PAGE_SIZE,PAGE_SIZE,
+      ( (jobs)-> $scope.jobsFailed = jobs),
+      ( (httpResponse)-> alert("Problem") )
+    )
 
     Resques.summary(
       ( (summary)->
@@ -43,10 +40,9 @@ controllers.controller("FailedController", [
         numPages = Math.ceil($scope.numJobsFailed / PAGE_SIZE)
 
         while page <= numPages
-          $scope.pages.push({ page: page, start: (page-1) * PAGE_SIZE})
+          $scope.pages.push(page)
           page += 1
       ),
       ( (httpResponse)-> alert("Problem") )
     )
-
 ])

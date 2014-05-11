@@ -1,0 +1,36 @@
+<ul class="pagination small hidden-xs" ng-if="pages.length > 1">
+  <li ng-class="{'disabled': currentPage == 1}">
+    <a ng-click="goToPage(currentPage - 1)" href="">
+      <i aria-hidden="true" class="glyphicon glyphicon-arrow-left"></i>
+      <span class="sr-only">Previous</span>
+    </a>
+  </li>
+  <li ng-repeat="page in pages" ng-class="{ 'active': page == currentPage }">
+    <a href="" ng-click="goToPage(page)" title="Page {{page}} of Results">{{page}}</a>
+  </li>
+  <li ng-class="{'disabled': currentPage == pages.length}">
+    <a ng-click="goToPage(currentPage + 1)" href="">
+      <i aria-hidden="true" class="glyphicon glyphicon-arrow-right"></i>
+      <span class="sr-only">Next</span>
+    </a>
+  </li>
+</ul>
+<ul class="pager small visible-xs" ng-if="pages.length > 1">
+  <li class="previous" ng-class="{'disabled': currentPage <= 1 }">
+    <a ng-click="goToPage(currentPage - 1)" href="">
+      <i aria-hidden="true" class="glyphicon glyphicon-arrow-left"></i>
+      <span class="sr-only">Previous</span>
+    </a>
+  </li>
+  <li class="disabled">
+    <a>
+    Page {{currentPage}} of {{pages.length}}
+  </a>
+  </li>
+  <li class="next" ng-class="{'disabled': currentPage >= pages.length}">
+    <a ng-click="goToPage(currentPage + 1)" href="">
+      <i aria-hidden="true" class="glyphicon glyphicon-arrow-right"></i>
+      <span class="sr-only">Next</span>
+    </a>
+  </li>
+</ul>
