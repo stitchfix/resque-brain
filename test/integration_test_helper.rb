@@ -11,4 +11,8 @@ class ActionDispatch::IntegrationTest
   def sanity_check(&block)
     block.call
   end
+
+  def page_assertion_error_message(page)
+    page.html
+  end
 end

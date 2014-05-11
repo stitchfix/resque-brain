@@ -37,7 +37,7 @@ class GetSummaryTest < ActionDispatch::IntegrationTest
     end
     sanity_check do
       resque_instance = ResqueInstance.new(resque_data_store: @resque_data_store)
-      raise "Got #{resque_instance.failed} instead of 2 failing jobs"  unless resque_instance.failed  == 2
+      raise "Got #{resque_instance.failed} instead of 2 failing jobs"  unless resque_instance.jobs_failed.size  == 2
       raise "Got #{resque_instance.waiting} instead of 3 waiting jobs" unless resque_instance.waiting == 3
       raise "Got #{resque_instance.running} instead of 1 running job"  unless resque_instance.running == 1
     end
@@ -55,7 +55,7 @@ class GetSummaryTest < ActionDispatch::IntegrationTest
   test "can click through to the failed page of that resque" do
     visit("/")
     click_link "View Failed Jobs"
-    assert page.has_text?("2 Failed Jobs")         , page_assertion_error_message(page)
+    assert page.has_text?("2 Jobs Failed")         , page_assertion_error_message(page)
     assert page.has_text?("localhost")             , page_assertion_error_message(page)
     assert page.has_text?("Resque::TermException") , page_assertion_error_message(page)
     assert page.has_text?("Baz")                   , page_assertion_error_message(page)
@@ -75,9 +75,5 @@ class GetSummaryTest < ActionDispatch::IntegrationTest
     assert page.has_text?("3 Jobs Waiting") , page_assertion_error_message(page)
     assert page.has_text?("localhost")      , page_assertion_error_message(page)
     assert page.has_text?("mail")           , page_assertion_error_message(page)
-  end
-
-  def page_assertion_error_message(page)
-    page.html
   end
 end

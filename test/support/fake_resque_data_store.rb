@@ -30,6 +30,53 @@ class FakeResqueDataStore
       indexing: { "queue" => "indexing",   "payload" => { "class" => "IndexingJob",   "args" => [ "blah"] },    "run_at" => "mangled timestamp" },
   }
 
+  FAILED = [
+    {
+      "failed_at" => (Time.now.utc - 3600).iso8601,
+      "payload" => {
+        "class" => "SomeFailingJob",
+        "args" => [500145, 1114130]
+      },
+      "exception" => "Resque::TermException",
+      "error" => "SIGTERM",
+      "backtrace" => [
+        "/app/app/services/blah_whatever.rb:57:in `block in whatever!'",
+        "/app/app/services/blah_whatever.rb:77:in `call'",
+        "/app/app/services/blah_whatever.rb:77:in `with_whatever'",
+        "/app/app/services/blah_whatever.rb:52:in `whatever!'",
+        "/app/app/services/blah_whatever.rb:11:in `whatever_items_from_bleorgh'",
+        "/app/lib/exceptions/exception_augmenter.rb:10:in `call'",
+        "/app/lib/exceptions/exception_augmenter.rb:10:in `augment_all_exceptions_with'",
+        "/app/app/jobs/concerns/whatevering_job.rb:6:in `augment_exceptions_with_remediation_help'",
+        "/app/app/jobs/whatever_inconsistent_blagh_job.rb:8:in `perform'"
+      ],
+      "worker" => "some_worker_id",
+      "queue" => "mail"
+    },
+    {
+      "failed_at" => Time.now.utc.iso8601,
+      "payload" => {
+        "class" => "SomeOtherFailingJob",
+        "args" => ["blah"]
+      },
+      "exception" => "KeyError",
+      "error" => "No Such key 'foobar'",
+      "backtrace" => [
+        "/app/app/services/blah_whatever.rb:57:in `block in whatever!'",
+        "/app/app/services/blah_whatever.rb:77:in `call'",
+        "/app/app/services/blah_whatever.rb:77:in `with_whatever'",
+        "/app/app/jobs/concerns/whatevering_job.rb:6:in `augment_exceptions_with_remediation_help'",
+        "/app/app/jobs/whatever_inconsistent_blagh_job.rb:8:in `perform'"
+      ],
+      "worker" => "some_other_worker_id",
+      "queue" => "cache"
+    },
+    {
+      "failed_at" => "mangled time",
+      "payload" => "mangled payload"
+    }
+  ]
+
   implement! def queue_names
     QUEUES.keys
   end
@@ -39,7 +86,7 @@ class FakeResqueDataStore
   end
 
   implement! def num_failed
-    10
+    FAILED.size
   end
 
   implement! def worker_ids
@@ -54,5 +101,10 @@ class FakeResqueDataStore
 
   implement! def everything_in_queue(queue)
     QUEUES[queue].map { |_| Resque.encode(_) }
+  end
+
+  implement!  def list_range(key, start = 0, count = 1)
+    raise 'only failed is allowed' unless key == :failed
+    FAILED[start..(count-1)].map { |_| Resque.encode(_) }
   end
 end

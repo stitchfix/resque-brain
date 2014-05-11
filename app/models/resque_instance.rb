@@ -62,8 +62,23 @@ class ResqueInstance
     }]
   end
 
-  def jobs_failed
-    raise
+  def jobs_failed(start=0,count=:all)
+    count = @resque_data_store.num_failed if count == :all
+    failed_payloads = @resque_data_store.list_range(:failed,start,count)
+    return [] if failed_payloads.nil?
+    failed_payloads.map { |json|
+      Resque.decode(json)
+    }.map { |failed_job|
+      FailedJob.new(
+        queue: failed_job["queue"],
+        payload: failed_job["payload"],
+        exception: failed_job["exception"],
+        error: failed_job["error"],
+        backtrace: failed_job["backtrace"],
+        worker: failed_job["worker"],
+        failed_at: (Time.parse(failed_job["failed_at"]) rescue nil)
+      )
+    }
   end
 
 private

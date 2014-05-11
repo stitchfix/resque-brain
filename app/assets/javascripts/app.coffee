@@ -5,7 +5,8 @@ resqueBrain = angular.module('resqueBrain',[
   'ui.bootstrap',
   'controllers',
   'directives',
-  'services'
+  'services',
+  'filters'
 ])
 
 resqueBrain.config([ '$routeProvider',
@@ -29,13 +30,14 @@ resqueBrain.config([ '$routeProvider',
       )
       .when('/:resque/failed',
         templateUrl: "failed.html"
-        controller: 'DashboardController'
+        controller: 'FailedController'
       )
 ])
 
 controllers = angular.module('controllers',[])
 directives  = angular.module('directives',[])
 services    = angular.module('services',[])
+filters     = angular.module('filters',[])
 
 controllers.controller("DashboardController", [
   '$scope', '$location', '$modal', '$route', 'Resques',

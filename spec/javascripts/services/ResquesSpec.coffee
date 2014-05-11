@@ -45,6 +45,28 @@ describe "Resques", ->
     tooLong: false
   ]
 
+  fakeFailedJobs = [
+    queue: "mail",
+    payload: {
+      class: "UserWelcomeMailer",
+      args: [ 12345 ]
+    }
+    worker: "p9e942asfhjsfg"
+    exception: "Resque::TermException"
+    backtrace: [ "foo.rb", "blah.rb" ]
+    error: "SIGTERM"
+  ,
+    queue: "mail",
+    payload: {
+      class: "UserWelcomeMailer",
+      args: [ 12345 ]
+    }
+    worker: "p9e942asfhjsfg"
+    exception: "Resque::TermException"
+    backtrace: [ "foo.rb", "blah.rb" ]
+    error: "SIGTERM"
+  ]
+
   beforeEach(module("resqueBrain"))
   beforeEach(inject(($httpBackend, $injector)->
     httpBackend = $httpBackend
@@ -65,7 +87,6 @@ describe "Resques", ->
     beforeEach ->
       receivedResques = null
       errorResponse   = null
-
 
     it 'returns from the backend and calls success', ->
       httpBackend.expectGET(/\/resques/).respond(fakeResques)
@@ -193,6 +214,37 @@ describe "Resques", ->
       httpBackend.expectGET(/\/resques\/foobar\/jobs\/waiting/).respond(500)
       
       service.jobsWaiting({ name: "foobar" },success,failure)
+      httpBackend.flush()
+
+      expect(receivedJobs).toBe(null)
+      expect(errorResponse).toNotBe(null)
+
+  describe 'jobsFailed', ->
+    receivedJobs  = null
+    errorResponse = null
+
+    success = (jobs)         -> receivedJobs = jobs
+    failure = (httpResponse) -> errorResponse = httpResponse
+
+    beforeEach ->
+      receivedJobs  = null
+      errorResponse = null
+
+
+    it 'returns from the backend and calls success', ->
+      httpBackend.expectGET(/\/resques\/foobar\/jobs\/failed.*count=12.*start=2/).respond(fakeFailedJobs)
+
+      service.jobsFailed({ name: "foobar"},2,12,success,failure)
+
+      httpBackend.flush()
+
+      expect(receivedJobs).toEqualData(fakeFailedJobs)
+      expect(errorResponse).toBe(null)
+
+    it 'returns from the backend and calls failure', ->
+      httpBackend.expectGET(/\/resques\/foobar\/jobs\/failed/).respond(500)
+      
+      service.jobsFailed({ name: "foobar" },2,12,success,failure)
       httpBackend.flush()
 
       expect(receivedJobs).toBe(null)

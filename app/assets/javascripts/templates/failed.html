@@ -2,7 +2,7 @@
 <div class="container">
   <section class="row">
     <header class="col-md-12">
-      <h1 class="text-center">2 Failed Jobs <small>{{resqueSelected}}</small></h1>
+      <h1 class="text-center">{{numJobsFailed}} Job<span ng-if="numJobsFailed != 1">s</span> Failed <small>{{resqueSelected}}</small></h1>
     </header>
     <div class="pull-right">
       <div class="btn-group">
@@ -13,14 +13,17 @@
     </div>
     <div class="clearfix"></div>
     <hr>
-    <article>
+    <a name="top"></a>
+    <article ng-repeat="job in jobsFailed track by $index" class="failed-job">
       <header>
-        <h1 class="h3 mt-none">UserWelcomeMailerJob<br class="visible-xs"> <small>Failed at 5/01/2014 12:34PM EST</small></h1>
-        <h2 class="h4 mt-none"><a href="https://www.google.com/search?q=Resque::TermException%20SIGTERM" target='google'>Resque::TermException - SIGTERM</a></h2>
+        <h1 class="h3 mt-none">{{job.payload.class}} <span class="h4"><span class="label label-info">{{job.queue}}</span></span></h1>
+        <h2 class="h4 mt-none"><a ng-href="https://www.google.com/search?q={{job.exception | encodeuri }}%20{{job.error | encodeuri }}" target='google'>{{job.exception}} - {{job.error}}</a></h2>
+        <h3 class="h4"><small>Failed {{job.failedAt | date:'MMM dd, yyyy HH:mm:ss Z'}}</small></h2>
+        <h4 class="h6"><small>{{job.worker}}</small></h4>
       </header>
       <p>
         <code class="payload">
-          [ 12345, 7683 ]
+          {{job.payload.args}}
         </code>
       </p>
       <div class="btn-toolbar" role="toolbar">
@@ -32,90 +35,22 @@
         <div class="visible-xs mt-1">&nbsp;</div>
         <div class="btn-group">
           <a href="" ng-click="" class="btn btn-sm btn-default"><i aria-hidden="true" class="glyphicon glyphicon-envelope"></i> Email</a>
-          <a href="" ng-click="showDetails()" class="btn btn-sm btn-warning">
+          <a href="" ng-click="toggleBacktrace(job)" class="btn btn-sm btn-warning">
             Backtrace
-            <i aria-hidden="true" ng-if="exceptionCollapsed" class="glyphicon glyphicon-chevron-right"></i> 
-            <i aria-hidden="true" ng-if="!exceptionCollapsed" class="glyphicon glyphicon-chevron-down"></i> 
+            <i aria-hidden="true" ng-if="!backtraceShowing(job)" class="glyphicon glyphicon-chevron-right"></i> 
+            <i aria-hidden="true" ng-if="backtraceShowing(job)" class="glyphicon glyphicon-chevron-down"></i> 
           </a>
         </div>
       </div>
-      <div collapse="exceptionCollapsed" class="mt-1">
-        <pre class="well pre-scroll-horizontal">
-/Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:401:in `wait2': Interrupt
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:401:in `watch_for_termination'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:60:in `start'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/cli.rb:41:in `start'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/command.rb:27:in `run'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/invocation.rb:126:in `invoke_command'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor.rb:359:in `dispatch'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/base.rb:440:in `start'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/bin/foreman:7:in `&lt;top (required)&gt;'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/foreman:23:in `load'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/foreman:23:in `&lt;main&gt;'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/ruby_executable_hooks:15:in `eval'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/ruby_executable_hooks:15:in `&lt;main&gt;'
-        </pre>
+      <div collapse="!backtraceShowing(job)" class="mt-1">
+        <pre class="well pre-scroll-horizontal mb-none">{{job.backtrace | join }}</pre>
       </div>
     </article>
-    <hr>
-    <article>
-      <header>
-        <h1 class="h3 mt-none">UserWelcomeMailerJob<br class="visible-xs"> <small>Failed at 5/01/2014 12:34PM EST</small>
-        </h1>
-        <h2 class="h4 mt-none"><a href="https://www.google.com/search?q=Resque::TermException%20SIGTERM" target='google'>Resque::TermException - SIGTERM</a></h2>
-      </header>
-      <p>
-        <code class="payload">
-          [ 12345, 7683 ]
-        </code>
-      </p>
-      <p>
-        <span class="label label-success">Retried 4 minutes ago</span>
-        </p>
-      <div class="btn-toolbar" role="toolbar">
-        <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-primary"><i aria-hidden="true" class="glyphicon glyphicon-repeat"></i> Retry &amp; Clear</button>
-          <button type="button" class="btn btn-sm btn-default">Retry</button>
-          <button type="button" class="btn btn-sm btn-default">Clear</button>
-        </div>
-        <div class="visible-xs mt-1">&nbsp;</div>
-        <div class="btn-group">
-          <a href="" ng-click="" class="btn btn-sm btn-default"><i aria-hidden="true" class="glyphicon glyphicon-envelope"></i> Email</a>
-          <a href="" ng-click="showDetails()" class="btn btn-sm btn-warning">
-            Backtrace
-            <i aria-hidden="true" ng-if="exceptionCollapsed" class="glyphicon glyphicon-chevron-right"></i> 
-            <i aria-hidden="true" ng-if="!exceptionCollapsed" class="glyphicon glyphicon-chevron-down"></i> 
-          </a>
-        </div>
-      </div>
-      <div collapse="exceptionCollapsed" class="mt-1">
-        <pre class="well pre-scroll-horizontal">
-/Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:401:in `wait2': Interrupt
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:401:in `watch_for_termination'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/engine.rb:60:in `start'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/lib/foreman/cli.rb:41:in `start'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/command.rb:27:in `run'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/invocation.rb:126:in `invoke_command'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor.rb:359:in `dispatch'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/thor-0.19.1/lib/thor/base.rb:440:in `start'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/gems/foreman-0.63.0/bin/foreman:7:in `&lt;top (required)&gt;'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/foreman:23:in `load'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/foreman:23:in `&lt;main&gt;'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/ruby_executable_hooks:15:in `eval'
-  from /Users/davec/.rvm/gems/ruby-2.1.0@spectre/bin/ruby_executable_hooks:15:in `&lt;main&gt;'
-        </pre>
-      </div>
-    </article>
-    <hr>
-    <footer class="text-center">
+    <footer class="text-center" ng-if="pages.length > 1">
       <nav>
         <ul class="pagination">
           <li><a href="#">&laquo;</a></li>
-          <li><a href="#">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">4</a></li>
-          <li><a href="#">5</a></li>
+          <li ng-repeat="page in pages" ng-class="{ 'active': page.page == currentPage }"><a href="" ng-click="goToPage(page)" title="Page {{page.page}} of Results">{{page.page}}</a></li>
           <li><a href="#">&raquo;</a></li>
         </ul>
       </nav>

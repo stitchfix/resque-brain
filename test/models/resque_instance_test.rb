@@ -4,11 +4,56 @@ require 'support/fake_resque_data_store'
 rails_require 'models/resque_instance'
 rails_require 'models/job'
 rails_require 'models/running_job'
+rails_require 'models/failed_job'
 
 class ResqueInstanceTest < MiniTest::Test
   def test_failed
-    assert_equal 10,create_test_instance.failed
+    assert_equal 3,create_test_instance.failed
   end
+
+  def test_get_jobs_failed
+    jobs_failed = create_test_instance.jobs_failed
+
+    assert_equal 3,jobs_failed.size
+
+    assert_equal   "SomeFailingJob"         , jobs_failed[0].payload["class"]
+    assert_equal   [500145,1114130]         , jobs_failed[0].payload["args"]
+    assert_equal   "mail"                   , jobs_failed[0].queue
+    assert_equal   "SIGTERM"                , jobs_failed[0].error
+    assert_equal   "Resque::TermException"  , jobs_failed[0].exception
+    assert_equal   "some_worker_id"         , jobs_failed[0].worker
+    assert_in_delta Time.now.utc - 3600     , jobs_failed[0].failed_at, 5 # seconds
+
+    assert_equal   "SomeOtherFailingJob"   , jobs_failed[1].payload["class"]
+    assert_equal  ["blah"]                 , jobs_failed[1].payload["args"]
+    assert_equal   "cache"                 , jobs_failed[1].queue
+    assert_equal   "No Such key 'foobar'"  , jobs_failed[1].error
+    assert_equal   "KeyError"              , jobs_failed[1].exception
+    assert_equal   "some_other_worker_id"  , jobs_failed[1].worker
+    assert_in_delta Time.now.utc           , jobs_failed[1].failed_at, 5 # seconds
+
+    assert_nil jobs_failed[2].payload["class"]
+    assert_nil jobs_failed[2].payload["args"]
+    assert_nil jobs_failed[2].queue
+    assert_nil jobs_failed[2].exception
+    assert_nil jobs_failed[2].failed_at
+    assert_nil jobs_failed[2].error
+  end
+
+  def test_get_jobs_failed_paginated
+    jobs_failed = create_test_instance.jobs_failed(0,1)
+
+    assert_equal 1,jobs_failed.size
+
+    assert_equal   "SomeFailingJob"         , jobs_failed[0].payload["class"]
+    assert_equal   [500145,1114130]         , jobs_failed[0].payload["args"]
+    assert_equal   "mail"                   , jobs_failed[0].queue
+    assert_equal   "SIGTERM"                , jobs_failed[0].error
+    assert_equal   "Resque::TermException"  , jobs_failed[0].exception
+    assert_equal   "some_worker_id"         , jobs_failed[0].worker
+    assert_in_delta Time.now.utc - 3600     , jobs_failed[0].failed_at, 5 # seconds
+  end
+
 
   def test_running
     assert_equal 4,create_test_instance.running

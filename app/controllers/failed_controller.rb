@@ -5,9 +5,9 @@ class FailedController < ApplicationController
   end
 
   def index
-    @jobs_failed = resques.find(params[:resque_id]).jobs_failed.sort_by { |job|
-      job.failed_at.to_i
-    }.reverse
+    start = params[:start].to_i
+    count = params[:count].try(:to_i) || :all
+    @jobs_failed = resques.find(params[:resque_id]).jobs_failed(start,count)
   end
 
 end

@@ -3,7 +3,7 @@ require 'support/fake_resque_instance'
 
 class FailedControllerTest < ActionController::TestCase
   setup do
-    @jobs_failed_unsorted = [
+    @jobs_failed = [
       FailedJob.new(
         failed_at: Time.now.utc - 3.hours,
         payload: {
@@ -43,11 +43,29 @@ class FailedControllerTest < ActionController::TestCase
         ],
        worker: "some_other_worker_id",
        queue: "cache"
+      ),
+      FailedJob.new(
+        failed_at: Time.now.utc + 1.second,
+        payload: {
+          class: "YetAnotherOtherFailingJob",
+          args: ["crud",12]
+        },
+        exception: "RuntimeError",
+        error: "OH NOES",
+        backtrace: [
+          "/app/app/services/blah_whatever.rb:57:in `block in whatever!'",
+          "/app/app/services/blah_whatever.rb:77:in `call'",
+          "/app/app/services/blah_whatever.rb:77:in `with_whatever'",
+          "/app/app/jobs/concerns/whatevering_job.rb:6:in `augment_exceptions_with_remediation_help'",
+          "/app/app/jobs/whatever_inconsistent_blagh_job.rb:8:in `perform'"
+        ],
+       worker: "yet_some_other_worker_id",
+       queue: "cache"
       )
     ]
     resques = Resques.new([
       FakeResqueInstance.new(name: "test1",
-                             jobs_failed: @jobs_failed_unsorted)
+                             jobs_failed: @jobs_failed)
     ])
     @original_resques = FailedController.resques
     FailedController.resques = resques
@@ -64,19 +82,69 @@ class FailedControllerTest < ActionController::TestCase
 
     result = JSON.parse(response.body)
 
+    assert_equal 3, result.size
+
+    assert_equal @jobs_failed[0].exception             , result[0]["exception"]
+    assert_equal @jobs_failed[0].queue                 , result[0]["queue"]
+    assert_equal @jobs_failed[0].worker                , result[0]["worker"]
+    assert_equal @jobs_failed[0].backtrace.size        , result[0]["backtrace"].size
+    assert_equal @jobs_failed[0].failed_at.to_i * 1000 , result[0]["failedAt"]
+
+    assert_equal @jobs_failed[1].exception             , result[1]["exception"]
+    assert_equal @jobs_failed[1].queue                 , result[1]["queue"]
+    assert_equal @jobs_failed[1].worker                , result[1]["worker"]
+    assert_equal @jobs_failed[1].backtrace.size        , result[1]["backtrace"].size
+    assert_equal @jobs_failed[1].failed_at.to_i * 1000 , result[1]["failedAt"]
+
+    assert_equal @jobs_failed[2].exception             , result[2]["exception"]
+    assert_equal @jobs_failed[2].queue                 , result[2]["queue"]
+    assert_equal @jobs_failed[2].worker                , result[2]["worker"]
+    assert_equal @jobs_failed[2].backtrace.size        , result[2]["backtrace"].size
+    assert_equal @jobs_failed[2].failed_at.to_i * 1000 , result[2]["failedAt"]
+  end
+
+  test "index with pagination" do
+    get :index, resque_id: "test1", format: :json, count: "2", start: "0"
+
+    assert_response :success
+
+    result = JSON.parse(response.body)
+
     assert_equal 2, result.size
 
-    assert_equal @jobs_failed_unsorted[1].exception             , result[0]["exception"]
-    assert_equal @jobs_failed_unsorted[1].queue                 , result[0]["queue"]
-    assert_equal @jobs_failed_unsorted[1].worker                , result[0]["worker"]
-    assert_equal @jobs_failed_unsorted[1].backtrace.size        , result[0]["backtrace"].size
-    assert_equal @jobs_failed_unsorted[1].failed_at.to_i * 1000 , result[0]["failedAt"]
+    assert_equal @jobs_failed[0].exception             , result[0]["exception"]
+    assert_equal @jobs_failed[0].queue                 , result[0]["queue"]
+    assert_equal @jobs_failed[0].worker                , result[0]["worker"]
+    assert_equal @jobs_failed[0].backtrace.size        , result[0]["backtrace"].size
+    assert_equal @jobs_failed[0].failed_at.to_i * 1000 , result[0]["failedAt"]
 
-    assert_equal @jobs_failed_unsorted[0].exception             , result[1]["exception"]
-    assert_equal @jobs_failed_unsorted[0].queue                 , result[1]["queue"]
-    assert_equal @jobs_failed_unsorted[0].worker                , result[1]["worker"]
-    assert_equal @jobs_failed_unsorted[0].backtrace.size        , result[1]["backtrace"].size
-    assert_equal @jobs_failed_unsorted[0].failed_at.to_i * 1000 , result[1]["failedAt"]
+    assert_equal @jobs_failed[1].exception             , result[1]["exception"]
+    assert_equal @jobs_failed[1].queue                 , result[1]["queue"]
+    assert_equal @jobs_failed[1].worker                , result[1]["worker"]
+    assert_equal @jobs_failed[1].backtrace.size        , result[1]["backtrace"].size
+    assert_equal @jobs_failed[1].failed_at.to_i * 1000 , result[1]["failedAt"]
+  end
+
+  test "index with pagination in the middle" do
+    get :index, resque_id: "test1", format: :json, count: "2", start: "1"
+
+    assert_response :success
+
+    result = JSON.parse(response.body)
+
+    assert_equal 2, result.size
+
+    assert_equal @jobs_failed[1].exception             , result[0]["exception"]
+    assert_equal @jobs_failed[1].queue                 , result[0]["queue"]
+    assert_equal @jobs_failed[1].worker                , result[0]["worker"]
+    assert_equal @jobs_failed[1].backtrace.size        , result[0]["backtrace"].size
+    assert_equal @jobs_failed[1].failed_at.to_i * 1000 , result[0]["failedAt"]
+
+    assert_equal @jobs_failed[2].exception             , result[1]["exception"]
+    assert_equal @jobs_failed[2].queue                 , result[1]["queue"]
+    assert_equal @jobs_failed[2].worker                , result[1]["worker"]
+    assert_equal @jobs_failed[2].backtrace.size        , result[1]["backtrace"].size
+    assert_equal @jobs_failed[2].failed_at.to_i * 1000 , result[1]["failedAt"]
   end
 
 end

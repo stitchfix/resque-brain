@@ -41,3 +41,9 @@
   word-wrap: normal; 
   white-space: pre;
 }
+
+.failed-job {
+  border-bottom: solid thin #ddd;
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
