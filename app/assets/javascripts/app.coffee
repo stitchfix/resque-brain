@@ -18,7 +18,7 @@ resqueBrain.config([ '$routeProvider',
       )
       .when('/:resque',
         templateUrl: "overview.html"
-        controller: 'DashboardController'
+        controller: 'OverviewController'
       )
       .when('/:resque/running',
         templateUrl: "running.html"
@@ -38,14 +38,3 @@ controllers = angular.module('controllers',[])
 directives  = angular.module('directives',[])
 services    = angular.module('services',[])
 filters     = angular.module('filters',[])
-
-controllers.controller("DashboardController", [
-  '$scope', '$location', '$modal', '$route', 'Resques',
-  ($scope ,  $location ,  $modal ,  $route ,  resques)->
-
-
-    $scope.exceptionCollapsed = true
-    $scope.showDetails = ->
-      $scope.exceptionCollapsed = !$scope.exceptionCollapsed
-
-])
