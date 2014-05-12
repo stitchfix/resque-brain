@@ -1,7 +1,7 @@
 controllers = angular.module('controllers')
 controllers.controller("SummaryController", [
-  '$scope', 'Resques',
-  ($scope ,  Resques)->
+  '$scope', 'Resques', "GenericErrorHandling",
+  ($scope ,  Resques ,  GenericErrorHandling)->
 
     $scope.loading             = true
     $scope.allResques          = []
@@ -22,7 +22,7 @@ controllers.controller("SummaryController", [
 
     Resques.summary(
       setResquesAndDeriveTotals,
-      ( (httpResponse)-> alert("Something went wrong") )
+      GenericErrorHandling.onFail($scope)
     )
 
 ])

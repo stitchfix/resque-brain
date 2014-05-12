@@ -19,4 +19,5 @@
 //= require lodash/dist/lodash
 //= require moment/moment
 //= require angular-moment/angular-moment
+//= require angular-flash/dist/angular-flash
 //= require_tree .

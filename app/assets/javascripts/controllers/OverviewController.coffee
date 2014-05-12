@@ -1,7 +1,7 @@
 controllers = angular.module("controllers")
 controllers.controller("OverviewController", [
-  "$scope", "$routeParams", "Resques",
-  ($scope ,  $routeParams ,  Resques)->
+  "$scope", "$routeParams", "Resques", "GenericErrorHandling",
+  ($scope ,  $routeParams ,  Resques ,  GenericErrorHandling)->
 
     $scope.loading = true
 
@@ -10,6 +10,6 @@ controllers.controller("OverviewController", [
         $scope.overview = (_.find(summary, (oneSummary)-> oneSummary.name == $routeParams.resque) or {})
         $scope.loading = false
       ),
-      ( (httpResponse)-> alert("Problem") )
+      GenericErrorHandling.onFail($scope)
     )
 ])

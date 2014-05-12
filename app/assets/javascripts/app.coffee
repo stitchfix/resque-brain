@@ -1,17 +1,28 @@
 resqueBrain = angular.module('resqueBrain',[
-  'templates',
   'ngRoute',
   'ngResource',
+
+  'templates',
   'ui.bootstrap',
   'angularMoment',
+  'angular-flash.service',
+  'angular-flash.flash-alert-directive'
+
   'controllers',
   'directives',
   'services',
   'filters'
 ])
 
-resqueBrain.config([ '$routeProvider',
-  ($routeProvider)->
+resqueBrain.config([
+  '$routeProvider', 'flashProvider'
+  ($routeProvider ,  flashProvider)->
+
+    flashProvider.errorClassnames.push("alert-danger")
+    flashProvider.warnClassnames.push("alert-warning")
+    flashProvider.infoClassnames.push("alert-info")
+    flashProvider.successClassnames.push("alert-success")
+
     $routeProvider
       .when('/',
         templateUrl: "summary.html"

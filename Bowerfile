@@ -6,4 +6,5 @@ asset 'angular-mocks'
 asset 'angular-resource'
 asset 'lodash'
 asset 'angular-moment'
+asset 'angular-flash'
 # vim: ft=ruby

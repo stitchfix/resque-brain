@@ -1,7 +1,7 @@
 controllers = angular.module("controllers")
 controllers.controller("FailedController", [
-  "$scope", "$modal", "$routeParams", "$location", "Resques",
-  ($scope ,  $modal ,  $routeParams ,  $location ,  Resques)->
+  "$scope", "$modal", "$routeParams", "$location", "Resques", "GenericErrorHandling",
+  ($scope ,  $modal ,  $routeParams ,  $location ,  Resques ,  GenericErrorHandling)->
 
     PAGE_SIZE = 10
 
@@ -34,7 +34,7 @@ controllers.controller("FailedController", [
         $scope.jobsFailed = jobs
         $scope.loading    = false
       ),
-      ( (httpResponse)-> alert("Problem") )
+      GenericErrorHandling.onFail($scope)
     )
 
     Resques.summary(
@@ -48,6 +48,6 @@ controllers.controller("FailedController", [
           $scope.pages.push(page)
           page += 1
       ),
-      ( (httpResponse)-> alert("Problem") )
+      GenericErrorHandling.onFail($scope)
     )
 ])

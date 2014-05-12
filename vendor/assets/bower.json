@@ -8,6 +8,7 @@
     "angular-mocks": "latest",
     "angular-resource": "latest",
     "lodash": "latest",
-    "angular-moment": "latest"
+    "angular-moment": "latest",
+    "angular-flash": "latest"
   }
 }

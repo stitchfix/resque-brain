@@ -1,7 +1,7 @@
 controllers = angular.module("controllers")
 controllers.controller("RunningController", [
-  "$scope", "$modal", "$routeParams", "Resques",
-  ($scope ,  $modal ,  $routeParams ,  Resques)->
+  "$scope", "$modal", "$routeParams", "Resques", "GenericErrorHandling",
+  ($scope ,  $modal ,  $routeParams ,  Resques ,  GenericErrorHandling)->
 
     $scope.loading = true
 
@@ -10,7 +10,7 @@ controllers.controller("RunningController", [
         $scope.jobsRunning = jobs
         $scope.loading     = false
       ),
-      ( (httpResponse)-> alert("Problem") )
+      GenericErrorHandling.onFail($scope)
     )
 
     $scope.killJob = (job)->
