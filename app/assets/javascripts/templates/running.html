@@ -10,7 +10,7 @@
           <tr>
             <th>Queue</th>
             <th>Job</th>
-            <th>Runtime</th>
+            <th>Started</th>
             <th>Payload</th>
             <th>Worker</th>
           </tr>
@@ -19,7 +19,7 @@
           <tr ng-repeat="job in jobsRunning" ng-class="{ 'warning': job.tooLong }">
             <td>{{job.queue}}</td>
             <td>{{job.payload.class}}</td>
-            <td>{{job.runtime}}</td>
+            <td>{{job.startedAt | amCalendar }}</td>
             <td><code class="payload">{{job.payload.args}}</code></td>
             <td>
               {{job.worker}}

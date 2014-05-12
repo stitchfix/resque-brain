@@ -3,6 +3,7 @@ resqueBrain = angular.module('resqueBrain',[
   'ngRoute',
   'ngResource',
   'ui.bootstrap',
+  'angularMoment',
   'controllers',
   'directives',
   'services',

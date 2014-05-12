@@ -5,4 +5,5 @@ asset 'angular-ui-bootstrap-bower'
 asset 'angular-mocks'
 asset 'angular-resource'
 asset 'lodash'
+asset 'angular-moment'
 # vim: ft=ruby

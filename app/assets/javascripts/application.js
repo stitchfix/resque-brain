@@ -17,4 +17,6 @@
 //= require angular-resource/angular-resource
 //= require angular-ui-bootstrap-bower
 //= require lodash/dist/lodash
+//= require moment/moment
+//= require angular-moment/angular-moment
 //= require_tree .
