@@ -7,6 +7,8 @@ controllers.controller("FailedController", [
 
     backtracesShowing = {}
 
+    $scope.loading = true
+
     $scope.backtraceShowing = (job)->
       index = _.indexOf($scope.jobsFailed,job)
       backtracesShowing[index]
@@ -28,7 +30,10 @@ controllers.controller("FailedController", [
 
     $scope.currentPage = parseInt($routeParams.page or "1")
     Resques.jobsFailed( { name: $routeParams.resque },($scope.currentPage - 1) * PAGE_SIZE,PAGE_SIZE,
-      ( (jobs)-> $scope.jobsFailed = jobs),
+      ( (jobs)->
+        $scope.jobsFailed = jobs
+        $scope.loading    = false
+      ),
       ( (httpResponse)-> alert("Problem") )
     )
 

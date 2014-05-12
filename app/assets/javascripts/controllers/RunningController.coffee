@@ -3,8 +3,13 @@ controllers.controller("RunningController", [
   "$scope", "$modal", "$routeParams", "Resques",
   ($scope ,  $modal ,  $routeParams ,  Resques)->
 
+    $scope.loading = true
+
     Resques.jobsRunning( { name: $routeParams.resque },
-      ( (jobs)-> $scope.jobsRunning = jobs ),
+      ( (jobs)->
+        $scope.jobsRunning = jobs
+        $scope.loading     = false
+      ),
       ( (httpResponse)-> alert("Problem") )
     )
 
