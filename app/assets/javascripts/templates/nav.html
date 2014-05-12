@@ -8,8 +8,8 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" ng-if="!resqueSelected" href="">Resque-Brain</a>
-      <a class="navbar-brand" ng-if="resqueSelected" href="">{{resqueSelected}}</a>
+      <a class="navbar-brand" ng-if="!resqueSelected" ng-click="viewSummary()" href="">Resque-Brain</a>
+      <a class="navbar-brand" ng-if="resqueSelected"  ng-click="viewOverview()"  href="">{{resqueSelected}}</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
