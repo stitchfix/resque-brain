@@ -1,13 +1,12 @@
 require 'rubygems'
 require 'resque'
 require 'resque/data_store'
+require 'support/explicit_interface_implementation'
 
 class FakeResqueDataStore
-  def self.implement!(method_name)
-    unless Resque::DataStore.instance_methods.include?(method_name)
-      raise "Resque::DataStore does not implement #{method_name}"
-    end
-  end
+  extend ExplicitInterfaceImplementation
+  implements Resque::DataStore
+
   QUEUES = {
     "foo" => [
       { "class" => "FooJob", "args" => [1] },
@@ -77,16 +76,26 @@ class FakeResqueDataStore
     }
   ]
 
+  attr_reader :unregistered_workers,
+              :failed,
+              :queues
+
+  def initialize
+    @unregistered_workers = []
+    @failed = FAILED.dup
+    @queues = QUEUES.dup
+  end
+
   implement! def queue_names
-    QUEUES.keys
+    @queues.keys
   end
 
   implement! def queue_size(queue_name)
-    QUEUES[queue_name].size
+    @queues[queue_name].size
   end
 
   implement! def num_failed
-    FAILED.size
+    @failed.size
   end
 
   implement! def worker_ids
@@ -100,11 +109,25 @@ class FakeResqueDataStore
   end
 
   implement! def everything_in_queue(queue)
-    QUEUES[queue].map { |_| Resque.encode(_) }
+    @queues[queue].map { |_| Resque.encode(_) }
   end
 
-  implement!  def list_range(key, start = 0, count = 1)
+  implement! def list_range(key, start = 0, count = 1)
     raise 'only failed is allowed' unless key == :failed
-    FAILED[start..(count-1)].map { |_| Resque.encode(_) }
+    result = @failed[start..(start + count-1)].map { |_| Resque.encode(_) }
+    if count == 1
+      result.first
+    else
+      result
+    end
+  end
+
+  implement! def update_item_in_failed_queue(index,json)
+    @failed[index] = Resque.decode(json)
+  end
+
+  implement! def push_to_queue(queue,json)
+    @queues[queue.to_s] ||= []
+    @queues[queue.to_s] << Resque.decode(json)
   end
 end

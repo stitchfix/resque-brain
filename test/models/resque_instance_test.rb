@@ -23,6 +23,7 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal   "Resque::TermException"  , jobs_failed[0].exception
     assert_equal   "some_worker_id"         , jobs_failed[0].worker
     assert_in_delta Time.now.utc - 3600     , jobs_failed[0].failed_at, 5 # seconds
+    assert_nil                                jobs_failed[0].retried_at
 
     assert_equal   "SomeOtherFailingJob"   , jobs_failed[1].payload["class"]
     assert_equal  ["blah"]                 , jobs_failed[1].payload["args"]
@@ -31,6 +32,7 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal   "KeyError"              , jobs_failed[1].exception
     assert_equal   "some_other_worker_id"  , jobs_failed[1].worker
     assert_in_delta Time.now.utc           , jobs_failed[1].failed_at, 5 # seconds
+    assert_nil                               jobs_failed[1].retried_at
 
     assert_nil jobs_failed[2].payload["class"]
     assert_nil jobs_failed[2].payload["args"]
@@ -115,9 +117,26 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal 7,create_test_instance.waiting
   end
 
-private
+  def test_retry_job
+    resque_data_store = fake_resque_data_store
+    instance = create_test_instance(resque_data_store: resque_data_store)
+    instance.retry_job(1)
 
-  def create_test_instance
-    ResqueInstance.new(name: "whatever", resque_data_store: FakeResqueDataStore.new)
+    refute_nil resque_data_store.queues["cache"], "Expected the retry to create the 'cache' queue, got #{resque_data_store.queues.keys}"
+
+    queued_job = resque_data_store.queues["cache"][-1]
+    assert_equal   "SomeOtherFailingJob"   , queued_job["class"]
+    assert_equal  ["blah"]                 , queued_job["args"]
+    assert_in_delta Time.now.utc           , instance.jobs_failed[1].retried_at, 5 # seconds
+
+  end
+
+private
+  def fake_resque_data_store
+    FakeResqueDataStore.new
+  end
+
+  def create_test_instance(resque_data_store: fake_resque_data_store)
+    ResqueInstance.new(name: "whatever", resque_data_store: resque_data_store)
   end
 end

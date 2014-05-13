@@ -5,6 +5,7 @@ class FailedJob < Job
   attr_reader :error
   attr_reader :backtrace
   attr_reader :worker
+  attr_reader :retried_at
 
   def initialize(attributes={})
     super(attributes)
@@ -13,5 +14,6 @@ class FailedJob < Job
     @error      = attributes[:error]
     @backtrace  = attributes[:backtrace]
     @worker     = attributes[:worker]
+    @retried_at = attributes[:retried_at]
   end
 end

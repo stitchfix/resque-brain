@@ -10,4 +10,7 @@ class FailedController < ApplicationController
     @jobs_failed = resques.find(params[:resque_id]).jobs_failed(start,count)
   end
 
+  def retry
+  end
+
 end

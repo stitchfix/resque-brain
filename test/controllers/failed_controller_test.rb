@@ -42,7 +42,8 @@ class FailedControllerTest < ActionController::TestCase
           "/app/app/jobs/whatever_inconsistent_blagh_job.rb:8:in `perform'"
         ],
        worker: "some_other_worker_id",
-       queue: "cache"
+       queue: "cache",
+       retried_at: Time.now.utc + 2.seconds
       ),
       FailedJob.new(
         failed_at: Time.now.utc + 1.second,
@@ -89,18 +90,25 @@ class FailedControllerTest < ActionController::TestCase
     assert_equal @jobs_failed[0].worker                , result[0]["worker"]
     assert_equal @jobs_failed[0].backtrace.size        , result[0]["backtrace"].size
     assert_equal @jobs_failed[0].failed_at.to_i * 1000 , result[0]["failedAt"]
+    assert_nil                                           result[0]["retriedAt"]
 
     assert_equal @jobs_failed[1].exception             , result[1]["exception"]
     assert_equal @jobs_failed[1].queue                 , result[1]["queue"]
     assert_equal @jobs_failed[1].worker                , result[1]["worker"]
     assert_equal @jobs_failed[1].backtrace.size        , result[1]["backtrace"].size
     assert_equal @jobs_failed[1].failed_at.to_i * 1000 , result[1]["failedAt"]
+    assert_equal @jobs_failed[1].retried_at.to_i * 1000, result[1]["retriedAt"]
 
     assert_equal @jobs_failed[2].exception             , result[2]["exception"]
     assert_equal @jobs_failed[2].queue                 , result[2]["queue"]
     assert_equal @jobs_failed[2].worker                , result[2]["worker"]
     assert_equal @jobs_failed[2].backtrace.size        , result[2]["backtrace"].size
     assert_equal @jobs_failed[2].failed_at.to_i * 1000 , result[2]["failedAt"]
+    assert_nil                                           result[2]["retriedAt"]
+  end
+
+  test "retry one job, don't clear it" do
+    post :retry, resque_id: "test1", id: 1, format: :json
   end
 
   test "index with pagination" do

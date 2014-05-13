@@ -65,6 +65,7 @@ class ResqueInstance
   def jobs_failed(start=0,count=:all)
     count = @resque_data_store.num_failed if count == :all
     failed_payloads = @resque_data_store.list_range(:failed,start,count)
+    failed_payloads = [failed_payloads] unless failed_payloads.kind_of?(Array)
     return [] if failed_payloads.nil?
     failed_payloads.map { |json|
       Resque.decode(json)
@@ -76,9 +77,21 @@ class ResqueInstance
         error: failed_job["error"],
         backtrace: failed_job["backtrace"],
         worker: failed_job["worker"],
-        failed_at: (Time.parse(failed_job["failed_at"]) rescue nil)
+        failed_at: (Time.parse(failed_job["failed_at"]) rescue nil),
+        retried_at: (Time.parse(failed_job["retried_at"]) rescue nil)
       )
     }
+  end
+
+  def retry_job(index_in_failed_queue)
+    item = Resque.decode(@resque_data_store.list_range(:failed,index_in_failed_queue))
+    item['retried_at'] = Time.now.strftime("%Y/%m/%d %H:%M:%S")
+    @resque_data_store.update_item_in_failed_queue(index_in_failed_queue,Resque.encode(item))
+    @resque_data_store.push_to_queue(item["queue"],Resque.encode(item["payload"]))
+  end
+
+  def kill_worker(worker_id)
+    raise
   end
 
 private
