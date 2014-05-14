@@ -1,8 +1,5 @@
 class FailedController < ApplicationController
-
-  cattr_accessor :resques, instance_writer: false do
-    RESQUES
-  end
+  include Concerns::InjectibleResqueInstances
 
   def index
     start = params[:start].to_i
@@ -11,7 +8,7 @@ class FailedController < ApplicationController
   end
 
   def retry
-    resques.find(params[:resque_id]).retry_job(params[:id].to_i)
+    resque.retry_job(params[:id].to_i)
     render nothing: true, status: 204
   end
 
