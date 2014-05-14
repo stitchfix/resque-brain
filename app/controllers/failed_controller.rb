@@ -11,6 +11,8 @@ class FailedController < ApplicationController
   end
 
   def retry
+    resques.find(params[:resque_id]).retry_job(params[:id].to_i)
+    render nothing: true, status: 204
   end
 
 end

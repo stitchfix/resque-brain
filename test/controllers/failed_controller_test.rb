@@ -64,12 +64,11 @@ class FailedControllerTest < ActionController::TestCase
        queue: "cache"
       )
     ]
-    resques = Resques.new([
-      FakeResqueInstance.new(name: "test1",
-                             jobs_failed: @jobs_failed)
-    ])
+
+    @resque_instance  = FakeResqueInstance.new(name: "test1", jobs_failed: @jobs_failed)
     @original_resques = FailedController.resques
-    FailedController.resques = resques
+
+    FailedController.resques = Resques.new([@resque_instance])
   end
 
   teardown do
@@ -105,10 +104,6 @@ class FailedControllerTest < ActionController::TestCase
     assert_equal @jobs_failed[2].backtrace.size        , result[2]["backtrace"].size
     assert_equal @jobs_failed[2].failed_at.to_i * 1000 , result[2]["failedAt"]
     assert_nil                                           result[2]["retriedAt"]
-  end
-
-  test "retry one job, don't clear it" do
-    post :retry, resque_id: "test1", id: 1, format: :json
   end
 
   test "index with pagination" do
@@ -153,6 +148,13 @@ class FailedControllerTest < ActionController::TestCase
     assert_equal @jobs_failed[2].worker                , result[1]["worker"]
     assert_equal @jobs_failed[2].backtrace.size        , result[1]["backtrace"].size
     assert_equal @jobs_failed[2].failed_at.to_i * 1000 , result[1]["failedAt"]
+  end
+
+  test "retry only one job" do
+    post :retry, resque_id: "test1", id: 1, format: :json
+
+    assert_response 204
+    assert_equal [1], @resque_instance.retried_jobs
   end
 
 end
