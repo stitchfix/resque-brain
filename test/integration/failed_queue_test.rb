@@ -35,14 +35,29 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
     assert_equal 10, page.all("article.failed-job").count
     assert page.has_content?("worker0"), page_assertion_error_message(page)
     assert page.has_content?("worker1"), page_assertion_error_message(page)
+    refute page.all("[title='Retry Job 0']").empty?
+    refute page.all("[title='Retry Job 9']").empty?
+    assert page.all("[title='Retry Job 10']").empty?
     refute page.has_content?("worker10"), page_assertion_error_message(page)
 
     first("[title='Page 2 of Results']").click
     assert_equal 10, page.all("article.failed-job").count, page_assertion_error_message(page)
     refute page.has_content?("worker0"), page_assertion_error_message(page)
     refute page.has_content?("worker2"), page_assertion_error_message(page)
+    refute page.all("[title='Retry Job 10']").empty?, page.html
     assert page.has_content?("worker10"), page_assertion_error_message(page)
     assert page.has_content?("worker19"), page_assertion_error_message(page)
     refute page.has_content?("worker20"), page_assertion_error_message(page)
+  end
+
+  test "retry" do
+    visit("/")
+    click_link "View Failed Jobs"
+    sleep 1
+
+    assert page.all("[title='Job 1 retried']").empty?
+    first("[title='Retry Job 1']").click
+    assert page.has_content?("worker1"), page_assertion_error_message(page)
+    refute page.all("[title='Job 1 retried']").empty?
   end
 end

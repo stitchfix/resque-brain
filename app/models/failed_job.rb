@@ -1,14 +1,16 @@
 class FailedJob < Job
 
-  attr_reader :failed_at
-  attr_reader :exception
-  attr_reader :error
-  attr_reader :backtrace
-  attr_reader :worker
-  attr_reader :retried_at
+  attr_reader :id,
+              :failed_at,
+              :exception,
+              :error,
+              :backtrace,
+              :worker,
+              :retried_at
 
   def initialize(attributes={})
     super(attributes)
+    @id         = attributes[:id]
     @failed_at  = attributes[:failed_at]
     @exception  = attributes[:exception]
     @error      = attributes[:error]

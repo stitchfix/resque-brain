@@ -69,8 +69,9 @@ class ResqueInstance
     return [] if failed_payloads.nil?
     failed_payloads.map { |json|
       Resque.decode(json)
-    }.map { |failed_job|
+    }.each_with_index.map { |failed_job,index|
       FailedJob.new(
+        id: index + start,
         queue: failed_job["queue"],
         payload: failed_job["payload"],
         exception: failed_job["exception"],

@@ -28,6 +28,11 @@ controllers.controller("FailedController", [
       if page > 0 and page <= $scope.pages.length
         $location.search( page: page )
 
+    $scope.retry         = (job)->
+    $scope.clear         = (job)->
+    $scope.retryAndClear = (job)->
+
+
     $scope.currentPage = parseInt($routeParams.page or "1")
     Resques.jobsFailed( { name: $routeParams.resque },($scope.currentPage - 1) * PAGE_SIZE,PAGE_SIZE,
       ( (jobs)->
