@@ -1,10 +1,12 @@
 describe "FailedController", ->
-  scope    = null
-  ctrl     = null
-  resques  = null
-  location = null
+  scope      = null
+  ctrl       = null
+  resques    = null
+  failedJobs = null
+  location   = null
 
   jobsFailed = _.map([1,2,3,4,5,6,7,8,9,10,11,12,13], (i)->
+    id: i
     queue: "mail",
     payload: {
       class: "UserWelcomeMailer",
@@ -15,6 +17,19 @@ describe "FailedController", ->
     backtrace: [ "foo.rb", "blah.rb" ]
     error: "SIGTERM"
   )
+
+  updatedJob =
+    id: 2
+    queue: "mail",
+    payload: {
+      class: "UserWelcomeMailer",
+      args: [ 12345 ]
+    }
+    worker: "worker1"
+    exception: "Resque::TermException"
+    backtrace: [ "foo.rb", "blah.rb" ]
+    error: "SIGTERM"
+    retriedAt: (new Date).getTime()
 
   testResque =
     name: "test"
@@ -32,17 +47,22 @@ describe "FailedController", ->
 
   resqueName = 'test'
 
-  setupController = (page)->
-    inject((Resques, $rootScope, $routeParams, $location, $controller)->
-      scope    = $rootScope.$new()
-      location = $location
-      resques  = Resques
+  setupController = (page,andAlso)->
+    inject((Resques, FailedJobs, $rootScope, $routeParams, $location, $controller)->
+      scope      = $rootScope.$new()
+      location   = $location
+      resques    = Resques
+      failedJobs = FailedJobs
       spyOn(resques,"jobsFailed").andCallFake( (resque,start,count,success,failure)->
         success(jobsFailed.slice(start,start + count))
       )
       spyOn(resques,"summary").andCallFake( (success,failure)-> success([testResque,wwwResque]))
+
       $routeParams.resque = resqueName
       $routeParams.page = page if page
+
+      if andAlso
+        andAlso()
 
       ctrl    = $controller('FailedController', $scope: scope)
     )
@@ -76,3 +96,18 @@ describe "FailedController", ->
     it 'fetches the next page of data', ->
       scope.goToPage(2)
       expect(location.search()["page"]).toBe(2)
+
+  describe "retry", ->
+    beforeEach ->
+      setupController(null, ->
+        spyOn(failedJobs,"retry").andCallFake( (resqueName, jobId, success,failure)-> success() )
+        spyOn(failedJobs,"get").andCallFake( (resqueName, jobId, success,failure)-> success(updatedJob) )
+      )
+    it 'fetches the next page of data', ->
+      scope.retry(scope.jobsFailed[1])
+      expect(scope.jobsFailed[1]).toEqualData(updatedJob)
+
+      expect(failedJobs.retry.mostRecentCall.args[0]).toEqualData(resqueName)
+      expect(failedJobs.retry.mostRecentCall.args[1]).toEqualData(jobsFailed[1].id)
+      expect(failedJobs.get.mostRecentCall.args[0]).toEqualData(resqueName)
+      expect(failedJobs.get.mostRecentCall.args[1]).toEqualData(jobsFailed[1].id)

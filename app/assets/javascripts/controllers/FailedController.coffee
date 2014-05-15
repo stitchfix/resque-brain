@@ -1,7 +1,7 @@
 controllers = angular.module("controllers")
 controllers.controller("FailedController", [
-  "$scope", "$modal", "$routeParams", "$location", "Resques", "GenericErrorHandling",
-  ($scope ,  $modal ,  $routeParams ,  $location ,  Resques ,  GenericErrorHandling)->
+  "$scope", "$modal", "$routeParams", "$location", "Resques", "GenericErrorHandling", "FailedJobs", "flash",
+  ($scope ,  $modal ,  $routeParams ,  $location ,  Resques ,  GenericErrorHandling ,  FailedJobs ,  flash)->
 
     PAGE_SIZE = 10
 
@@ -29,6 +29,23 @@ controllers.controller("FailedController", [
         $location.search( page: page )
 
     $scope.retry         = (job)->
+      FailedJobs.retry($routeParams.resque,job.id,
+        (
+          ()->
+            FailedJobs.get($routeParams.resque,job.id,
+              (
+                (job)->
+                  index = _.findIndex($scope.jobsFailed, { id: job.id })
+                  if index > -1
+                    $scope.jobsFailed[index] = job
+                  else
+                    flash.warn = "Retried job isn't in our list—try reloading"
+              ),
+              GenericErrorHandling.onFail($scope)
+            )
+        ),
+        GenericErrorHandling.onFail($scope),
+      )
     $scope.clear         = (job)->
     $scope.retryAndClear = (job)->
 

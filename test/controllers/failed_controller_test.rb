@@ -78,6 +78,22 @@ class FailedControllerTest < ActionController::TestCase
     FailedController.resques = @original_resques
   end
 
+  test "show" do
+    get :show, resque_id: "test1", id: 1, format: :json
+
+    assert_response :success
+
+    result = JSON.parse(response.body)
+
+    assert_equal @jobs_failed[1].exception             , result["exception"]
+    assert_equal @jobs_failed[1].queue                 , result["queue"]
+    assert_equal @jobs_failed[1].worker                , result["worker"]
+    assert_equal @jobs_failed[1].backtrace.size        , result["backtrace"].size
+    assert_equal @jobs_failed[1].failed_at.to_i * 1000 , result["failedAt"]
+    assert_equal @jobs_failed[1].retried_at.to_i * 1000, result["retriedAt"]
+    assert_equal 1                                     , result["id"]
+  end
+
   test "index" do
     get :index, resque_id: "test1", format: :json
 
