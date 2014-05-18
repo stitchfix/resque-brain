@@ -1,8 +1,8 @@
 # TODO
 
 - [ ] Kill Worker
-- [ ] Retry Job
-- [ ] Clear job
+- [x] Retry Job
+- [x] Clear job
 - [ ] Retry & Clear job
 - [ ] Retry All
 - [ ] Clear All
