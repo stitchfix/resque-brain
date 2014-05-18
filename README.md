@@ -85,6 +85,38 @@ Currently, only HTTP Auth is available.  Allow access by setting these in the en
 * `HTTP_AUTH_USERNAME` - username
 * `HTTP_AUTH_PASSWORD` - password
 
+## Local Development
+
+You'll need to do three things:
+
+* Install `Bower` (which requires npm, which requires node)
+* Install PhantomJS
+* Set up your environment:
+
+  Easiest thing is to create a `.env` like so:
+
+  ```
+  RESQUE_BRAIN_INSTANCES=localhost
+  RESQUE_BRAIN_INSTANCES_localhost=redis://localhost:6379
+  HTTP_AUTH_USERNAME=a
+  HTTP_AUTH_PASSWORD=a
+  ```
+
+  Then:
+
+  ```
+  > foreman start
+  ```
+
+  The app will be running on http://localhost:5000
+
+To run tests:
+
+```
+> rake test # run server-side tests
+> rake teaspoon # run JavaScript tests
+```
+
 # Limitations
 
 * This only works with the default Redis-based Failure backend.  It *does* work with resque-retry because resque-retry defers to
@@ -93,3 +125,4 @@ example, is not high on my priority list
 * Just as with resque-web, if multiple people are manipulating the failed queue at the same time bad things will happen.  This is
 a function of the poor design of the failed queue implementation.  Be warned.
 * The Web UI is not extensible, so currently this is no visibility into resque-scheduler or resque-retry.
+
