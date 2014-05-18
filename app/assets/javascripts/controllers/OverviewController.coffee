@@ -3,13 +3,16 @@ controllers.controller("OverviewController", [
   "$scope", "$routeParams", "Resques", "GenericErrorHandling",
   ($scope ,  $routeParams ,  Resques ,  GenericErrorHandling)->
 
-    $scope.loading = true
+    $scope.refresh = ->
+      $scope.loading = true
 
-    Resques.summary(
-      ( (summary)->
-        $scope.overview = (_.find(summary, (oneSummary)-> oneSummary.name == $routeParams.resque) or {})
-        $scope.loading = false
-      ),
-      GenericErrorHandling.onFail($scope)
-    )
+      Resques.summary(
+        ( (summary)->
+          $scope.overview = (_.find(summary, (oneSummary)-> oneSummary.name == $routeParams.resque) or {})
+          $scope.loading = false
+        ),
+        GenericErrorHandling.onFail($scope)
+      )
+
+     $scope.refresh()
 ])

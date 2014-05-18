@@ -3,15 +3,18 @@ controllers.controller("RunningController", [
   "$scope", "$modal", "$routeParams", "Resques", "GenericErrorHandling",
   ($scope ,  $modal ,  $routeParams ,  Resques ,  GenericErrorHandling)->
 
-    $scope.loading = true
+    $scope.refresh = ->
+      $scope.loading = true
 
-    Resques.jobsRunning( { name: $routeParams.resque },
-      ( (jobs)->
-        $scope.jobsRunning = jobs
-        $scope.loading     = false
-      ),
-      GenericErrorHandling.onFail($scope)
-    )
+      Resques.jobsRunning( { name: $routeParams.resque },
+        ( (jobs)->
+          $scope.jobsRunning = jobs
+          $scope.loading     = false
+        ),
+        GenericErrorHandling.onFail($scope)
+      )
+
+    $scope.refresh()
 
     $scope.killJob = (job)->
       modalInstance = $modal.open(

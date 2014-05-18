@@ -32,6 +32,7 @@ controllers.controller("FailedController", [
         "flush"
       )
 
+    $scope.refresh = loadFailedJobs
 
     $scope.loading = true
 

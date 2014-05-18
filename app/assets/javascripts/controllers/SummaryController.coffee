@@ -3,7 +3,6 @@ controllers.controller("SummaryController", [
   '$scope', 'Resques', "GenericErrorHandling",
   ($scope ,  Resques ,  GenericErrorHandling)->
 
-    $scope.loading             = true
     $scope.allResques          = []
     $scope.totalFailed         = 0
     $scope.totalRunning        = 0
@@ -20,9 +19,12 @@ controllers.controller("SummaryController", [
       $scope.totalWaiting = sumField(resques,"waiting")
       $scope.loading      = false
 
-    Resques.summary(
-      setResquesAndDeriveTotals,
-      GenericErrorHandling.onFail($scope)
-    )
+    $scope.refresh = ->
+      $scope.loading = true
+      Resques.summary(
+        setResquesAndDeriveTotals,
+        GenericErrorHandling.onFail($scope)
+      )
 
+    $scope.refresh()
 ])

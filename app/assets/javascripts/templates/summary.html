@@ -6,7 +6,7 @@
     </header>
   </section>
   <article class="col-md-4 col-sm-12 col-xs-12 summary-failed">
-    <section class="panel panel-danger">
+    <section class="panel" ng-class="{ 'panel-info': totalFailed == 0, 'panel-danger': totalFailed != 0 }">
       <header class="panel-heading">
         <h1 class="h3 mt-none mb-none">
           <i aria-hidden='true' class="glyphicon glyphicon-remove"></i>

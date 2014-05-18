@@ -24,7 +24,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Resques <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a ng-click="viewSummary()" href="">Summary</a></li>
+            <li><a ng-click="viewSummary()" href="">All</a></li>
             <li class="divider"></li>
             <li ng-repeat="resque in resques">
               <a ng-click="viewResque(resque)" href="">{{resque.name}}</a>
@@ -32,6 +32,11 @@
           </ul>
         </li>
       </ul>
+      <form class="navbar-form navbar-right" role="search">
+        <button type="button" class="btn btn-link" ng-click="refresh()">
+          <i aria-hidden="true" class="glyphicon glyphicon-retweet"></i> Refresh
+        </button>
+      </form>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>

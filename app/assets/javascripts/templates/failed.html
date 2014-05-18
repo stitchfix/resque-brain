@@ -2,10 +2,10 @@
 <div class="container">
   <section class="row">
     <header class="col-md-12">
-      <h1 class="text-center">{{numJobsFailed}} Job<span ng-if="numJobsFailed != 1">s</span> Failed <small>{{resqueSelected}}</small></h1>
+      <h1 class="text-center"><i aria-hidden="true" class="glyphicon glyphicon-ok text-success" ng-if="numJobsFailed == 0"></i> {{numJobsFailed}} Job<span ng-if="numJobsFailed != 1">s</span> Failed <small>{{resqueSelected}}</small></h1>
     </header>
     <div class="pull-right">
-      <div class="btn-toolbar">
+      <div class="btn-toolbar" ng-if="numJobsFailed > 0">
         <div class="btn-group">
           <button type="button" class="btn btn-default" title="Retry All" ng-click="retryAll()">
             <i aria-hidden='true' class='glyphicon glyphicon-refresh hidden-xs'></i>

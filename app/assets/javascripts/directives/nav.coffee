@@ -1,6 +1,6 @@
 angular.module("directives").directive("rbNav", [
-  "$location","Resques",
-  ($location , Resques)->
+  "$location","Resques", "GenericErrorHandling",
+  ($location , Resques,   GenericErrorHandling)->
     templateUrl: "nav.html"
     link: (scope) ->
 
@@ -13,15 +13,15 @@ angular.module("directives").directive("rbNav", [
         }[section] or ''
         $location.path("/#{resque.name}#{path}")
 
-      scope.viewOverview =          -> $location.path("/#{scope.resqueSelected}")
-      scope.viewRunning  =          -> $location.path("/#{scope.resqueSelected}/running")
-      scope.viewWaiting  =          -> $location.path("/#{scope.resqueSelected}/waiting")
-      scope.viewFailed   =          -> $location.path("/#{scope.resqueSelected}/failed")
-      scope.viewSummary  =          -> $location.path("/")
+      scope.viewOverview = -> $location.path("/#{scope.resqueSelected}")
+      scope.viewRunning  = -> $location.path("/#{scope.resqueSelected}/running")
+      scope.viewWaiting  = -> $location.path("/#{scope.resqueSelected}/waiting")
+      scope.viewFailed   = -> $location.path("/#{scope.resqueSelected}/failed")
+      scope.viewSummary  = -> $location.path("/")
 
       Resques.all(
         ( (resques)-> scope.resques = resques ),
-        ( (httpResponse)-> alert("Something busted, yo"))
+        GenericErrorHandling.onFail(scope)
       )
 
       scope.navCollapsed = true
