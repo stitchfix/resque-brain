@@ -13,6 +13,10 @@
  *= require bootstrap/dist/css/bootstrap
  *= require_tree .
  *= require_self
+ *= depend_on_asset "bootstrap/fonts/glyphicons-halflings-regular.eot"
+ *= depend_on_asset "bootstrap/fonts/glyphicons-halflings-regular.woff"
+ *= depend_on_asset "bootstrap/fonts/glyphicons-halflings-regular.ttf"
+ *= depend_on_asset "bootstrap/fonts/glyphicons-halflings-regular.svg"
  */
 .container {
   padding-left: 20px;
@@ -43,3 +47,12 @@
   padding-top: 20px;
 }
 
+@font-face {
+  font-family: 'Glyphicons Halflings';
+
+  src: font-url('bootstrap/fonts/glyphicons-halflings-regular.eot');
+  src: font-url('bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+       font-url('bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'),
+       font-url('bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+       font-url('bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
