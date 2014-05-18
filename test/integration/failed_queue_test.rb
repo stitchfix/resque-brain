@@ -71,4 +71,15 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
     refute page.has_content?("worker2"), page_assertion_error_message(page)
     assert page.has_content?("worker10"), page_assertion_error_message(page)
   end
+
+  test "clear and retry" do
+    visit("/")
+    click_link "View Failed Jobs"
+    sleep 1
+
+    first("[title='Retry, Then Clear Job 2']").click
+    sleep 2
+    refute page.has_content?("worker2"), page_assertion_error_message(page)
+    assert page.has_content?("worker10"), page_assertion_error_message(page)
+  end
 end

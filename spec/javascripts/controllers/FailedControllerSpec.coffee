@@ -122,3 +122,17 @@ describe "FailedController", ->
 
       expect(failedJobs.clear.mostRecentCall.args[0]).toEqualData(resqueName)
       expect(failedJobs.clear.mostRecentCall.args[1]).toEqualData(jobsFailed[1].id)
+
+  describe "retryAndClear", ->
+    beforeEach ->
+      setupController(null, ->
+        spyOn(failedJobs,"retry").andCallFake( (resqueName, jobId, success,failure)-> success() )
+        spyOn(failedJobs,"clear").andCallFake( (resqueName, jobId, success,failure)-> success() )
+      )
+    it 'calls clear then re-fetches all jobs', ->
+      scope.retryAndClear(scope.jobsFailed[1])
+
+      expect(failedJobs.clear.mostRecentCall.args[0]).toEqualData(resqueName)
+      expect(failedJobs.clear.mostRecentCall.args[1]).toEqualData(jobsFailed[1].id)
+      expect(failedJobs.retry.mostRecentCall.args[0]).toEqualData(resqueName)
+      expect(failedJobs.retry.mostRecentCall.args[1]).toEqualData(jobsFailed[1].id)

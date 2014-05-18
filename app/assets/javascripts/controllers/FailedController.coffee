@@ -39,9 +39,8 @@ controllers.controller("FailedController", [
       if page > 0 and page <= $scope.pages.length
         $location.search( page: page )
 
-    $scope.retry         = (job)->
-      FailedJobs.retry($routeParams.resque,job.id,
-        (
+    $scope.retry = (job)->
+      FailedJobs.retry($routeParams.resque,job.id, (
           ()->
             FailedJobs.get($routeParams.resque,job.id,
               (
@@ -55,11 +54,11 @@ controllers.controller("FailedController", [
               GenericErrorHandling.onFail($scope)
             )
         ),
-        GenericErrorHandling.onFail($scope),
+        GenericErrorHandling.onFail($scope)
       )
-    $scope.clear         = (job)->
-      FailedJobs.clear($routeParams.resque, job.id,
-        (
+
+    $scope.clear = (job)->
+      FailedJobs.clear($routeParams.resque, job.id, (
           ()->
             index = _.indexOf($scope.jobsFailed,job)
             if index != -1
@@ -72,12 +71,17 @@ controllers.controller("FailedController", [
         GenericErrorHandling.onFail($scope)
       )
     $scope.retryAndClear = (job)->
+      FailedJobs.retry($routeParams.resque,job.id, (
+         ()-> $scope.clear(job)
+        ),
+        GenericErrorHandling.onFail($scope)
+      )
+      
 
     $scope.currentPage = parseInt($routeParams.page or "1")
-    loadFailedJobs()
 
-    Resques.summary(
-      ( (summary)->
+    Resques.summary( (
+      (summary)->
         $scope.numJobsFailed = (_.find(summary, (oneSummary)-> oneSummary.name == $routeParams.resque) or {}).failed
         $scope.pages = []
         page = 1
@@ -86,6 +90,8 @@ controllers.controller("FailedController", [
         while page <= numPages
           $scope.pages.push(page)
           page += 1
+
+        loadFailedJobs()
       ),
       GenericErrorHandling.onFail($scope)
     )
