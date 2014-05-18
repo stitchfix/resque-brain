@@ -1,0 +1,18 @@
+common: &common
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  host: localhost
+  port: 5432
+  username: postgres
+  password: 
+  min_messages: WARNING
+
+development:
+  database: resque_brain_development
+  <<: *common
+
+test:
+  database: resque_brain_test
+  <<: *common
+

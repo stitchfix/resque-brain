@@ -1,6 +1,8 @@
 notifications:
   email:
     on_success: always
+before_script:
+  - 'cp config/database.yml.ci config/database.yml'
 script: 
   - 'bundle exec rake test'
   - 'bundle exec rake teaspoon'
