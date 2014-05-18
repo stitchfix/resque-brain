@@ -130,4 +130,8 @@ class FakeResqueDataStore
     @queues[queue.to_s] ||= []
     @queues[queue.to_s] << Resque.decode(json)
   end
+
+  implement! def remove_from_failed_queue(index_in_failed_queue)
+    @failed.delete_at(index_in_failed_queue)
+  end
 end

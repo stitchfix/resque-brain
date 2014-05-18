@@ -14,6 +14,9 @@ services.factory("FailedJobs", [
     {
       retry: (resqueName, jobId, success, failure)->
         FailedJobs.retry({ resqueName: resqueName, id: jobId }, {}, success, failure)
+      clear: (resqueName, jobId, success, failure)->
+        FailedJobs.remove({ resqueName: resqueName, id: jobId }, success, failure)
+
       get: (resqueName, jobId, success, failure)->
         FailedJobs.get({ resqueName: resqueName, id: jobId }, success, failure)
     }

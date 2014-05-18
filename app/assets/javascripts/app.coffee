@@ -1,6 +1,7 @@
 resqueBrain = angular.module('resqueBrain',[
   'ngRoute',
   'ngResource',
+  'ngAnimate',
 
   'templates',
   'ui.bootstrap',

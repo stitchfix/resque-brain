@@ -28,7 +28,7 @@
     <div class="clearfix"></div>
     <hr>
     <a name="top"></a>
-    <article ng-repeat="job in jobsFailed track by $index" class="failed-job">
+    <article ng-repeat="job in jobsFailed" class="failed-job animate-repeat fade-in">
       <header>
         <h1 class="h3 mt-none">{{job.payload.class}} <span class="h4"><span class="label label-info">{{job.queue}}</span></span></h1>
         <h2 class="h4 mt-none">
@@ -77,7 +77,7 @@
           <i aria-hidden='true' class='glyphicon glyphicon-refresh'></i>
             Retry
           </button>
-          <button type="button" ng-click="retry(job)" class="btn btn-sm btn-warning" title="Clear Job {{job.id}}">
+          <button type="button" ng-click="clear(job)" class="btn btn-sm btn-warning" title="Clear Job {{job.id}}">
           <i aria-hidden='true' class='glyphicon glyphicon-trash'></i>
             Clear
           </button>

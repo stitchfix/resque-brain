@@ -7,6 +7,7 @@
     "angular-ui-bootstrap-bower": "latest",
     "angular-mocks": "latest",
     "angular-resource": "latest",
+    "angular-animate": "latest",
     "lodash": "latest",
     "angular-moment": "latest",
     "angular-flash": "latest"

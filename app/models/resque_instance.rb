@@ -91,6 +91,10 @@ class ResqueInstance
     @resque_data_store.push_to_queue(item["queue"],Resque.encode(item["payload"]))
   end
 
+  def clear_job(index_in_failed_queue)
+    @resque_data_store.remove_from_failed_queue(index_in_failed_queue)
+  end
+
   def kill_worker(worker_id)
     raise
   end

@@ -1,11 +1,22 @@
 controllers = angular.module("controllers")
 controllers.controller("FailedController", [
-  "$scope", "$modal", "$routeParams", "$location", "Resques", "GenericErrorHandling", "FailedJobs", "flash",
-  ($scope ,  $modal ,  $routeParams ,  $location ,  Resques ,  GenericErrorHandling ,  FailedJobs ,  flash)->
+  "$scope", "$modal", "$routeParams", "$location", "$timeout", "$animate", "Resques", "GenericErrorHandling", "FailedJobs", "flash",
+  ($scope ,  $modal ,  $routeParams ,  $location ,  $timeout ,  $animate ,  Resques ,  GenericErrorHandling ,  FailedJobs ,  flash)->
 
     PAGE_SIZE = 10
 
     backtracesShowing = {}
+
+    loadFailedJobs = ->
+      $scope.loading = true
+      Resques.jobsFailed( { name: $routeParams.resque },($scope.currentPage - 1) * PAGE_SIZE,PAGE_SIZE,
+        ( (jobs)->
+          $scope.jobsFailed = jobs
+          $scope.loading    = false
+        ),
+        GenericErrorHandling.onFail($scope)
+      )
+
 
     $scope.loading = true
 
@@ -47,17 +58,23 @@ controllers.controller("FailedController", [
         GenericErrorHandling.onFail($scope),
       )
     $scope.clear         = (job)->
+      FailedJobs.clear($routeParams.resque, job.id,
+        (
+          ()->
+            index = _.indexOf($scope.jobsFailed,job)
+            if index != -1
+              $scope.jobsFailed.splice(index,1)
+
+            $timeout( ( -> $animate.enabled(false) ), 500 )
+            $timeout( ( -> $animate.enabled(true) ), 1500 )
+            $timeout(loadFailedJobs,1000)
+        ),
+        GenericErrorHandling.onFail($scope)
+      )
     $scope.retryAndClear = (job)->
 
-
     $scope.currentPage = parseInt($routeParams.page or "1")
-    Resques.jobsFailed( { name: $routeParams.resque },($scope.currentPage - 1) * PAGE_SIZE,PAGE_SIZE,
-      ( (jobs)->
-        $scope.jobsFailed = jobs
-        $scope.loading    = false
-      ),
-      GenericErrorHandling.onFail($scope)
-    )
+    loadFailedJobs()
 
     Resques.summary(
       ( (summary)->

@@ -177,10 +177,17 @@ class FailedControllerTest < ActionController::TestCase
   end
 
   test "retry only one job" do
-    post :retry, resque_id: "test1", id: 1, format: :json
+    post :retry, resque_id: "test1", id: "1", format: :json
 
     assert_response 204
     assert_equal [1], @resque_instance.retried_jobs
+  end
+
+  test "clear only one job" do
+    delete :destroy, resque_id: "test1", id: "1", format: :json
+
+    assert_response 204
+    assert_equal [1], @resque_instance.cleared_jobs
   end
 
 end

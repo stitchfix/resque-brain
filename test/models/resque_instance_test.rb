@@ -136,6 +136,16 @@ class ResqueInstanceTest < MiniTest::Test
 
   end
 
+  def test_clear_job
+    resque_data_store = fake_resque_data_store
+    instance = create_test_instance(resque_data_store: resque_data_store)
+
+    instance.clear_job(1)
+
+    assert_equal 2                     , instance.jobs_failed.size
+    refute_equal "SomeOtherFailingJob" , instance.jobs_failed[1].payload["class"]
+  end
+
 private
   def fake_resque_data_store
     FakeResqueDataStore.new

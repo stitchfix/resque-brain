@@ -85,3 +85,33 @@ describe "Resques", ->
       expect(job).toBe(null)
       expect(errorResponse).toNotBe(null)
 
+  describe 'clear', ->
+    successReceived = null
+    errorResponse   = null
+
+    success = ()             -> successReceived = true
+    failure = (httpResponse) -> errorResponse = httpResponse
+
+    beforeEach ->
+      successReceived = null
+      errorResponse   = null
+
+    it 'returns from the backend and calls success', ->
+      httpBackend.expectDELETE(/\/resques\/test1\/jobs\/failed\/42/).respond(204)
+
+      service.clear("test1",42,success,failure)
+
+      httpBackend.flush()
+
+      expect(successReceived).toBe(true)
+      expect(errorResponse).toBe(null)
+
+    it 'calls the failure callback', ->
+      httpBackend.expectDELETE(/\/resques\/test1\/jobs\/failed\/42/).respond(500)
+
+      service.clear("test1",42,success,failure)
+
+      httpBackend.flush()
+
+      expect(successReceived).toBe(null)
+      expect(errorResponse).toNotBe(null)

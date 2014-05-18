@@ -17,4 +17,9 @@ class FailedController < ApplicationController
     render nothing: true, status: 204
   end
 
+  def destroy
+    resque.clear_job(params[:id].to_i)
+    render nothing: true, status: 204
+  end
+
 end

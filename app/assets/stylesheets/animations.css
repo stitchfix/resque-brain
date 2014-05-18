@@ -167,3 +167,19 @@
   100%  { background-color:#ddd }
 }
 
+.animate-repeat.fade-in.ng-move,
+.animate-repeat.fade-in.ng-leave,
+.animate-repeat.fade-in.ng-enter {
+  -webkit-transition:opacity linear 0.3s;
+  transition:opacity linear 0.3s;
+}
+
+.animate-repeat.fade-in.ng-leave.ng-leave-active,
+.animate-repeat.fade-in.ng-enter {
+  opacity:0;
+}
+
+.animate-repeat.fade-in.ng-leave,
+.animate-repeat.fade-in.ng-enter.ng-enter-active {
+  opacity:1;
+}

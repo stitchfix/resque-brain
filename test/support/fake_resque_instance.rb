@@ -4,7 +4,7 @@ class FakeResqueInstance
   extend ExplicitInterfaceImplementation
   implements ResqueInstance
 
-  attr_reader :workers, :retried_jobs
+  attr_reader :workers, :retried_jobs, :cleared_jobs
 
   def initialize(attributes)
     @name         = attributes.fetch(:name)
@@ -13,6 +13,7 @@ class FakeResqueInstance
     @jobs_failed  = attributes[:jobs_failed]  || []
     @workers      = attributes[:workers]      || []
     @retried_jobs = []
+    @cleared_jobs = []
   end
 
   implement! def name
@@ -38,5 +39,9 @@ class FakeResqueInstance
 
   implement! def retry_job(index_in_failed_queue)
     @retried_jobs << index_in_failed_queue
+  end
+
+  implement! def clear_job(index_in_failed_queue)
+    @cleared_jobs << index_in_failed_queue
   end
 end
