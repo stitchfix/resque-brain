@@ -3,7 +3,8 @@
 - [ ] Kill Worker
 - [x] Retry Job
 - [x] Clear job
-- [ ] Retry & Clear job
-- [ ] Retry All
-- [ ] Clear All
-- [ ] Retry & Clear All
+- [x] Retry & Clear job
+- [x] Retry All
+- [x] Clear All
+- [x] Retry & Clear All
+- [ ] Auto-refreshing
