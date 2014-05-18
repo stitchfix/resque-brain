@@ -3,6 +3,7 @@ notifications:
     on_success: always
 before_script:
   - 'cp config/database.yml.ci config/database.yml'
+  - 'bundle exec rake db:create db:migrate'
 script: 
   - 'bundle exec rake test'
   - 'bundle exec rake teaspoon'
