@@ -58,6 +58,7 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
 
     assert page.all("[title='Job 1 retried']").empty?
     first("[title='Retry Job 1']").click
+    sleep 1
     assert page.has_content?("worker1"), page_assertion_error_message(page)
     assert page.all("[title='Job 1 retried']").present?
 
