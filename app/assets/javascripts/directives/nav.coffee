@@ -13,11 +13,11 @@ angular.module("directives").directive("rbNav", [
         }[section] or ''
         $location.path("/#{resque.name}#{path}")
 
-      scope.viewOverview = -> $location.path("/#{scope.resqueSelected}")
-      scope.viewRunning  = -> $location.path("/#{scope.resqueSelected}/running")
-      scope.viewWaiting  = -> $location.path("/#{scope.resqueSelected}/waiting")
-      scope.viewFailed   = -> $location.path("/#{scope.resqueSelected}/failed")
-      scope.viewSummary  = -> $location.path("/")
+      scope.viewOverview = -> $location.path("/#{scope.resqueSelected}").search({})
+      scope.viewRunning  = -> $location.path("/#{scope.resqueSelected}/running").search({})
+      scope.viewWaiting  = -> $location.path("/#{scope.resqueSelected}/waiting").search({})
+      scope.viewFailed   = -> $location.path("/#{scope.resqueSelected}/failed").search({})
+      scope.viewSummary  = -> $location.path("/").search({})
 
       Resques.all(
         ( (resques)-> scope.resques = resques ),

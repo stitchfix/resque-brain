@@ -13,11 +13,12 @@ controllers.controller("SummaryController", [
       sumField = (list,field)->
         _.chain(list).pluck(field).reduce((acc,val)-> acc + val).value()
 
-      $scope.allResques   = resques
-      $scope.totalFailed  = sumField(resques,"failed")
-      $scope.totalRunning = sumField(resques,"running")
-      $scope.totalWaiting = sumField(resques,"waiting")
-      $scope.loading      = false
+      $scope.allResques          = resques
+      $scope.totalFailed         = sumField(resques,"failed")
+      $scope.totalRunning        = sumField(resques,"running")
+      $scope.totalRunningTooLong = sumField(resques,"runningTooLong")
+      $scope.totalWaiting        = sumField(resques,"waiting")
+      $scope.loading             = false
 
     $scope.refresh = ->
       $scope.loading = true

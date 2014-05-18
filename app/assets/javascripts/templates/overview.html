@@ -10,7 +10,7 @@
       <header class="panel-heading">
         <h1 class="h3 mt-none mb-none">
           <i aria-hidden='true' class="glyphicon glyphicon-remove"></i>
-          <a ng-class="{ 'text-info': overview.failed == 0, 'text-danger': overview.failed != 0 }" ng-click="viewFailed()" href="">{{overview.failed}} Job<span ng-if="overview.failed != 1">s</span> Failed <i aria-hidden='true' class="glyphicon glyphicon-chevron-right"></i></a>
+          <a ng-class="{ 'text-info': overview.failed == 0, 'text-danger': overview.failed != 0 }" ng-click="viewFailed()" href="">{{overview.failed}} <span class="hidden-xs">Job<span ng-if="overview.failed != 1">s</span></span> Failed <i aria-hidden='true' class="glyphicon glyphicon-chevron-right"></i></a>
         </h1>
       </header>
     </article>
@@ -20,7 +20,7 @@
       <header class="panel-heading">
         <h1 class="h3 mt-none mb-none">
           <i aria-hidden='true' class="glyphicon glyphicon-random"></i>
-          <a ng-click="viewRunning()" href="">{{overview.running}} Job<span ng-if="overview.running != 1">s</span> Running <i aria-hidden='true' class="glyphicon glyphicon-chevron-right"></i></a>
+          <a ng-click="viewRunning()" href="">{{overview.running}} <span class="hidden-xs">Job<span ng-if="overview.running != 1">s</span></span> Running <i aria-hidden='true' class="glyphicon glyphicon-chevron-right"></i></a>
         </h1>
       </header>
       <footer class="panel-footer" ng-if="overview.runningTooLong > 0">
@@ -36,7 +36,7 @@
       <header class="panel-heading">
         <h1 class="h3 mt-none mb-none">
           <i aria-hidden='true' class="glyphicon glyphicon-time"></i>
-          <a ng-click="viewWaiting()" href="">{{overview.waiting}} Job<span ng-if="overview.waiting != 1">s</span> Waiting <i aria-hidden='true' class="glyphicon glyphicon-chevron-right"></i></a>
+          <a ng-click="viewWaiting()" href="">{{overview.waiting}} <span class="hidden-xs">Job<span ng-if="overview.waiting != 1">s</span></span> Waiting <i aria-hidden='true' class="glyphicon glyphicon-chevron-right"></i></a>
         </h1>
       </header>
     </article>
