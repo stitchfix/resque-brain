@@ -1,5 +1,7 @@
 # resque-brain: a better resque-web
 
+![build status](https://travis-ci.org/davetron5000/resque-brain.svg?branch=master)
+
 resque-brain is a web app to monitor and manage multiple [Resque][resque] instances.  It is superior to resque-web in three
 important ways:
 
