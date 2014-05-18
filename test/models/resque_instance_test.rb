@@ -146,6 +146,25 @@ class ResqueInstanceTest < MiniTest::Test
     refute_equal "SomeOtherFailingJob" , instance.jobs_failed[1].payload["class"]
   end
 
+  def test_clear_all
+    resque_data_store = fake_resque_data_store
+    instance = create_test_instance(resque_data_store: resque_data_store)
+
+    instance.clear_all
+
+    assert_equal 0, instance.jobs_failed.size
+  end
+
+  def test_retry_all
+    resque_data_store = fake_resque_data_store
+    instance = create_test_instance(resque_data_store: resque_data_store)
+
+    instance.retry_all
+
+    refute_nil resque_data_store.queues["cache"], "Expected the retry to create the 'cache' queue, got #{resque_data_store.queues.keys}"
+    refute_nil resque_data_store.queues["mail"], "Expected the retry to create the 'mail' queue, got #{resque_data_store.queues.keys}"
+  end
+
 private
   def fake_resque_data_store
     FakeResqueDataStore.new

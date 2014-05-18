@@ -134,4 +134,8 @@ class FakeResqueDataStore
   implement! def remove_from_failed_queue(index_in_failed_queue)
     @failed.delete_at(index_in_failed_queue)
   end
+
+  implement! def clear_failed_queue
+    @failed = []
+  end
 end

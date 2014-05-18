@@ -136,3 +136,33 @@ describe "FailedController", ->
       expect(failedJobs.clear.mostRecentCall.args[1]).toEqualData(jobsFailed[1].id)
       expect(failedJobs.retry.mostRecentCall.args[0]).toEqualData(resqueName)
       expect(failedJobs.retry.mostRecentCall.args[1]).toEqualData(jobsFailed[1].id)
+
+  describe "retryAll", ->
+    beforeEach ->
+      setupController(null, ->
+        spyOn(failedJobs,"retryAll").andCallFake( (resqueName, success,failure)-> success() )
+      )
+    it 'calls retry then get on FailedJobs', ->
+      scope.retryAll()
+
+      expect(failedJobs.retryAll.mostRecentCall.args[0]).toEqualData(resqueName)
+
+  describe "clearAll", ->
+    beforeEach ->
+      setupController(null, ->
+        spyOn(failedJobs,"clearAll").andCallFake( (resqueName, success,failure)-> success() )
+      )
+    it 'calls clear then re-fetches all jobs', ->
+      scope.clearAll()
+
+      expect(failedJobs.clearAll.mostRecentCall.args[0]).toEqualData(resqueName)
+
+  describe "retryAndClearAll", ->
+    beforeEach ->
+      setupController(null, ->
+        spyOn(failedJobs,"retryAndClearAll").andCallFake( (resqueName, success,failure)-> success() )
+      )
+    it 'calls clear then re-fetches all jobs', ->
+      scope.retryAndClearAll()
+
+      expect(failedJobs.retryAndClearAll.mostRecentCall.args[0]).toEqualData(resqueName)

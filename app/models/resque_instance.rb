@@ -95,6 +95,16 @@ class ResqueInstance
     @resque_data_store.remove_from_failed_queue(index_in_failed_queue)
   end
 
+  def retry_all
+    @resque_data_store.num_failed.times do |index|
+      retry_job(index)
+    end
+  end
+
+  def clear_all
+    @resque_data_store.clear_failed_queue
+  end
+
   def kill_worker(worker_id)
     raise
   end

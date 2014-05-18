@@ -190,4 +190,26 @@ class FailedControllerTest < ActionController::TestCase
     assert_equal [1], @resque_instance.cleared_jobs
   end
 
+  test "retry all" do
+    post :retry_all, resque_id: "test1", format: :json
+
+    assert_response 204
+    assert @resque_instance.retried_all
+  end
+
+  test "retry then clear all" do
+    post :retry_all, resque_id: "test1", also_clear: "true", format: :json
+
+    assert_response 204
+    assert @resque_instance.retried_all
+    assert @resque_instance.cleared_all
+  end
+
+  test "clear all" do
+    delete :clear_all, resque_id: "test1", format: :json
+
+    assert_response 204
+    assert @resque_instance.cleared_all
+  end
+
 end

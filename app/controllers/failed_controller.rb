@@ -22,4 +22,14 @@ class FailedController < ApplicationController
     render nothing: true, status: 204
   end
 
+  def retry_all
+    resque.retry_all
+    resque.clear_all if params[:also_clear] == 'true'
+    render nothing: true, status: 204
+  end
+
+  def clear_all
+    resque.clear_all
+    render nothing: true, status: 204
+  end
 end

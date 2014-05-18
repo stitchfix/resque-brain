@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   resources :resques, only: [ :index, :show ] do
     resource :jobs, only: [ :show ] do
       resources :failed, only: [ :index, :show, :destroy ] do
+        collection do
+          post 'retry_all'
+          delete 'clear_all'
+        end
         member do
           post 'retry'
         end

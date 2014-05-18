@@ -115,3 +115,97 @@ describe "Resques", ->
 
       expect(successReceived).toBe(null)
       expect(errorResponse).toNotBe(null)
+
+  describe 'retryAll', ->
+    successReceived = null
+    errorResponse   = null
+
+    success = ()             -> successReceived = true
+    failure = (httpResponse) -> errorResponse = httpResponse
+
+    beforeEach ->
+      successReceived = null
+      errorResponse   = null
+
+    it 'returns from the backend and calls success', ->
+      httpBackend.expectPOST(/\/resques\/test1\/jobs\/failed\/retry_all/).respond(204)
+
+      service.retryAll("test1",success,failure)
+
+      httpBackend.flush()
+
+      expect(successReceived).toBe(true)
+      expect(errorResponse).toBe(null)
+
+    it 'calls the failure callback', ->
+      httpBackend.expectPOST(/\/resques\/test1\/jobs\/failed\/retry_all/).respond(500)
+
+      service.retryAll("test1",success,failure)
+
+      httpBackend.flush()
+
+      expect(successReceived).toBe(null)
+      expect(errorResponse).toNotBe(null)
+
+  describe 'retryAndClearAll', ->
+    successReceived = null
+    errorResponse   = null
+
+    success = ()             -> successReceived = true
+    failure = (httpResponse) -> errorResponse = httpResponse
+
+    beforeEach ->
+      successReceived = null
+      errorResponse   = null
+
+    it 'returns from the backend and calls success', ->
+      httpBackend.expectPOST(/\/resques\/test1\/jobs\/failed\/retry_all.*also_clear=true/).respond(204)
+
+      service.retryAndClearAll("test1",success,failure)
+
+      httpBackend.flush()
+
+      expect(successReceived).toBe(true)
+      expect(errorResponse).toBe(null)
+
+    it 'calls the failure callback', ->
+      httpBackend.expectPOST(/\/resques\/test1\/jobs\/failed\/retry_all.*also_clear=true/).respond(500)
+
+      service.retryAndClearAll("test1",success,failure)
+
+      httpBackend.flush()
+
+      expect(successReceived).toBe(null)
+      expect(errorResponse).toNotBe(null)
+
+  describe 'clearAll', ->
+    successReceived = null
+    errorResponse   = null
+
+    success = ()             -> successReceived = true
+    failure = (httpResponse) -> errorResponse = httpResponse
+
+    beforeEach ->
+      successReceived = null
+      errorResponse   = null
+
+    it 'returns from the backend and calls success', ->
+      httpBackend.expectDELETE(/\/resques\/test1\/jobs\/failed\/clear_all/).respond(204)
+
+      service.clearAll("test1",success,failure)
+
+      httpBackend.flush()
+
+      expect(successReceived).toBe(true)
+      expect(errorResponse).toBe(null)
+
+    it 'calls the failure callback', ->
+      httpBackend.expectDELETE(/\/resques\/test1\/jobs\/failed\/clear_all/).respond(500)
+
+      service.clearAll("test1",success,failure)
+
+      httpBackend.flush()
+
+      expect(successReceived).toBe(null)
+      expect(errorResponse).toNotBe(null)
+

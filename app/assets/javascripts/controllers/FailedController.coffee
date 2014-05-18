@@ -9,12 +9,27 @@ controllers.controller("FailedController", [
 
     loadFailedJobs = ->
       $scope.loading = true
-      Resques.jobsFailed( { name: $routeParams.resque },($scope.currentPage - 1) * PAGE_SIZE,PAGE_SIZE,
-        ( (jobs)->
-          $scope.jobsFailed = jobs
-          $scope.loading    = false
+      Resques.summary( (
+        (summary)->
+          $scope.numJobsFailed = (_.find(summary, (oneSummary)-> oneSummary.name == $routeParams.resque) or {}).failed
+          $scope.pages = []
+          page = 1
+          numPages = Math.ceil($scope.numJobsFailed / PAGE_SIZE)
+
+          while page <= numPages
+            $scope.pages.push(page)
+            page += 1
+
+          Resques.jobsFailed( { name: $routeParams.resque },($scope.currentPage - 1) * PAGE_SIZE,PAGE_SIZE,
+            ( (jobs)->
+              $scope.jobsFailed = jobs
+              $scope.loading    = false
+            ),
+            GenericErrorHandling.onFail($scope)
+          )
         ),
-        GenericErrorHandling.onFail($scope)
+        GenericErrorHandling.onFail($scope),
+        "flush"
       )
 
 
@@ -76,23 +91,14 @@ controllers.controller("FailedController", [
         ),
         GenericErrorHandling.onFail($scope)
       )
+
+    $scope.retryAll         = ()-> FailedJobs.retryAll($routeParams.resque,loadFailedJobs,GenericErrorHandling.onFail($scope))
+    $scope.clearAll         = ()-> FailedJobs.clearAll($routeParams.resque,loadFailedJobs,GenericErrorHandling.onFail($scope))
+    $scope.retryAndClearAll = ()-> FailedJobs.retryAndClearAll($routeParams.resque,loadFailedJobs,GenericErrorHandling.onFail($scope))
       
 
     $scope.currentPage = parseInt($routeParams.page or "1")
 
-    Resques.summary( (
-      (summary)->
-        $scope.numJobsFailed = (_.find(summary, (oneSummary)-> oneSummary.name == $routeParams.resque) or {}).failed
-        $scope.pages = []
-        page = 1
-        numPages = Math.ceil($scope.numJobsFailed / PAGE_SIZE)
+    loadFailedJobs()
 
-        while page <= numPages
-          $scope.pages.push(page)
-          page += 1
-
-        loadFailedJobs()
-      ),
-      GenericErrorHandling.onFail($scope)
-    )
 ])
