@@ -11,7 +11,8 @@ controllers.controller("OverviewController", [
           $scope.overview = (_.find(summary, (oneSummary)-> oneSummary.name == $routeParams.resque) or {})
           $scope.loading = false
         ),
-        GenericErrorHandling.onFail($scope)
+        GenericErrorHandling.onFail($scope),
+        "flush"
       )
 
      $scope.refresh()

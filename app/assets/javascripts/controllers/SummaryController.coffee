@@ -24,7 +24,8 @@ controllers.controller("SummaryController", [
       $scope.loading = true
       Resques.summary(
         setResquesAndDeriveTotals,
-        GenericErrorHandling.onFail($scope)
+        GenericErrorHandling.onFail($scope),
+        "flush"
       )
 
     $scope.refresh()
