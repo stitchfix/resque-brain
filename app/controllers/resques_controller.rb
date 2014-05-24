@@ -2,7 +2,7 @@ class ResquesController < ApplicationController
   include Concerns::InjectibleResqueInstances
 
   def index
-    @resques = resques.all
+    @resques = resques.all.sort_by { |resque| resque.name.downcase }
   end
 
   def show

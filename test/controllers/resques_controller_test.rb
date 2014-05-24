@@ -4,8 +4,8 @@ require 'support/fake_resque_data_store'
 class ResquesControllerTest < ActionController::TestCase
   setup do
     @resques = Resques.new([
-      ResqueInstance.new(name: "test1", resque_data_store: FakeResqueDataStore.new),
       ResqueInstance.new(name: "test2", resque_data_store: FakeResqueDataStore.new),
+      ResqueInstance.new(name: "Test1", resque_data_store: FakeResqueDataStore.new),
     ])
     @original_resques = ResquesController.resques
     ResquesController.resques = @resques
@@ -21,8 +21,8 @@ class ResquesControllerTest < ActionController::TestCase
     assert_response :success
 
     result = JSON.parse(response.body)
-    assert result.include?("name" => "test1")
-    assert result.include?("name" => "test2")
+    assert_equal result[0]["name"],"Test1"
+    assert_equal result[1]["name"],"test2"
     assert_equal 2, result.size
   end
 
@@ -32,11 +32,11 @@ class ResquesControllerTest < ActionController::TestCase
   end
 
   test "show with real resque" do
-    get :show, format: :json, id: "test1"
+    get :show, format: :json, id: "Test1"
 
     assert_response :success
 
-    resque_instance = @resques.find("test1")
+    resque_instance = @resques.find("Test1")
 
     result = JSON.parse(response.body)
 
