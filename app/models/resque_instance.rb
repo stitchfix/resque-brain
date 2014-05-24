@@ -2,6 +2,11 @@ class ResqueInstance
   attr_reader :name,
               :resque_data_store
 
+  # Create an access-point to a Resque instance.
+  # config:: options and configuration:
+  #          :name:: logical name of this resque.  Please avoid spaces
+  #          :resque_data_store:: a Resque::DataStore instance to use to acccess resque's internals
+  #          :stale_worker_seconds:: number of seconds a worker can be running before being considered stale.  Default 3600
   def initialize(config={})
 
     @name                 = config[:name]
@@ -10,16 +15,19 @@ class ResqueInstance
 
   end
 
+  # Return the number of failed jobs
   def failed
     @resque_data_store.num_failed
   end
 
+  # Return the number of running jobs
   def running
     worker_ids = Array(@resque_data_store.worker_ids)
     return 0 if worker_ids.empty?
     workers_map(worker_ids).reject { |id,worker_info| worker_info.nil? }.size
   end
 
+  # Return the number of running jobs that are running "too long" based on the `:stale_worker_seconds` configuration value
   def running_too_long
     worker_ids = Array(@resque_data_store.worker_ids)
     return 0 if worker_ids.empty?
@@ -30,12 +38,14 @@ class ResqueInstance
     }.size
   end
 
+  # Return the number of jobs waiting, in all queues
   def waiting
     @resque_data_store.queue_names.reduce(0) { |current_sum,queue_name|
       current_sum + @resque_data_store.queue_size(queue_name)
     }
   end
 
+  # Return all jobs that are currently running as an array of `RunningJob` instances
   def jobs_running
     worker_ids = Array(@resque_data_store.worker_ids)
     return [] if worker_ids.empty?
@@ -49,6 +59,8 @@ class ResqueInstance
     }
   end
 
+  # Return a hash of all jobs waiting, where the key is the name of the queue and the value
+  # being an array of `Job` instances.
   def jobs_waiting
     Hash[@resque_data_store.queue_names.map { |queue_name|
       [
@@ -62,6 +74,12 @@ class ResqueInstance
     }]
   end
 
+  # Return failed jobs either all or over a rage, as an Array of `FailedJob`.
+  # The failed queue is only accessible via indeces, but it does fill up
+  # FIFO, so the indeces are stable as long as no job is removed.
+  #
+  # start:: where to start, 0 is the default and is the first element
+  # count:: number of jobs to return, or `:all` for all jobs
   def jobs_failed(start=0,count=:all)
     count = @resque_data_store.num_failed if count == :all
     failed_payloads = @resque_data_store.list_range(:failed,start,count)
@@ -84,6 +102,7 @@ class ResqueInstance
     }
   end
 
+  # Retry a job at index `index_in_failed_queue` of the failed queue.
   def retry_job(index_in_failed_queue)
     item = Resque.decode(@resque_data_store.list_range(:failed,index_in_failed_queue))
     item['retried_at'] = Time.now.strftime("%Y/%m/%d %H:%M:%S")
@@ -91,16 +110,22 @@ class ResqueInstance
     @resque_data_store.push_to_queue(item["queue"],Resque.encode(item["payload"]))
   end
 
+  # Remove a job from the failed queue.
+  #
+  # Note that after this completes, any index you have stored to the failed queue is likely going to point to a 
+  # different failed job.  You should refresh any view of the failed queue you have.
   def clear_job(index_in_failed_queue)
     @resque_data_store.remove_from_failed_queue(index_in_failed_queue)
   end
 
+  # Retry all failed jobs
   def retry_all
     @resque_data_store.num_failed.times do |index|
       retry_job(index)
     end
   end
 
+  # Clear all failed jobs
   def clear_all
     @resque_data_store.clear_failed_queue
   end
