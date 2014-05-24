@@ -1,13 +1,23 @@
 <aside>
   <header class="modal-header">
-    <h1 class="h3">Really Kill {{job.payload.class}}?</h1>
-    <h2 class="h4"><code class="paylod">{{job.payload.args}}</code></h2>
+    <h1 class="h3">Killing a Worker</h1>
   </header>
   <p class="modal-body">
-    This will terminate the worker and <strong>fail the job it's working on</strong>.
+    It is unsafe to kill a worker from Resque-Brain.  See <a href="https://github.com/davetron5000/resque-brain/wiki/Why-resque-brain-can't-kill-a-worker">here for an explanation</a>.
+    To do it yourself, you must:
+    <ol>
+      <li>Get a production console to {{resqueSelected.name}}</li>
+      <li>Find the worker instance:
+        <pre class="mr-1"><code>worker = Resque.workers.detect { |worker|
+  worker.id == '{{job.worker}}'
+}</code></pre>
+      </li>
+      <li>Unregister the worker:
+        <pre class="mr-1"><code>worker.unregister_worker</code></pre>
+      </li>
+    </ol>
   </p>
   <footer class="modal-footer">
-    <button class="btn btn-info pull-left" ng-click="cancel()">Leave Worker Running</button>
-    <button class="btn btn-danger" ng-click="ok()"><i aria-hidden="true" class="glyphicon glyphicon-remove"></i> Kill Worker</button>
+    <button class="btn btn-info" ng-click="cancel()">OK</button>
   </footer>
 </aside>
