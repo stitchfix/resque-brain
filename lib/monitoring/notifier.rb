@@ -1,6 +1,6 @@
 module Monitoring
   class Notifier
-    def notify!
+    def notify!(results)
       raise
     end
   end

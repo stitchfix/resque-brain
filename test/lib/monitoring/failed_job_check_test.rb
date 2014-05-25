@@ -1,7 +1,6 @@
 require 'quick_test_helper'
 require 'minitest/autorun'
 require 'resque'
-require 'active_support/core_ext/numeric/time.rb'
 
 lib_require 'monitoring/checker'
 lib_require 'monitoring/failed_job_check'
