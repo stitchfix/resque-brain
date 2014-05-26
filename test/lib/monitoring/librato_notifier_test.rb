@@ -1,20 +1,11 @@
 require 'quick_test_helper'
 require 'minitest/autorun'
 require 'resque'
+require 'support/fake_logger'
 
 lib_require 'monitoring/notifier'
 lib_require 'monitoring/librato_notifier'
 
-class FakeLogger
-  attr_reader :infos
-  def initialize
-    @infos = []
-  end
-
-  def info(message)
-    @infos << message
-  end
-end
 module Monitoring
 end
 class Monitoring::LibratoNotifierTest < MiniTest::Test
@@ -44,8 +35,22 @@ class Monitoring::LibratoNotifierTest < MiniTest::Test
       "test3" => [],
     })
 
-    assert_equal "source=test1 foo.bar#count=3", logger.infos[0]
-    assert_equal "source=test2 foo.bar#count=1", logger.infos[1]
-    assert_equal "source=test3 foo.bar#count=0", logger.infos[2]
+    assert_equal "source=test1 count#foo.bar=3", logger.infos[0]
+    assert_equal "source=test2 count#foo.bar=1", logger.infos[1]
+    assert_equal "source=test3 count#foo.bar=0", logger.infos[2]
+  end
+
+  def test_logs_results_as_measure
+    logger = FakeLogger.new
+    notifier = Monitoring::LibratoNotifier.new(prefix: "foo.bar", logger: logger, type: :measure)
+    notifier.notify!({
+      "test1" => [ Object.new, Object.new, Object.new ],
+      "test2" => [ Object.new ],
+      "test3" => [],
+    })
+
+    assert_equal "source=test1 measure#foo.bar=3", logger.infos[0]
+    assert_equal "source=test2 measure#foo.bar=1", logger.infos[1]
+    assert_equal "source=test3 measure#foo.bar=0", logger.infos[2]
   end
 end

@@ -4,6 +4,7 @@ require 'resque'
 require 'active_support/core_ext/numeric/time.rb'
 
 require 'support/explicit_interface_implementation'
+require 'support/resque_helpers'
 
 lib_require 'monitoring/checker'
 lib_require 'monitoring/stale_worker_check'
@@ -15,46 +16,14 @@ rails_require 'models/resques'
 module Monitoring
 end
 class Monitoring::StaleWorkerCheckTest < MiniTest::Test
+  include ResqueHelpers
 
   def setup_resques(test1: 1, test2: 2)
     Redis.new.flushall
     Resques.new([
-      setup_resque("test1",:resque,test1),
-      setup_resque("test2",:resque2,test2),
+      add_workers(num_stale: test1, resque_instance: resque_instance("test1",:resque)),
+      add_workers(num_stale: test2, resque_instance: resque_instance("test2",:resque2)),
     ])
-  end
-
-  def setup_resque(name, namespace, num_stale)
-    redis = Redis::Namespace.new(namespace,Redis.new)
-    resque_data_store = Resque::DataStore.new(redis)
-
-    num_workers = [num_stale,2].max
-
-    (0..(num_stale-1)).each do |i|
-      worker = Resque::Worker.new("#{name}_mail#{i}")
-      resque_data_store.register_worker(worker)
-      resque_data_store.set_worker_payload(
-        worker,
-        Resque.encode(
-          :queue   => "#{name}_mail#{i}",
-          :run_at  => (Time.now - 2.hours).utc.iso8601,
-          :payload => { class: "RunningTypeJob", args: [4,5,6] }
-        )
-      )
-    end
-    (num_stale..(num_workers-1)).each do |i|
-      worker = Resque::Worker.new("#{name}_cache#{i}")
-      resque_data_store.register_worker(worker)
-      resque_data_store.set_worker_payload(
-        worker,
-        Resque.encode(
-          :queue   => "#{name}_cache#{i}",
-          :run_at  => Time.now.utc.iso8601,
-          :payload => { class: "RunningTypeJob", args: [4,5,6] }
-        )
-      )
-    end
-    ResqueInstance.new(name: name, resque_data_store: resque_data_store)
   end
 
   def test_type

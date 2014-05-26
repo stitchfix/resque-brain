@@ -1,4 +1,5 @@
 require 'quick_test_helper'
+require 'support/resque_helpers'
 require 'minitest/autorun'
 require 'resque'
 
@@ -12,32 +13,14 @@ rails_require 'models/resques'
 module Monitoring
 end
 class Monitoring::FailedJobCheckTest < MiniTest::Test
+  include ResqueHelpers
 
   def setup_resques(test1: 1, test2: 2)
     Redis.new.flushall
     Resques.new([
-      setup_resque("test1",:resque,test1),
-      setup_resque("test2",:resque2,test2),
+      add_failed_jobs(num_failed: test1, resque_instance: resque_instance("test1",:resque)),
+      add_failed_jobs(num_failed: test2, resque_instance: resque_instance("test2",:resque)),
     ])
-  end
-
-  def setup_resque(name, namespace, num_failed)
-    redis = Redis::Namespace.new(namespace,Redis.new)
-    resque_data_store = Resque::DataStore.new(redis)
-
-    num_failed.times do |i|
-      resque_data_store.push_to_failed_queue(Resque.encode(
-        failed_at: Time.now.utc.iso8601,
-        payload: { class: "Baz", args: [ i ]},
-        exception: "Resque::TermException",
-        error: "SIGTERM",
-        backtrace: [ "foo","bar","blah"],
-        queue: "mail",
-        worker: "worker#{i}",
-      ))
-    end
-
-    ResqueInstance.new(name: name, resque_data_store: resque_data_store)
   end
 
   def test_type

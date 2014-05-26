@@ -1,6 +1,6 @@
 module Monitoring
   class Monitor
-    def initialize(checker,notifier)
+    def initialize(checker: checker,notifier: notifier)
       @checker  = checker
       @notifier = notifier
     end

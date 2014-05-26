@@ -36,7 +36,7 @@ class Monitoring::MonitorTest < MiniTest::Test
     notifier = FakeNotifier.new
     results = Object.new
     checker = FakeChecker.new(results)
-    monitor = Monitoring::Monitor.new(checker,notifier)
+    monitor = Monitoring::Monitor.new(checker: checker,notifier: notifier)
     monitor.monitor!
 
     assert_equal results,notifier.notified

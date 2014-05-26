@@ -1,13 +1,14 @@
 module Monitoring
   class LibratoNotifier < Notifier
-    def initialize(prefix: nil, logger: Rails.logger)
+    def initialize(prefix: nil, logger: Rails.logger, type: :count)
       @prefix = validate_prefix!(prefix)
       @logger = logger
+      @type = type
     end
 
     def notify!(results)
       results.each do |resque_name,items|
-        @logger.info("source=#{resque_name} #{@prefix}#count=#{items.size}")
+        @logger.info("source=#{resque_name} #{@type}##{@prefix}=#{items.size}")
       end
     end
 
