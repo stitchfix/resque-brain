@@ -13,12 +13,8 @@ important ways:
 
 ## Planned Features
 
-- ability to kill workers
-- Monitoring/Alerting
-- Statistics collection
 - Visibility for resque-scheduler, if installed
 - Extensibility
-
 # UI
 
 ## Summary of all monitored Resques
@@ -118,6 +114,22 @@ To run tests:
 > rake test # run server-side tests
 > rake teaspoon # run JavaScript tests
 ```
+
+# Rake Tasks for Monitoring
+
+There are various techniques one can use to monitor and alert on issues with resque.  Resque-brain currently ships with a very
+simple approach based on logging statistics.
+
+The tasks work by checking some information from each monitored resque and then logging that information in a special way.  That
+special way happens to be a format that [Librato](https://metrics.librato.com/metrics) understands.  Librato can then interpret what's going on with your resque instances to record metrics.  You can then alert on those metrics, for example if the number of failed jobs is every more than 0, alert.
+
+The tasks are:
+
+* `rake monitor:failed` - Check the number of failed jobs and stat the results to the log in a way Librato can understand
+* `rake monitor:queue_sizes` - Stat the sizes of all queues to the log in a way Librato can understand
+* `rake monitor:stale_workers` - Check the number of stale workers and stat the results to the log in a way Librato can understand
+
+You can arrange for these rake tasks to be run periodically, to populate your Librato instance with metrics.
 
 # Limitations
 
