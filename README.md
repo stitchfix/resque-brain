@@ -11,10 +11,19 @@ important ways:
 * it allows for "retry & clear" on failed jobs, to re-queue the job and remove it from the failed queue in one step
 * it has a responsive design, thus working on mobile browsers
 
+## Other Features
+
+- Include rake tasks to monitor the health of your resque instances
+- UI focused on issues, not just dumping the contents of the queues:
+  - stale workers
+  - large queues
+  - failed jobs
+
 ## Planned Features
 
 - Visibility for resque-scheduler, if installed
 - Extensibility
+
 # UI
 
 ## Summary of all monitored Resques
