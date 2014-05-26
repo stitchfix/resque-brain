@@ -6,10 +6,20 @@ module Monitoring
       @type = type
     end
 
+    # Log metrics based on the hash passed in.
+    #
+    # results:: a hash where the keys represent the source (the resque instance name) and the values
+    #           are lists of items to be counted.  The items won't be examined, just counted and used in the metric
     def notify!(results)
       results.each do |resque_name,items|
-        @logger.info("source=#{resque_name} #{@type}##{@prefix}=#{items.size}")
+        log_to_librato(resque_name,@type,@prefix,items.size)
       end
+    end
+
+  protected
+
+    def log_to_librato(resque_name,type,prefix,size)
+      @logger.info("source=#{resque_name} #{type}##{prefix}=#{size}")
     end
 
   private

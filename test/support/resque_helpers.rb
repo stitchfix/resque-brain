@@ -20,6 +20,16 @@ module ResqueHelpers
     resque_instance
   end
 
+  def add_jobs(jobs: {}, resque_instance: nil)
+    jobs.each do |queue,num_jobs|
+      num_jobs.times do
+        resque_instance.resque_data_store.push_to_queue(queue,Resque.encode(class: "Blah", args: [1,2,3]))
+      end
+    end
+
+    resque_instance
+  end
+
   def add_workers(num_stale: 0, total_workers: 2, resque_instance: nil)
     total_workers = [num_stale,total_workers].max
 

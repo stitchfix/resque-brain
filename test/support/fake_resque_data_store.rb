@@ -94,7 +94,8 @@ class FakeResqueDataStore
     @queues[queue_name].size
   end
 
-  implement! def num_failed
+  implement! def num_failed(failed_queue_name=:failed)
+    raise "We do not support multiple failed queues" if failed_queue_name != :failed
     @failed.size
   end
 
@@ -122,7 +123,8 @@ class FakeResqueDataStore
     end
   end
 
-  implement! def update_item_in_failed_queue(index,json)
+  implement! def update_item_in_failed_queue(index,json,failed_queue_name=:failed)
+    raise "We do not support multiple failed queues" if failed_queue_name != :failed
     @failed[index] = Resque.decode(json)
   end
 
@@ -131,11 +133,13 @@ class FakeResqueDataStore
     @queues[queue.to_s] << Resque.decode(json)
   end
 
-  implement! def remove_from_failed_queue(index_in_failed_queue)
+  implement! def remove_from_failed_queue(index_in_failed_queue,failed_queue_name = :failed)
+    raise "We do not support multiple failed queues" if failed_queue_name != :failed
     @failed.delete_at(index_in_failed_queue)
   end
 
-  implement! def clear_failed_queue
+  implement! def clear_failed_queue(failed_queue_name=:failed)
+    raise "We do not support multiple failed queues" if failed_queue_name != :failed
     @failed = []
   end
 end

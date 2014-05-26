@@ -19,7 +19,7 @@ class Monitoring::FailedJobCheckTest < MiniTest::Test
     Redis.new.flushall
     Resques.new([
       add_failed_jobs(num_failed: test1, resque_instance: resque_instance("test1",:resque)),
-      add_failed_jobs(num_failed: test2, resque_instance: resque_instance("test2",:resque)),
+      add_failed_jobs(num_failed: test2, resque_instance: resque_instance("test2",:resque2)),
     ])
   end
 

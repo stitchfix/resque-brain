@@ -48,4 +48,24 @@ class MonitoringTest < ActionDispatch::IntegrationTest
     assert_equal "source=test1 measure#resque.stale_workers=1",logger.infos[0]
     assert_equal "source=test2 measure#resque.stale_workers=2",logger.infos[1]
   end
+
+  test "queue sizes to librato" do
+    resques = Resques.new([
+      add_jobs(jobs: { mail: 4, cache: 2 }, resque_instance: resque_instance("test1",:resque)),
+      add_jobs(jobs: { mail: 1, admin: 2 }, resque_instance: resque_instance("test2",:resque2)),
+    ])
+
+    logger = FakeLogger.new
+    Rails.logger = logger
+
+    monitor = Monitoring::Monitor.new(checker: Monitoring::QueueSizeCheck.new(resques: resques),
+                                      notifier: Monitoring::PerQueueLibratoNotifier.new(prefix: "resque.queue_size", type: :count))
+
+    monitor.monitor!
+
+    assert_equal "source=test1 count#resque.queue_size.cache=2" , logger.infos[0]
+    assert_equal "source=test1 count#resque.queue_size.mail=4"  , logger.infos[1]
+    assert_equal "source=test2 count#resque.queue_size.admin=2" , logger.infos[2]
+    assert_equal "source=test2 count#resque.queue_size.mail=1"  , logger.infos[3]
+  end
 end
