@@ -29,7 +29,7 @@ class Monitoring::PerQueueLibratoNotifierTest < MiniTest::Test
 
   def test_logs_results
     logger = FakeLogger.new
-    notifier = Monitoring::PerQueueLibratoNotifier.new(prefix: "foo.bar", logger: logger)
+    notifier = Monitoring::PerQueueLibratoNotifier.new(prefix: "foo.bar", logger: logger, unit: "jobs")
     notifier.notify!(
       "test1" => {
         "mail"  =>  [ Object.new, Object.new, Object.new ],
@@ -45,10 +45,10 @@ class Monitoring::PerQueueLibratoNotifierTest < MiniTest::Test
     )
 
     # Sorts by queue within a resque for predictability
-    assert_equal "source=test1 count#foo.bar.cache=4", logger.infos[0]
-    assert_equal "source=test1 count#foo.bar.mail=3",  logger.infos[1]
-    assert_equal "source=test2 count#foo.bar.mail=1",  logger.infos[2]
-    assert_equal "source=test3 count#foo.bar.cache=1", logger.infos[3]
-    assert_equal "source=test3 count#foo.bar.mail=0",  logger.infos[4]
+    assert_equal "source=test1.cache count#foo.bar=4jobs", logger.infos[0]
+    assert_equal "source=test1.mail count#foo.bar=3jobs",  logger.infos[1]
+    assert_equal "source=test2.mail count#foo.bar=1jobs",  logger.infos[2]
+    assert_equal "source=test3.cache count#foo.bar=1jobs", logger.infos[3]
+    assert_equal "source=test3.mail count#foo.bar=0jobs",  logger.infos[4]
   end
 end

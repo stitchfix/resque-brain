@@ -1,9 +1,10 @@
 module Monitoring
   class LibratoNotifier < Notifier
-    def initialize(prefix: nil, logger: Rails.logger, type: :count)
+    def initialize(prefix: nil, logger: Rails.logger, type: :count, unit: "")
       @prefix = validate_prefix!(prefix)
       @logger = logger
-      @type = type
+      @type   = type
+      @unit   = unit || ""
     end
 
     # Log metrics based on the hash passed in.
@@ -18,8 +19,8 @@ module Monitoring
 
   protected
 
-    def log_to_librato(resque_name,type,prefix,size)
-      @logger.info("source=#{resque_name} #{type}##{prefix}=#{size}")
+    def log_to_librato(source,type,prefix,size)
+      @logger.info("source=#{source} #{type}##{prefix}=#{size}#{@unit}")
     end
 
   private

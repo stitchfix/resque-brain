@@ -8,7 +8,7 @@ module Monitoring
     def notify!(results)
       results.each do |resque_name,by_queue|
         by_queue.sort_by(&:to_s).each do |queue_name,items|
-          log_to_librato(resque_name,@type,"#{@prefix}.#{queue_name}",items.size)
+          log_to_librato("#{resque_name}.#{queue_name}",@type,@prefix,items.size)
         end
       end
     end

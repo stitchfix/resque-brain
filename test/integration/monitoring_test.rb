@@ -30,8 +30,8 @@ class MonitoringTest < ActionDispatch::IntegrationTest
 
     Rake::Task['monitor:failed'].invoke
 
-    assert_equal "source=test1 count#resque.failed_jobs=3",logger.infos[0]
-    assert_equal "source=test2 count#resque.failed_jobs=4",logger.infos[1]
+    assert_equal "source=test1 count#resque.failed_jobs=3jobs",logger.infos[0]
+    assert_equal "source=test2 count#resque.failed_jobs=4jobs",logger.infos[1]
   end
 
   test "stale workers to librato" do
@@ -45,8 +45,8 @@ class MonitoringTest < ActionDispatch::IntegrationTest
 
     Rake::Task['monitor:stale_workers'].invoke
 
-    assert_equal "source=test1 measure#resque.stale_workers=1",logger.infos[0]
-    assert_equal "source=test2 measure#resque.stale_workers=2",logger.infos[1]
+    assert_equal "source=test1 measure#resque.stale_workers=1workers",logger.infos[0]
+    assert_equal "source=test2 measure#resque.stale_workers=2workers",logger.infos[1]
   end
 
   test "queue sizes to librato" do
@@ -60,9 +60,9 @@ class MonitoringTest < ActionDispatch::IntegrationTest
 
     Rake::Task['monitor:queue_sizes'].invoke
 
-    assert_equal "source=test1 count#resque.queue_size.cache=2" , logger.infos[0]
-    assert_equal "source=test1 count#resque.queue_size.mail=4"  , logger.infos[1]
-    assert_equal "source=test2 count#resque.queue_size.admin=2" , logger.infos[2]
-    assert_equal "source=test2 count#resque.queue_size.mail=1"  , logger.infos[3]
+    assert_equal "source=test1.cache count#resque.queue_size=2jobs" , logger.infos[0]
+    assert_equal "source=test1.mail count#resque.queue_size=4jobs"  , logger.infos[1]
+    assert_equal "source=test2.admin count#resque.queue_size=2jobs" , logger.infos[2]
+    assert_equal "source=test2.mail count#resque.queue_size=1jobs"  , logger.infos[3]
   end
 end
