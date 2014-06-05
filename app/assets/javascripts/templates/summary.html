@@ -26,7 +26,7 @@
             <td>{{resque.name}}</td>
             <td>{{resque.failed}}</td>
             <td>
-              <a ng-click="viewResque(resque,'failed')" title="View Failed Jobs" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+              <a ng-click="viewResque('failed',resque)" title="View Failed Jobs" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>
           </tr>
         </tbody>
@@ -59,7 +59,7 @@
             </td>
             <td class="hidden-xs">{{resque.runningTooLong}}</td>
             <td>
-              <a ng-click="viewResque(resque,'running')" title="View Running Jobs" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+              <a ng-click="viewResque('running',resque)" title="View Running Jobs" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>
           </tr>
         </tbody>
@@ -87,7 +87,7 @@
             <td>{{resque.name}}</td>
             <td>{{resque.waiting}}</td>
             <td>
-              <a ng-click="viewResque(resque,'waiting')" title="View Waiting Jobs" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
+              <a ng-click="viewResque('waiting',resque)" title="View Waiting Jobs" href="">View <i aria-hidden="true" class="glyphicon glyphicon-chevron-right"></i></a>
             </td>
           </tr>
         </tbody>

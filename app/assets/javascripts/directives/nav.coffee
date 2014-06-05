@@ -1,23 +1,8 @@
 angular.module("directives").directive("rbNav", [
-  "$location","Resques", "GenericErrorHandling",
-  ($location , Resques,   GenericErrorHandling)->
+  "$location","Resques", "GenericErrorHandling", "NavElement",
+  ($location , Resques,   GenericErrorHandling ,  NavElement)->
     templateUrl: "nav.html"
     link: (scope) ->
-
-      scope.viewResque   = (resque,section='overview') ->
-        path = {
-          overview: ''
-          running: '/running'
-          waiting: '/waiting'
-          failed:  '/failed'
-        }[section] or ''
-        $location.path("/#{resque.name}#{path}")
-
-      scope.viewOverview = -> $location.path("/#{scope.resqueSelected}").search({})
-      scope.viewRunning  = -> $location.path("/#{scope.resqueSelected}/running").search({})
-      scope.viewWaiting  = -> $location.path("/#{scope.resqueSelected}/waiting").search({})
-      scope.viewFailed   = -> $location.path("/#{scope.resqueSelected}/failed").search({})
-      scope.viewSummary  = -> $location.path("/").search({})
 
       Resques.all(
         ( (resques)-> scope.resques = resques ),
@@ -32,15 +17,19 @@ angular.module("directives").directive("rbNav", [
       else
         scope.resqueSelected = null
 
-      scope.activeClass = (name)->
-        if name == 'overview' and $location.path().match(/^\/[^\/]+\/?$/)
-          'active'
-        else if name == 'running' and $location.path().match(/\/[^\/]+\/running/)
-          'active'
-        else if name == 'waiting' and $location.path().match(/\/[^\/]+\/waiting/)
-          'active'
-        else if name == 'failed' and $location.path().match(/\/[^\/]+\/failed/)
-          'active'
-        else
-          ''
+      scope.navElements = [
+        NavElement(scope.resqueSelected,'overview','Overview','/',new RegExp("/$")),
+        NavElement(scope.resqueSelected,'running','Running Jobs'),
+        NavElement(scope.resqueSelected,'waiting','Waiting Jobs'),
+        NavElement(scope.resqueSelected,'failed','Failed Jobs')
+      ]
+
+      scope.viewResque = (section,resque)->
+        resqueName = (resque or {}).name or scope.resqueSelected
+        element = _.find(scope.navElements, (navElement)-> navElement.name == section)
+        throw Error("No nav element named #{section}") unless element
+        element.activate(resqueName)
+
+      scope.viewSummary = -> $location.path("/").search({})
+
 ])

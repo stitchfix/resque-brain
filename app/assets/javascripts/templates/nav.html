@@ -15,10 +15,9 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" collapse='navCollapsed'>
       <ul class="nav navbar-nav" ng-if="resqueSelected">
-        <li ng-class="activeClass('overview')"><a ng-click="viewOverview()" title="Overview" href="">Overview</a></li>
-        <li ng-class="activeClass('running')" ><a ng-click="viewRunning()"  title="Running Jobs" href="">Running</a></li>
-        <li ng-class="activeClass('waiting')" ><a ng-click="viewWaiting()"  title="Waiting Jobs" href="">Waiting</a></li>
-        <li ng-class="activeClass('failed')"  ><a ng-click="viewFailed()"   title="Failed Jobs" href="">Failed</a></li>
+        <li ng-repeat="navElement in navElements" ng-class="navElement.activeClass()">
+          <a href="" ng-click="navElement.activate()" title="navElement.title">{{navElement.title}}</a>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
@@ -27,7 +26,7 @@
             <li><a ng-click="viewSummary()" href="">All</a></li>
             <li class="divider"></li>
             <li ng-repeat="resque in resques">
-              <a ng-click="viewResque(resque)" href="">{{resque.name}}</a>
+              <a ng-click="viewResque('overview',resque)" href="">{{resque.name}}</a>
             </li>
           </ul>
         </li>
