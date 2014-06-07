@@ -7,6 +7,15 @@ services.factory("Resques", [
     Resques = $resource("/resques/:resqueName", { "format": "json" })
     ResqueJobs = $resource("/resques/:resqueName/jobs/:jobType", { "format" : "json" })
 
+    addToSummaryKeepingSorted = (summary,resqueSummary)->
+      summary.push(resqueSummary)
+      summary.sort(
+        (a,b)->
+          nameA = (a.name or "").toLocaleUpperCase()
+          nameB = (b.name or "").toLocaleUpperCase()
+          nameA.localeCompare(nameB)
+      )
+
     all = (success,failure)              -> Resques.query(success,failure)
     get = (resqueName,success,failure)   -> Resques.get({"resqueName": resqueName},success,failure)
     refreshSummaries = (success,failure) ->
@@ -16,8 +25,8 @@ services.factory("Resques", [
           promises = _.chain(resques).map( (resque)->
             get(
               resque.name,
-              ( (resqueSummary)-> summary.push(resqueSummary) ),
-              ( (httpResponse) -> summary.push({ name: resque.name, error: "Problem retreiving #{resque.name}"}) )
+              ( (resqueSummary)-> addToSummaryKeepingSorted(summary,resqueSummary) ),
+              ( (httpResponse) -> addToSummaryKeepingSorted(summary,{ name: resque.name, error: "Problem retreiving #{resque.name}"}))
             ).$promise
           ).value()
           $q.all(promises)["finally"]( -> success(summary))
