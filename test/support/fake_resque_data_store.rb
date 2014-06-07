@@ -105,7 +105,7 @@ class FakeResqueDataStore
 
   implement! def workers_map(worker_ids)
     Hash[WORKERS.select {|k,v| worker_ids.include?(k) }.map { |k,v|
-      [k,Resque.encode(v)]
+      ["worker:#{k}",Resque.encode(v)]
     }]
   end
 

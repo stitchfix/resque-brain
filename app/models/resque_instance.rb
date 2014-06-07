@@ -24,14 +24,14 @@ class ResqueInstance
   def running
     worker_ids = Array(@resque_data_store.worker_ids)
     return 0 if worker_ids.empty?
-    workers_map(worker_ids).reject { |id,worker_info| worker_info.nil? }.size
+    workers_map(worker_ids).reject { |_,worker_info| worker_info.nil? }.size
   end
 
   # Return the number of running jobs that are running "too long" based on the `:stale_worker_seconds` configuration value
   def running_too_long
     worker_ids = Array(@resque_data_store.worker_ids)
     return 0 if worker_ids.empty?
-    workers_map(worker_ids).reject { |id,worker_info| 
+    workers_map(worker_ids).reject { |_,worker_info| 
       worker_info.nil? 
     }.select { |_,worker_info|
       WorkerStartTime.new(worker_info,@stale_worker_seconds).too_long?
@@ -49,9 +49,10 @@ class ResqueInstance
   def jobs_running
     worker_ids = Array(@resque_data_store.worker_ids)
     return [] if worker_ids.empty?
-    workers_map(worker_ids).reject { |_,worker_info| worker_info.nil?  }.map { |id,worker_info| 
+    workers_map(worker_ids).reject { |_,worker_info| worker_info.nil?  }.map { |resque_key,worker_info| 
       start_time = WorkerStartTime.new(worker_info,@stale_worker_seconds)
-      RunningJob.new(worker: id,
+      worker_id = resque_key.gsub(/^worker:/,'')
+      RunningJob.new(worker: worker_id,
                     payload: worker_info["payload"],
                  started_at: start_time.started_at,
                    too_long: start_time.too_long?,

@@ -80,19 +80,23 @@ class ResqueInstanceTest < MiniTest::Test
 
     assert_equal    4               , jobs_running.size
     assert_equal   "cache"          , jobs_running[0].queue
+    assert_equal   "cache"          , jobs_running[0].worker
     assert_equal   "CacheJob"       , jobs_running[0].payload["class"]
     assert_equal  ["whatever"]      , jobs_running[0].payload["args"]
     assert_in_delta Time.now - 3600 , jobs_running[0].started_at       , 5 # seconds
     assert                            jobs_running[0].too_long?
 
     assert_equal "generator"  ,  jobs_running[1].queue
+    assert_equal "generator"  ,  jobs_running[1].worker
     refute                       jobs_running[1].too_long?
 
     assert_equal "indexing"   ,  jobs_running[2].queue
+    assert_equal "indexing"   ,  jobs_running[2].worker
     refute                       jobs_running[2].too_long?
 
     assert_equal "purchasing" ,  jobs_running[3].queue
-    refute                       jobs_running[2].too_long?
+    assert_equal "purchasing" ,  jobs_running[3].worker
+    refute                       jobs_running[3].too_long?
 
   end
 
