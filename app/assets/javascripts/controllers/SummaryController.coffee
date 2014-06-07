@@ -1,7 +1,7 @@
 controllers = angular.module('controllers')
 controllers.controller("SummaryController", [
-  '$scope', 'Resques', "GenericErrorHandling",
-  ($scope ,  Resques ,  GenericErrorHandling)->
+  '$scope', 'Resques', "GenericErrorHandling", "IntervalRefresh",
+  ($scope ,  Resques ,  GenericErrorHandling ,  IntervalRefresh)->
 
     $scope.allResques          = []
     $scope.totalFailed         = 0
@@ -28,5 +28,5 @@ controllers.controller("SummaryController", [
         "flush"
       )
 
-    $scope.refresh()
+    IntervalRefresh($scope.refresh,$scope)
 ])

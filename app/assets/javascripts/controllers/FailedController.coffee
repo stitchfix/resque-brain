@@ -1,7 +1,7 @@
 controllers = angular.module("controllers")
 controllers.controller("FailedController", [
-  "$scope", "$modal", "$routeParams", "$location", "$timeout", "$animate", "Resques", "GenericErrorHandling", "FailedJobs", "flash",
-  ($scope ,  $modal ,  $routeParams ,  $location ,  $timeout ,  $animate ,  Resques ,  GenericErrorHandling ,  FailedJobs ,  flash)->
+  "$scope", "$modal", "$routeParams", "$location", "$timeout", "$animate", "IntervalRefresh", "Resques", "GenericErrorHandling", "FailedJobs", "flash",
+  ($scope ,  $modal ,  $routeParams ,  $location ,  $timeout ,  $animate ,  IntervalRefresh ,  Resques ,  GenericErrorHandling ,  FailedJobs ,  flash)->
 
     PAGE_SIZE = 10
 
@@ -31,8 +31,6 @@ controllers.controller("FailedController", [
         GenericErrorHandling.onFail($scope),
         "flush"
       )
-
-    $scope.refresh = loadFailedJobs
 
     $scope.loading = true
 
@@ -100,6 +98,8 @@ controllers.controller("FailedController", [
 
     $scope.currentPage = parseInt($routeParams.page or "1")
 
-    loadFailedJobs()
+    $scope.refresh = loadFailedJobs
+    IntervalRefresh($scope.refresh,$scope)
+
 
 ])

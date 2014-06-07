@@ -1,8 +1,9 @@
 controllers = angular.module("controllers")
 controllers.controller("RunningController", [
-  "$scope", "$modal", "$routeParams", "Resques", "GenericErrorHandling",
-  ($scope ,  $modal ,  $routeParams ,  Resques ,  GenericErrorHandling)->
+  "$scope", "$modal", "$routeParams", "IntervalRefresh", "Resques", "GenericErrorHandling",
+  ($scope ,  $modal ,  $routeParams ,  IntervalRefresh ,  Resques ,  GenericErrorHandling)->
 
+ 
     $scope.refresh = ->
       $scope.loading = true
 
@@ -14,7 +15,7 @@ controllers.controller("RunningController", [
         GenericErrorHandling.onFail($scope)
       )
 
-    $scope.refresh()
+    IntervalRefresh($scope.refresh,$scope)
 
     $scope.killJob = (job)->
       modalInstance = $modal.open(

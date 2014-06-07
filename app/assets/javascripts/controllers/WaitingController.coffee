@@ -1,7 +1,7 @@
 controllers = angular.module("controllers")
 controllers.controller("WaitingController", [
-  "$scope", "$modal", "$routeParams", "flash", "Resques", "GenericErrorHandling",
-  ($scope ,  $modal ,  $routeParams ,  flash ,  Resques ,  GenericErrorHandling)->
+  "$scope", "$modal", "$routeParams", "flash", "Resques", "GenericErrorHandling", "IntervalRefresh",
+  ($scope ,  $modal ,  $routeParams ,  flash ,  Resques ,  GenericErrorHandling ,  IntervalRefresh)->
 
     $scope.refresh = ->
       $scope.loading = true
@@ -14,6 +14,5 @@ controllers.controller("WaitingController", [
         GenericErrorHandling.onFail($scope)
       )
 
-    $scope.refresh()
-
+    IntervalRefresh($scope.refresh,$scope)
 ])
