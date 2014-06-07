@@ -8,5 +8,7 @@ author: "David Bryant Copeland"
 url: "http://davetron5000.github.io/resque-brain"
 title: "Resque-Brain: Monitor Multiple Resque Instances from one UI"
 production_url: "http://davetron5000.github.io/resque-brain"
-
+baseurl: "/resque-brain"
+safe: true
+lsi: true
 exclude: [Rakefile, README.md]
