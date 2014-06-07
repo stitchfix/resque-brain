@@ -1,0 +1,12 @@
+# This will be the first part of the title tag for your site <title> site.name + page.title </title>
+name: "Resque-Brain"
+# Populates the meta description for the site. Should be under 150 characters for best SEO purposes.
+descripiton: "Resque-Brain can monitor multiple resques from one UI, safely"
+
+# Owner (organization or individual) of site content
+author: "David Bryant Copeland"
+url: "http://davetron5000.github.io/resque-brain"
+title: "Resque-Brain: Monitor Multiple Resque Instances from one UI"
+production_url: "http://davetron5000.github.io/resque-brain"
+
+exclude: [Rakefile, README.md]
