@@ -1,7 +1,7 @@
 controllers = angular.module("controllers")
 controllers.controller("OverviewController", [
   "$scope", "$routeParams", "IntervalRefresh", "Resques", "GenericErrorHandling", "Monitor",
-  ($scope ,  $routeParams ,  IntervalRefresh , Resques ,  GenericErrorHandling ,  Monitor)->
+  ($scope ,  $routeParams ,  IntervalRefresh ,  Resques ,  GenericErrorHandling ,  Monitor)->
 
     $scope.refresh = ->
       $scope.loading = true
