@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-<header class="header-main">
+<header class="full-bar header-main">
   <h1 class="text-center f1">
     Resque Brain 
   </h1>
@@ -11,12 +11,12 @@ layout: default
   <p class="lead f5">
     You're running <strong>more than one</strong> <a href="https://github.com/resque/resque">Resque</a> instance, and you have to <strong>bounce between apps</strong>.  Resque's web UI is <strong>nigh-unusbale</strong> on a <strong>mobile browser</strong> and managing the failed queue is <strong>error-prone</strong> at best.
   </p>
-  <h1 class="f3 text-center">Resque Brain Changes That</h3>
+  <h1 class="f3 text-center neon-glow">Resque Brain Changes That</h3>
 </header>
     <!--
-<section class="video-overview">
+<section class="full-bar video-overview">
   <article class="text-center">
-    <iframe src="//player.vimeo.com/video/6185584" class="img-shadow video-player" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+    <iframe src="//player.vimeo.com/video/6185584" class="shadow video-player" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
     <p class="f7">
       <a href="#benefits">Don't feel like watching a video?</a>
     </p>
@@ -24,28 +24,32 @@ layout: default
 </section>
     -->
 <a name="benefits"></a>
-<section class="selling-points">
+<section class="full-bar selling-points">
   <section class="third">
-    <h1 class="f6 text-center text-bold mt-some">Monitor Multiple Resques</h1>
-    <p class="text-center">
-      <img class="img-shadow img-screenshot" src="{{site.baseurl}}/images/overview.png">
-    </p>
+    <h1 class="f6 text-center text-semibold mt-some">Monitor Multiple Resques</h1>
+    <ul class="screenshots text-center">
+      <li class="screenshot"><img class="shadow" src="{{site.baseurl}}/images/overview_running.png"></li>
+      <li class="screenshot"><img class="shadow" src="{{site.baseurl}}/images/overview_waiting.png"></li>
+      <li class="screenshot"><img class="shadow" src="{{site.baseurl}}/images/overview_failed.png"></li>
+    </ul>
   </section>
   <section class="third">
-    <h1 class="f6 text-center text-bold mt-some">Mobile-Friendly Design</h1>
-    <p class="text-center">
-      <img class="img-shadow img-screenshot" src="{{site.baseurl}}/images/responsive.png">
-    </p>
+    <h1 class="f6 text-center text-semibold mt-some">Mobile-Friendly Design</h1>
+    <ul class="screenshots text-center">
+      <li class="screenshot"><img class="shadow" src="{{site.baseurl}}/images/mobile_overview.png"></li>
+      <li class="screenshot"><img class="shadow" src="{{site.baseurl}}/images/mobile_failed.png"></li>
+    </ul>
   </section>
   <section class="third">
-    <h1 class="f6 text-center text-bold mt-some">Failed Queue Management</h1>
-    <p class="text-center">
-      <img class="img-shadow img-screenshot" src="{{site.baseurl}}/images/failed_queue.png">
-    </p>
+    <h1 class="f6 text-center text-semibold mt-some">Failed Queue Management</h1>
+    <ul class="screenshots text-center">
+      <li class="screenshot"><img class="shadow" src="{{site.baseurl}}/images/failed_queue.png"></li>
+      <li class="screenshot"><img class="shadow" src="{{site.baseurl}}/images/failed_queue_all.png"></li>
+    </ul>
   </section>
   <div class="clear-floats"></div>
 </section>
-<section class="details">
+<section class="full-bar details">
   <section class="third">
     <h1 class="f6 text-center text-bold mt-some">Monitoring &amp; Statistics</h1>
     <p class="text-center">
@@ -72,10 +76,8 @@ layout: default
   </section>
   <div class="clear-floats"></div>
 </section>
-<section class="learn-more">
-  <ul class="text-center">
-    <li class="f4"><a href="https://github.com/davetron5000/resque-brain/wiki/Set-Up">Set It Up</a></li>
-    <li class="f4"><a href="https://github.com/davetron5000/resque-brain/wiki/Features">Detailed Featurelist</a></li>
-    <li class="f4"><a href="https://github.com/davetron5000/resque-brain">View <span class="hide-small">the Source </span>on GitHub</a></li>
+<section class="full-bar learn-more">
+  <ul class="text-right">
+    <li class="f4"><a href="https://github.com/davetron5000/resque-brain/wiki/Set-Up">Get Set Up Now &rarr;</a></li>
   </ul>
 </section>
