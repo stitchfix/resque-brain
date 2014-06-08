@@ -16,7 +16,7 @@
           </tr>
         <thead>
         <tbody>
-          <tr ng-repeat="job in jobsRunning" ng-class="{ 'warning': job.tooLong }">
+          <tr class="animate-repeat fade-in" ng-repeat="job in jobsRunning" ng-class="{ 'warning': job.tooLong }">
             <td>{{job.queue}}</td>
             <td>{{job.payload.class}}</td>
             <td>{{job.startedAt | amCalendar }}</td>

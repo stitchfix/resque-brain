@@ -14,7 +14,7 @@
             </tr>
             <thead>
               <tbody>
-                <tr ng-repeat="jobsInQueue in jobsWaiting" ng-class="{'success': jobsInQueue.jobs.length == 0, 'warning': jobsInQueue.jobs.length > 0}">
+                <tr class="animate-repeat fade-in" ng-repeat="jobsInQueue in jobsWaiting" ng-class="{'success': jobsInQueue.jobs.length == 0, 'warning': jobsInQueue.jobs.length > 0}">
                   <td>{{ jobsInQueue.queue }}</td>
                   <td>{{ jobsInQueue.jobs.length }}</td>
                 </tr>
