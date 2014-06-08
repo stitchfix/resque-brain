@@ -5,7 +5,10 @@ services.factory("GenericErrorHandling", [
   (flash)->
     onFail: (scope)->
       (httpResponse)->
-        flash.error   = "#{httpResponse.status}/#{httpResponse.statusText}: #{httpResponse.data}"
+        flash.error   = if httpResponse.status == 0
+          "Lost connection to the server"
+        else
+          "#{httpResponse.status}/#{httpResponse.statusText}: #{httpResponse.data}"
         scope.loading =    false
 
 ])
