@@ -7,7 +7,7 @@ important ways:
 
 [resque]: https://github.com/resque/resque
 
-* it can monitor any number of resque instances, instead of just one
+* it can monitor any number of resque instances, instead of just one (see [the wiki](https://github.com/davetron5000/resque-brain/wiki/Why-Run-Multiple-Resques%3F) for why you'd want to do that).
 * it allows for "retry & clear" on failed jobs, to re-queue the job and remove it from the failed queue in one step
 * it has a responsive design, thus working on mobile browsers
 
@@ -69,28 +69,7 @@ The design is completely responsive, meaning you can tend to your queues while o
 
 # Running
 
-To use resque-brain, arrange to have it deployed as you do with other Rails apps.  You will need to configure two things in the
-environment - Resque instances to monitor, and login credentials.
-
-## Resque Instances
-
-* Set `RESQUE_BRAIN_INSTANCES` to a comma-delimited list of Resque instance names.  They can be anything, but url-friendly labels
-are recommended.  
-* For each instance name set `RESQUE_BRAIN_INSTANCES_thename` to the redis url to your Resque's redis
-
-```
-RESQUE_BRAIN_INSTANCES=www,admin,api
-RESQUE_BRAIN_INSTANCES_www=redis://09809sfasdf@myredis.com:8765
-RESQUE_BRAIN_INSTANCES_admin=redis://9ryfkfg@myredis.com:8766
-RESQUE_BRAIN_INSTANCES_api=redis://77f77ff@myredis.com:8767
-```
-
-## Authentication
-
-Currently, only HTTP Auth is available.  Allow access by setting these in the environment:
-
-* `HTTP_AUTH_USERNAME` - username
-* `HTTP_AUTH_PASSWORD` - password
+See [Set Up](https://github.com/davetron5000/resque-brain/wiki/Set-Up) on the wiki.
 
 ## Local Development
 
@@ -126,25 +105,12 @@ To run tests:
 
 # Rake Tasks for Monitoring
 
-There are various techniques one can use to monitor and alert on issues with resque.  Resque-brain currently ships with a very
-simple approach based on logging statistics.
-
-The tasks work by checking some information from each monitored resque and then logging that information in a special way.  That
-special way happens to be a format that [Librato](https://metrics.librato.com/metrics) understands.  Librato can then interpret what's going on with your resque instances to record metrics.  You can then alert on those metrics, for example if the number of failed jobs is every more than 0, alert.
-
-The tasks are:
-
-* `rake monitor:failed` - Check the number of failed jobs and stat the results to the log in a way Librato can understand
-* `rake monitor:queue_sizes` - Stat the sizes of all queues to the log in a way Librato can understand
-* `rake monitor:stale_workers` - Check the number of stale workers and stat the results to the log in a way Librato can understand
-
-You can arrange for these rake tasks to be run periodically, to populate your Librato instance with metrics.
+See [the Set Up page](https://github.com/davetron5000/resque-brain/wiki/Set-Up) on the wiki, as well as [Monitoring & Alerting](https://github.com/davetron5000/resque-brain/wiki/Monitoring-and-Alerting) for a discussion of how its set up.
 
 # Limitations
 
 * This only works with the default Redis-based Failure backend.  It *does* work with resque-retry because resque-retry defers to
-that backend.  Personally, I don't believe you should use the other back-ends, so supporting the multi-queue backend, for
-example, is not high on my priority list
+that backend.  [I don't believe you should use the other back-ends](https://github.com/davetron5000/resque-brain/wiki/Why-you-shouldn't-use-other-Resque-Falure-Back-ends).
 * Just as with resque-web, if multiple people are manipulating the failed queue at the same time bad things will happen.  This is
 a function of the poor design of the failed queue implementation.  Be warned.
 * The Web UI is not extensible, so currently this is no visibility into resque-scheduler or resque-retry.
