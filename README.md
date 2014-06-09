@@ -1,13 +1,13 @@
 # resque-brain: a better resque-web
 
-![build status](https://travis-ci.org/davetron5000/resque-brain.svg?branch=master)
+![build status](https://travis-ci.org/stitchfix/resque-brain.svg?branch=master)
 
 resque-brain is a web app to monitor and manage multiple [Resque][resque] instances.  It is superior to resque-web in three
 important ways:
 
 [resque]: https://github.com/resque/resque
 
-* it can monitor any number of resque instances, instead of just one (see [the wiki](https://github.com/davetron5000/resque-brain/wiki/Why-Run-Multiple-Resques%3F) for why you'd want to do that).
+* it can monitor any number of resque instances, instead of just one (see [the wiki](https://github.com/stitchfix/resque-brain/wiki/Why-Run-Multiple-Resques%3F) for why you'd want to do that).
 * it allows for "retry & clear" on failed jobs, to re-queue the job and remove it from the failed queue in one step
 * it has a responsive design, thus working on mobile browsers
 
@@ -69,7 +69,7 @@ The design is completely responsive, meaning you can tend to your queues while o
 
 # Running
 
-See [Set Up](https://github.com/davetron5000/resque-brain/wiki/Set-Up) on the wiki.
+See [Set Up](https://github.com/stitchfix/resque-brain/wiki/Set-Up) on the wiki.
 
 ## Local Development
 
@@ -105,12 +105,12 @@ To run tests:
 
 # Rake Tasks for Monitoring
 
-See [the Set Up page](https://github.com/davetron5000/resque-brain/wiki/Set-Up) on the wiki, as well as [Monitoring & Alerting](https://github.com/davetron5000/resque-brain/wiki/Monitoring-and-Alerting) for a discussion of how its set up.
+See [the Set Up page](https://github.com/stitchfix/resque-brain/wiki/Set-Up) on the wiki, as well as [Monitoring & Alerting](https://github.com/stitchfix/resque-brain/wiki/Monitoring-and-Alerting) for a discussion of how its set up.
 
 # Limitations
 
 * This only works with the default Redis-based Failure backend.  It *does* work with resque-retry because resque-retry defers to
-that backend.  [I don't believe you should use the other back-ends](https://github.com/davetron5000/resque-brain/wiki/Why-you-shouldn't-use-other-Resque-Falure-Back-ends).
+that backend.  [I don't believe you should use the other back-ends](https://github.com/stitchfix/resque-brain/wiki/Why-you-shouldn't-use-other-Resque-Falure-Back-ends).
 * Just as with resque-web, if multiple people are manipulating the failed queue at the same time bad things will happen.  This is
 a function of the poor design of the failed queue implementation.  Be warned.
 * The Web UI is not extensible, so currently this is no visibility into resque-scheduler or resque-retry.
