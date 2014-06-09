@@ -5,9 +5,9 @@ descripiton: "Resque-Brain can monitor multiple resques from one UI, safely"
 
 # Owner (organization or individual) of site content
 author: "David Bryant Copeland"
-url: "http://davetron5000.github.io/resque-brain"
+url: "http://stitchfix.github.io/resque-brain"
 title: "Resque-Brain: Monitor Multiple Resque Instances from one UI"
-production_url: "http://davetron5000.github.io/resque-brain"
+production_url: "http://stitchfix.github.io/resque-brain"
 baseurl: "/resque-brain"
 safe: true
 lsi: true
