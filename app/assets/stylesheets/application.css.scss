@@ -25,6 +25,7 @@
 
 .pt-1 { padding-top: 20px; }
 .pb-1 { padding-bottom: 20px; }
+.pb-none { padding-bottom: 0; }
 
 .mt-none { margin-top: 0; }
 .mt-1    { margin-top: 20px; }
@@ -56,4 +57,12 @@
        font-url('bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'),
        font-url('bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
        font-url('bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+.code-normal {
+  background: none;
+  color: black;
+}
+.code-smaller {
+  font-size: 80%;
 }

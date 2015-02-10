@@ -5,6 +5,7 @@ rails_require 'models/resque_instance'
 rails_require 'models/job'
 rails_require 'models/running_job'
 rails_require 'models/failed_job'
+rails_require 'models/schedule'
 
 class ResqueInstanceTest < MiniTest::Test
   def test_failed
@@ -169,9 +170,44 @@ class ResqueInstanceTest < MiniTest::Test
     refute_nil resque_data_store.queues["mail"], "Expected the retry to create the 'mail' queue, got #{resque_data_store.queues.keys}"
   end
 
+  def test_schedule
+    resque_data_store = fake_resque_data_store(schedule: {
+      foo: { class: "FooJob", args: [ 1, "two", true ], description: "This is a fake job", cron: "1 * * * *" },
+      bar: { class: "BarJob", description: "This is another fake job", cron: "3 * * * *" },
+    })
+    instance = create_test_instance(resque_data_store: resque_data_store)
+    schedule = instance.schedule
+
+    assert_equal "foo",schedule[0].name
+    assert_equal [1,"two",true],schedule[0].args
+    assert_equal "This is a fake job",schedule[0].description
+    assert_equal "1 * * * *",schedule[0].cron
+
+    assert_equal "bar",schedule[1].name
+    assert_nil   schedule[1].args
+    assert_equal "This is another fake job",schedule[1].description
+    assert_equal "3 * * * *",schedule[1].cron
+  end
+
+  def test_schedule_no_schedule
+    resque_data_store = fake_resque_data_store(schedule: nil)
+    instance = create_test_instance(resque_data_store: resque_data_store)
+    schedule = instance.schedule
+
+    assert schedule.empty?
+  end
+
+  def test_schedule_mangled_schedule
+    resque_data_store = fake_resque_data_store(schedule: "blah blah blah blah whatever")
+    instance = create_test_instance(resque_data_store: resque_data_store)
+    schedule = instance.schedule
+
+    assert schedule.empty?
+  end
+
 private
-  def fake_resque_data_store
-    FakeResqueDataStore.new
+  def fake_resque_data_store(*args)
+    FakeResqueDataStore.new(*args)
   end
 
   def create_test_instance(resque_data_store: fake_resque_data_store)

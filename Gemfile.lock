@@ -61,6 +61,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    cron2english (0.1.3)
     dotenv (0.7.0)
     dotenv-rails (0.7.0)
       dotenv (= 0.7.0)
@@ -185,6 +186,7 @@ DEPENDENCIES
   bower-rails
   capybara
   coffee-rails (~> 4.0.0)
+  cron2english
   dotenv-rails
   foreman
   jbuilder (~> 2.0)

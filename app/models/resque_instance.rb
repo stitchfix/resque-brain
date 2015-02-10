@@ -135,6 +135,26 @@ class ResqueInstance
     raise
   end
 
+  # Get the schedule, if present, as an array of Schedule instances
+  #
+  # This relies on the internals of resque-scheduler's implementation.  Because it
+  # must depend on the single, global Resque instances, we can't use that, so we have to reach
+  # into the underlying redis.  Ugh.
+  def schedule
+    resque_schedule = @resque_data_store.hgetall("schedules")
+    return [] if resque_schedule.nil? || !resque_schedule.kind_of?(Hash)
+    resque_schedule.map { |name,schedule|
+      schedule = JSON.parse(schedule)
+      Schedule.new(name: name,
+                   args: schedule["args"],
+                   cron: schedule["cron"],
+                   klass: schedule["class"],
+                   queues: schedule["queue"],
+                   description: schedule["description"],
+                   every: schedule["every"])
+    }
+  end
+
 private
 
   def workers_map(ids)

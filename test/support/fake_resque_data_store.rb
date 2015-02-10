@@ -76,14 +76,35 @@ class FakeResqueDataStore
     }
   ]
 
+  class FakeRedis
+    def initialize(data)
+      @data = data
+    end
+
+    def method_missing(sym,*args,&block)
+      if @data[sym] && @data[sym].key?(args)
+        @data[sym][args]
+      else
+        super
+      end
+    end
+  end
+
   attr_reader :unregistered_workers,
               :failed,
               :queues
 
-  def initialize
+  def initialize(schedule: {})
     @unregistered_workers = []
     @failed = FAILED.dup
     @queues = QUEUES.dup
+    @fake_redis = if schedule.nil?
+                    FakeRedis.new(hgetall: { ["schedules"] => nil })
+                  elsif schedule.kind_of?(Hash)
+                    FakeRedis.new(hgetall: { ["schedules"] => schedule.map { |name,sched| [name.to_s,sched.to_json] }.to_h })
+                  else
+                    FakeRedis.new(hgetall: { ["schedules"] => schedule })
+                  end
   end
 
   implement! def queue_names
@@ -141,5 +162,9 @@ class FakeResqueDataStore
   implement! def clear_failed_queue(failed_queue_name=:failed)
     raise "We do not support multiple failed queues" if failed_queue_name != :failed
     @failed = []
+  end
+
+  implement_ghost! def hgetall(key)
+    @fake_redis.hgetall(key)
   end
 end

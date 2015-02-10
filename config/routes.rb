@@ -18,5 +18,6 @@ Rails.application.routes.draw do
       end
     end
     resources :workers, only: [ :destroy ]
+    resource :schedule, only: [ :show ]
   end
 end

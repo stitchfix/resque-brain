@@ -1,0 +1,43 @@
+<div rb-nav></div>
+<div class="container">
+  <section class="row">
+    <header class="col-md-12">
+      <h1 class="text-center">Schedule <small>{{resqueSelected}}</small></h1>
+    </header>
+  </section>
+  <section>
+    <ul class="list-group">
+      <li ng-repeat="scheduleElement in schedule" class="list-group-item">
+        <h2 class="list-group-item-heading mt-none hidden-xs">
+          {{scheduleElement.name}}
+        </h2>
+        <h2 class="h6 list-group-item-heading mt-none visible-xs">
+          {{scheduleElement.name}}
+        </h2>
+        <div class="list-group-item-text">
+          <p class="text-muted">
+            <span class="label label-info">{{scheduleElement.queue}}</span>
+            {{scheduleElement.description}}
+          </p>
+          <p class="hidden-xs">
+            <code>{{scheduleElement.klass}}.perform<span ng-if="scheduleElement.args">({{scheduleElement.args.join(',')}})</span></code>
+          </p>
+          <p class="visible-xs">
+            <code class="code-smaller">{{scheduleElement.klass}}</code>
+            <code ng-if="scheduleElement.args">{{scheduleElement.args.join(',')}}</code>
+          </p>
+          <section class="well well-sm pb-none mb-none">
+            <div class="row">
+              <p class="col-md-6 col-sm-12">
+                {{scheduleElement.frequencyEnglish}}
+              </p>
+              <p class="col-md-6 col-sm-12">
+                <code class="code-normal">{{scheduleElement.cron}}</code>
+              </p>
+            </div>
+          </section>
+        </div>
+      </li>
+    </ul>
+  </section>
+</div>

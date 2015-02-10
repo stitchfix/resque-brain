@@ -14,6 +14,7 @@ gem 'resque', git: 'https://github.com/stitchfix/resque.git', branch: 'resque-re
 gem 'angular-rails-templates'
 gem 'unicorn'
 gem "foreman"
+gem "cron2english"
 
 group :test, :development do
   gem "capybara"

@@ -5,6 +5,7 @@ services.factory("Resques", [
   ($resource ,  $q)->
     summary = []
     Resques = $resource("/resques/:resqueName", { "format": "json" })
+    ResqueSchedule = $resource("/resques/:resqueName/schedule", { "format": "json" })
     ResqueJobs = $resource("/resques/:resqueName/jobs/:jobType", { "format" : "json" })
 
     addToSummaryKeepingSorted = (summary,resqueSummary)->
@@ -18,6 +19,7 @@ services.factory("Resques", [
 
     all = (success,failure)              -> Resques.query(success,failure)
     get = (resqueName,success,failure)   -> Resques.get({"resqueName": resqueName},success,failure)
+    schedule = (resqueName,success,failure)   -> ResqueSchedule.query({"resqueName": resqueName},success,failure)
     refreshSummaries = (success,failure) ->
       summary = []
       all(
@@ -37,6 +39,7 @@ services.factory("Resques", [
     {
       all: all
       get: get
+      schedule: schedule
       summary: (success,failure,flush)->
         if summary.length <= 0 or flush == "flush"
           refreshSummaries(success,failure)
