@@ -9,7 +9,8 @@ class FakeResqueInstance
               :cleared_jobs,
               :retried_all,
               :cleared_all,
-              :schedule
+              :schedule,
+              :queued_scheduled_jobs
 
   def initialize(attributes)
     @name         = attributes.fetch(:name)
@@ -20,6 +21,7 @@ class FakeResqueInstance
     @schedule     = attributes[:schedule]     || []
     @retried_jobs = []
     @cleared_jobs = []
+    @queued_scheduled_jobs = []
   end
 
   implement! def name
@@ -58,4 +60,9 @@ class FakeResqueInstance
   implement! def clear_all
     @cleared_all = true
   end
+
+  implement! def queue_job_from_schedule(schedule_element)
+    @queued_scheduled_jobs << schedule_element
+  end
+
 end

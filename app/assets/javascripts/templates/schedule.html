@@ -9,7 +9,7 @@
     <ul class="list-group schedule">
       <li ng-repeat="scheduleElement in schedule" class="list-group-item">
         <h2 class="list-group-item-heading mt-none hidden-xs">
-          {{scheduleElement.name}}
+          {{scheduleElement.name | humanize}} <small><small>{{scheduleElement.name}}</small></small>
         </h2>
         <h2 class="h6 list-group-item-heading mt-none visible-xs">
           {{scheduleElement.name}}
@@ -31,8 +31,14 @@
               <p class="col-md-6 col-sm-12">
                 {{scheduleElement.frequencyEnglish}}
               </p>
-              <p class="col-md-6 col-sm-12">
+              <p class="col-md-4 col-sm-12">
                 <code class="code-normal">{{scheduleElement.cron}}</code>
+              </p>
+              <p class="col-md-2 col-sm-12 text-right">
+                <button class="btn btn-xs btn-default" title="Queue Job {{scheduleElement.name}}" ng-click="queue(scheduleElement)">
+                  <i aria-hidden='true' class='glyphicon glyphicon-indent-left'></i>
+                  Queue Now
+                </button>
               </p>
             </div>
           </section>

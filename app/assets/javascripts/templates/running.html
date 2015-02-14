@@ -4,37 +4,35 @@
     <header class="col-md-12">
       <h1 class="text-center">{{jobsRunning.length}} Job<span ng-if="jobsRunning.length != 1">s</span> Running <small>{{resqueSelected}}</small></h1>
     </header>
-    <div class="table-responsive">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Queue</th>
-            <th>Job</th>
-            <th>Started</th>
-            <th>Payload</th>
-            <th>Worker</th>
-          </tr>
-        <thead>
-        <tbody>
-          <tr class="animate-repeat fade-in" ng-repeat="job in jobsRunning" ng-class="{ 'warning': job.tooLong }">
-            <td>{{job.queue}}</td>
-            <td>{{job.payload.class}}</td>
-            <td>{{job.startedAt | amCalendar }}</td>
-            <td><code class="payload">{{job.payload.args}}</code></td>
-            <td>
-              {{job.worker}}
-              <a href="" 
-                 title="Kill Worker" 
-                 class="btn btn-xs btn-warning pull-right"
-                 ng-if="job.tooLong" 
-                 ng-click="killJob(job)">
-                <i aria-hidden='true' class='glyphicon glyphicon-warning-sign'></i>
-                Kill Worker
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Queue</th>
+          <th>Job</th>
+          <th>Started</th>
+          <th>Payload</th>
+          <th>Worker</th>
+        </tr>
+      <thead>
+      <tbody>
+        <tr ng-repeat="job in jobsRunning" ng-class="{ 'warning': job.tooLong }">
+          <td>{{job.queue}}</td>
+          <td>{{job.payload.class}}</td>
+          <td>{{job.startedAt | amCalendar }}</td>
+          <td><code class="payload">{{job.payload.args}}</code></td>
+          <td>
+            {{job.worker}}
+            <a href="" 
+               title="Kill Worker" 
+               class="btn btn-xs btn-warning pull-right"
+               ng-if="job.tooLong" 
+               ng-click="killJob(job)">
+              <i aria-hidden='true' class='glyphicon glyphicon-warning-sign'></i>
+              Kill Worker
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </section>
 </div>

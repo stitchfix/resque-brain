@@ -5,22 +5,20 @@
       <h1 class="text-center">{{totalJobsWaiting}} Job<span ng-if="totalJobsWaiting != 1">s</span> Waiting <small>{{resqueSelected}}</small></h1>
     </header>
     <div class="col-md-6 col-md-offset-3">
-      <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Queue</th>
-              <th>Jobs</th>
-            </tr>
-            <thead>
-              <tbody>
-                <tr class="animate-repeat fade-in" ng-repeat="jobsInQueue in jobsWaiting" ng-class="{'success': jobsInQueue.jobs.length == 0, 'warning': jobsInQueue.jobs.length > 0}">
-                  <td>{{ jobsInQueue.queue }}</td>
-                  <td>{{ jobsInQueue.jobs.length }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Queue</th>
+            <th>Jobs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="animate-repeat fade-in" ng-repeat="jobsInQueue in jobsWaiting" ng-class="{'success': jobsInQueue.jobs.length == 0, 'warning': jobsInQueue.jobs.length > 0}">
+            <td>{{ jobsInQueue.queue }}</td>
+            <td>{{ jobsInQueue.jobs.length }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 </div>

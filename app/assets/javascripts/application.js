@@ -12,13 +12,15 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require bootstrap/js/dropdown
 //= require angular/angular
 //= require angular-route/angular-route
 //= require angular-animate/angular-animate
 //= require angular-resource/angular-resource
 //= require angular-ui-bootstrap-bower
-//= require lodash/dist/lodash
+//= require lodash
 //= require moment/moment
 //= require angular-moment/angular-moment
 //= require angular-flash/dist/angular-flash
+//= require angular-rails-templates
 //= require_tree .

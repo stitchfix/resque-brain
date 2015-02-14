@@ -5,7 +5,7 @@ rails_require 'models/resque_instance'
 rails_require 'models/job'
 rails_require 'models/running_job'
 rails_require 'models/failed_job'
-rails_require 'models/schedule'
+rails_require 'models/schedule_element'
 
 class ResqueInstanceTest < MiniTest::Test
   def test_failed
@@ -172,18 +172,20 @@ class ResqueInstanceTest < MiniTest::Test
 
   def test_schedule
     resque_data_store = fake_resque_data_store(schedule: {
-      foo: { class: "FooJob", args: [ 1, "two", true ], description: "This is a fake job", cron: "1 * * * *" },
-      bar: { class: "BarJob", description: "This is another fake job", cron: "3 * * * *" },
+      foo: { class: "FooJob", queue: "fooqueue", args: [ 1, "two", true ], description: "This is a fake job", cron: "1 * * * *" },
+      bar: { class: "BarJob", queue: "barqueue", description: "This is another fake job", cron: "3 * * * *" },
     })
     instance = create_test_instance(resque_data_store: resque_data_store)
     schedule = instance.schedule
 
     assert_equal "foo",schedule[0].name
+    assert_equal "fooqueue",schedule[0].queue
     assert_equal [1,"two",true],schedule[0].args
     assert_equal "This is a fake job",schedule[0].description
     assert_equal "1 * * * *",schedule[0].cron
 
     assert_equal "bar",schedule[1].name
+    assert_equal "barqueue",schedule[1].queue
     assert_nil   schedule[1].args
     assert_equal "This is another fake job",schedule[1].description
     assert_equal "3 * * * *",schedule[1].cron
@@ -203,6 +205,24 @@ class ResqueInstanceTest < MiniTest::Test
     schedule = instance.schedule
 
     assert schedule.empty?
+  end
+
+  def test_queue_job_from_schedule
+    schedule = {
+      foo: { class: "FooJob", queue: "some_new_queue", args: [ 1, "two", true ], description: "This is a fake job", cron: "1 * * * *" },
+      bar: { class: "BarJob", queue: "some_other_new_queue", args: [ "blah" ], description: "This is another fake job", cron: "3 * * * *" },
+    }
+    resque_data_store = fake_resque_data_store(schedule: schedule)
+    instance = create_test_instance(resque_data_store: resque_data_store)
+
+    instance.queue_job_from_schedule(instance.schedule[1])
+
+    refute_nil resque_data_store.queues["some_other_new_queue"], "Expected the queue to create the 'some_other_new_queue' queue, got #{resque_data_store.queues.keys}"
+
+    queued_job = resque_data_store.queues["some_other_new_queue"][-1]
+
+    assert_equal   "BarJob", queued_job["class"]
+    assert_equal  ["blah"] , queued_job["args"]
   end
 
 private
