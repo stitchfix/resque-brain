@@ -6,6 +6,7 @@ class Schedule
   attr_reader :description
   attr_reader :every
   attr_reader :args
+  attr_reader :cron_expression
 
   def initialize(attributes={})
     @name            = attributes[:name]

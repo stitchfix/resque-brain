@@ -8,7 +8,8 @@ class FakeResqueInstance
               :retried_jobs,
               :cleared_jobs,
               :retried_all,
-              :cleared_all
+              :cleared_all,
+              :schedule
 
   def initialize(attributes)
     @name         = attributes.fetch(:name)
@@ -16,6 +17,7 @@ class FakeResqueInstance
     @jobs_waiting = attributes[:jobs_waiting] || []
     @jobs_failed  = attributes[:jobs_failed]  || []
     @workers      = attributes[:workers]      || []
+    @schedule     = attributes[:schedule]     || []
     @retried_jobs = []
     @cleared_jobs = []
   end
