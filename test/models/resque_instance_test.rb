@@ -24,7 +24,7 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal   "Resque::TermException"  , jobs_failed[0].exception
     assert_equal   "some_worker_id"         , jobs_failed[0].worker
     assert_equal   0                        , jobs_failed[0].id
-    assert_in_delta Time.now.utc - 3600     , jobs_failed[0].failed_at, 5 # seconds
+    assert_in_delta Time.now.utc - 3600     , jobs_failed[0].failed_at, 20 # seconds
     assert_nil                                jobs_failed[0].retried_at
 
     assert_equal   "SomeOtherFailingJob"   , jobs_failed[1].payload["class"]
@@ -34,7 +34,7 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal   "KeyError"              , jobs_failed[1].exception
     assert_equal   "some_other_worker_id"  , jobs_failed[1].worker
     assert_equal   1                       , jobs_failed[1].id
-    assert_in_delta Time.now.utc           , jobs_failed[1].failed_at, 5 # seconds
+    assert_in_delta Time.now.utc           , jobs_failed[1].failed_at, 20 # seconds
     assert_nil                               jobs_failed[1].retried_at
 
     assert_nil jobs_failed[2].payload["class"]
@@ -58,7 +58,7 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal   "KeyError"              , jobs_failed[0].exception
     assert_equal   "some_other_worker_id"  , jobs_failed[0].worker
     assert_equal   1                       , jobs_failed[0].id
-    assert_in_delta Time.now.utc           , jobs_failed[0].failed_at, 5 # seconds
+    assert_in_delta Time.now.utc           , jobs_failed[0].failed_at, 20 # seconds
     assert_nil                               jobs_failed[0].retried_at
   end
 
@@ -84,7 +84,7 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal   "cache"          , jobs_running[0].worker
     assert_equal   "CacheJob"       , jobs_running[0].payload["class"]
     assert_equal  ["whatever"]      , jobs_running[0].payload["args"]
-    assert_in_delta Time.now - 3600 , jobs_running[0].started_at       , 5 # seconds
+    assert_in_delta Time.now - 3600 , jobs_running[0].started_at       , 20 # seconds
     assert                            jobs_running[0].too_long?
 
     assert_equal "generator"  ,  jobs_running[1].queue
@@ -137,7 +137,7 @@ class ResqueInstanceTest < MiniTest::Test
     queued_job = resque_data_store.queues["cache"][-1]
     assert_equal   "SomeOtherFailingJob"   , queued_job["class"]
     assert_equal  ["blah"]                 , queued_job["args"]
-    assert_in_delta Time.now.utc           , instance.jobs_failed[1].retried_at, 5 # seconds
+    assert_in_delta Time.now.utc           , instance.jobs_failed[1].retried_at, 20 # seconds
 
   end
 
