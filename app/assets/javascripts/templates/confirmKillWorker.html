@@ -7,13 +7,11 @@
     To do it yourself, you must:
     <ol>
       <li>Get a production console to {{resqueSelected.name}}</li>
-      <li>Find the worker instance:
+      <li>Find the worker instance and unregister it:
         <pre class="mr-1"><code>worker = Resque.workers.detect { |worker|
   worker.id == '{{job.worker}}'
-}</code></pre>
-      </li>
-      <li>Unregister the worker:
-        <pre class="mr-1"><code>worker.unregister_worker</code></pre>
+}
+worker.unregister_worker</code></pre>
       </li>
     </ol>
   </p>

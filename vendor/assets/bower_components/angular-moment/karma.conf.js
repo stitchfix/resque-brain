@@ -1,5 +1,5 @@
 /* License: MIT.
- * Copyright (C) 2013, 2014, Uri Shaked.
+ * Copyright (C) 2013, 2014, 2015, Uri Shaked.
  */
 
 'use strict';
@@ -15,7 +15,7 @@ module.exports = function (config) {
 		files: [
 			'bower_components/angular/angular.js',
 			'bower_components/moment/moment.js',
-			'bower_components/moment/lang/fr.js',
+			'bower_components/moment/{locale,lang}/fr.js',
 			'bower_components/moment-timezone/moment-timezone.js',
 			'angular-moment.js',
 

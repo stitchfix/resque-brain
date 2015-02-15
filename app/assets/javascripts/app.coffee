@@ -45,6 +45,10 @@ resqueBrain.config([
         templateUrl: "failed.html"
         controller: 'FailedController'
       )
+      .when('/:resque/schedule',
+        templateUrl: "schedule.html"
+        controller: 'ScheduleController'
+      )
 ])
 
 controllers = angular.module('controllers',[])

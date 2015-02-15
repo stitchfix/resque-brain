@@ -48,5 +48,6 @@ config/database.yml
 db/tmp
 spec/file-upload/stylecard-from-db.jpg
 .env
+.env.production
 prod_env
 _site

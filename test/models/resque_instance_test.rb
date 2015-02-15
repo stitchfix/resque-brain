@@ -5,6 +5,7 @@ rails_require 'models/resque_instance'
 rails_require 'models/job'
 rails_require 'models/running_job'
 rails_require 'models/failed_job'
+rails_require 'models/schedule_element'
 
 class ResqueInstanceTest < MiniTest::Test
   def test_failed
@@ -23,7 +24,7 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal   "Resque::TermException"  , jobs_failed[0].exception
     assert_equal   "some_worker_id"         , jobs_failed[0].worker
     assert_equal   0                        , jobs_failed[0].id
-    assert_in_delta Time.now.utc - 3600     , jobs_failed[0].failed_at, 5 # seconds
+    assert_in_delta Time.now.utc - 3600     , jobs_failed[0].failed_at, 20 # seconds
     assert_nil                                jobs_failed[0].retried_at
 
     assert_equal   "SomeOtherFailingJob"   , jobs_failed[1].payload["class"]
@@ -33,7 +34,7 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal   "KeyError"              , jobs_failed[1].exception
     assert_equal   "some_other_worker_id"  , jobs_failed[1].worker
     assert_equal   1                       , jobs_failed[1].id
-    assert_in_delta Time.now.utc           , jobs_failed[1].failed_at, 5 # seconds
+    assert_in_delta Time.now.utc           , jobs_failed[1].failed_at, 20 # seconds
     assert_nil                               jobs_failed[1].retried_at
 
     assert_nil jobs_failed[2].payload["class"]
@@ -57,7 +58,7 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal   "KeyError"              , jobs_failed[0].exception
     assert_equal   "some_other_worker_id"  , jobs_failed[0].worker
     assert_equal   1                       , jobs_failed[0].id
-    assert_in_delta Time.now.utc           , jobs_failed[0].failed_at, 5 # seconds
+    assert_in_delta Time.now.utc           , jobs_failed[0].failed_at, 20 # seconds
     assert_nil                               jobs_failed[0].retried_at
   end
 
@@ -83,7 +84,7 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal   "cache"          , jobs_running[0].worker
     assert_equal   "CacheJob"       , jobs_running[0].payload["class"]
     assert_equal  ["whatever"]      , jobs_running[0].payload["args"]
-    assert_in_delta Time.now - 3600 , jobs_running[0].started_at       , 5 # seconds
+    assert_in_delta Time.now - 3600 , jobs_running[0].started_at       , 20 # seconds
     assert                            jobs_running[0].too_long?
 
     assert_equal "generator"  ,  jobs_running[1].queue
@@ -136,7 +137,7 @@ class ResqueInstanceTest < MiniTest::Test
     queued_job = resque_data_store.queues["cache"][-1]
     assert_equal   "SomeOtherFailingJob"   , queued_job["class"]
     assert_equal  ["blah"]                 , queued_job["args"]
-    assert_in_delta Time.now.utc           , instance.jobs_failed[1].retried_at, 5 # seconds
+    assert_in_delta Time.now.utc           , instance.jobs_failed[1].retried_at, 20 # seconds
 
   end
 
@@ -169,9 +170,64 @@ class ResqueInstanceTest < MiniTest::Test
     refute_nil resque_data_store.queues["mail"], "Expected the retry to create the 'mail' queue, got #{resque_data_store.queues.keys}"
   end
 
+  def test_schedule
+    resque_data_store = fake_resque_data_store(schedule: {
+      foo: { class: "FooJob", queue: "fooqueue", args: [ 1, "two", true ], description: "This is a fake job", cron: "1 * * * *" },
+      bar: { class: "BarJob", queue: "barqueue", description: "This is another fake job", cron: "3 * * * *" },
+    })
+    instance = create_test_instance(resque_data_store: resque_data_store)
+    schedule = instance.schedule
+
+    assert_equal "foo",schedule[0].name
+    assert_equal "fooqueue",schedule[0].queue
+    assert_equal [1,"two",true],schedule[0].args
+    assert_equal "This is a fake job",schedule[0].description
+    assert_equal "1 * * * *",schedule[0].cron
+
+    assert_equal "bar",schedule[1].name
+    assert_equal "barqueue",schedule[1].queue
+    assert_nil   schedule[1].args
+    assert_equal "This is another fake job",schedule[1].description
+    assert_equal "3 * * * *",schedule[1].cron
+  end
+
+  def test_schedule_no_schedule
+    resque_data_store = fake_resque_data_store(schedule: nil)
+    instance = create_test_instance(resque_data_store: resque_data_store)
+    schedule = instance.schedule
+
+    assert schedule.empty?
+  end
+
+  def test_schedule_mangled_schedule
+    resque_data_store = fake_resque_data_store(schedule: "blah blah blah blah whatever")
+    instance = create_test_instance(resque_data_store: resque_data_store)
+    schedule = instance.schedule
+
+    assert schedule.empty?
+  end
+
+  def test_queue_job_from_schedule
+    schedule = {
+      foo: { class: "FooJob", queue: "some_new_queue", args: [ 1, "two", true ], description: "This is a fake job", cron: "1 * * * *" },
+      bar: { class: "BarJob", queue: "some_other_new_queue", args: [ "blah" ], description: "This is another fake job", cron: "3 * * * *" },
+    }
+    resque_data_store = fake_resque_data_store(schedule: schedule)
+    instance = create_test_instance(resque_data_store: resque_data_store)
+
+    instance.queue_job_from_schedule(instance.schedule[1])
+
+    refute_nil resque_data_store.queues["some_other_new_queue"], "Expected the queue to create the 'some_other_new_queue' queue, got #{resque_data_store.queues.keys}"
+
+    queued_job = resque_data_store.queues["some_other_new_queue"][-1]
+
+    assert_equal   "BarJob", queued_job["class"]
+    assert_equal  ["blah"] , queued_job["args"]
+  end
+
 private
-  def fake_resque_data_store
-    FakeResqueDataStore.new
+  def fake_resque_data_store(*args)
+    FakeResqueDataStore.new(*args)
   end
 
   def create_test_instance(resque_data_store: fake_resque_data_store)

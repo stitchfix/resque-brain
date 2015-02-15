@@ -1,6 +1,9 @@
-/* angular-moment.js / v0.7.0 / (c) 2013, 2014 Uri Shaked / MIT Licence */
+/* angular-moment.js / v0.9.0 / (c) 2013, 2014, 2015 Uri Shaked / MIT Licence */
 
+'format global';
 /* global define */
+'deps angular';
+'deps moment';
 
 (function () {
 	'use strict';
@@ -46,7 +49,33 @@
 				 * The default timezone (e.g. 'Europe/London'). Empty string by default (does not apply
 				 * any timezone shift).
 				 */
-				timezone: ''
+				timezone: '',
+
+				/**
+				 * @ngdoc property
+				 * @name angularMoment.config.angularMomentConfig#format
+				 * @propertyOf angularMoment.config:angularMomentConfig
+				 * @returns {string} The pre-conversion format of the date
+				 *
+				 * @description
+				 * Specify the format of the input date. Essentially it's a
+				 * default and saves you from specifying a format in every
+				 * element. Overridden by element attr. Null by default.
+				 */
+				format: null,
+
+				/**
+				 * @ngdoc property
+				 * @name angularMoment.config.angularMomentConfig#statefulFilters
+				 * @propertyOf angularMoment.config:angularMomentConfig
+				 * @returns {boolean} Whether angular-moment filters should be stateless (or not)
+				 *
+				 * @description
+				 * Specifies whether the filters included with angular-moment are stateful.
+				 * Stateful filters will automatically re-evaluate whenever you change the timezone
+				 * or language settings, but may negatively impact performance. true by default.
+				 */
+				statefulFilters: true
 			})
 
 		/**
@@ -76,7 +105,31 @@
 				 * @description
 				 * Defaults to false.
 				 */
-				withoutSuffix: false
+				withoutSuffix: false,
+
+				/**
+				 * @ngdoc property
+				 * @name angularMoment.config.amTimeAgoConfig#serverTime
+				 * @propertyOf angularMoment.config:amTimeAgoConfig
+				 * @returns {number} Server time in milliseconds since the epoch
+				 *
+				 * @description
+				 * If set, time ago will be calculated relative to the given value.
+				 * If null, local time will be used. Defaults to null.
+				 */
+				serverTime: null,
+
+				/**
+				 * @ngdoc property
+				 * @name angularMoment.config.amTimeAgoConfig#format
+				 * @propertyOf angularMoment.config:amTimeAgoConfig
+				 * @returns {string} The format of the date to be displayed in the title of the element. If null,
+				 *        the directive set the title of the element.
+				 *
+				 * @description
+				 * Specify the format of the date when displayed. null by default.
+				 */
+				titleFormat: null
 			})
 
 		/**
@@ -91,9 +144,28 @@
 				return function (scope, element, attr) {
 					var activeTimeout = null;
 					var currentValue;
-					var currentFormat;
+					var currentFormat = angularMomentConfig.format;
 					var withoutSuffix = amTimeAgoConfig.withoutSuffix;
+					var titleFormat = amTimeAgoConfig.titleFormat;
+					var localDate = new Date().getTime();
 					var preprocess = angularMomentConfig.preprocess;
+					var modelName = attr.amTimeAgo.replace(/^::/, '');
+					var isBindOnce = (attr.amTimeAgo.indexOf('::') === 0);
+					var isTimeElement = ('TIME' === element[0].nodeName.toUpperCase());
+					var unwatchChanges;
+
+					function getNow() {
+						var now;
+						if (amTimeAgoConfig.serverTime) {
+							var localNow = new Date().getTime();
+							var nowMillis = localNow - localDate + amTimeAgoConfig.serverTime;
+							now = moment(nowMillis);
+						}
+						else {
+							now = moment();
+						}
+						return now;
+					}
 
 					function cancelTimer() {
 						if (activeTimeout) {
@@ -103,34 +175,51 @@
 					}
 
 					function updateTime(momentInstance) {
-						element.text(momentInstance.fromNow(withoutSuffix));
-						var howOld = moment().diff(momentInstance, 'minute');
-						var secondsUntilUpdate = 3600;
-						if (howOld < 1) {
-							secondsUntilUpdate = 1;
-						} else if (howOld < 60) {
-							secondsUntilUpdate = 30;
-						} else if (howOld < 180) {
-							secondsUntilUpdate = 300;
+						element.text(momentInstance.from(getNow(), withoutSuffix));
+
+						if (titleFormat && !element.attr('title')) {
+							element.attr('title', momentInstance.local().format(titleFormat));
 						}
 
-						activeTimeout = $window.setTimeout(function () {
-							updateTime(momentInstance);
-						}, secondsUntilUpdate * 1000);
+						if (!isBindOnce) {
+
+							var howOld = Math.abs(getNow().diff(momentInstance, 'minute'));
+							var secondsUntilUpdate = 3600;
+							if (howOld < 1) {
+								secondsUntilUpdate = 1;
+							} else if (howOld < 60) {
+								secondsUntilUpdate = 30;
+							} else if (howOld < 180) {
+								secondsUntilUpdate = 300;
+							}
+
+							activeTimeout = $window.setTimeout(function () {
+								updateTime(momentInstance);
+							}, secondsUntilUpdate * 1000);
+						}
+					}
+
+					function updateDateTimeAttr(value) {
+						if (isTimeElement) {
+							element.attr('datetime', value);
+						}
 					}
 
 					function updateMoment() {
 						cancelTimer();
 						if (currentValue) {
-							updateTime(amMoment.preprocessDate(currentValue, preprocess, currentFormat));
+							var momentValue = amMoment.preprocessDate(currentValue, preprocess, currentFormat);
+							updateTime(momentValue);
+							updateDateTimeAttr(momentValue.toISOString());
 						}
 					}
 
-					scope.$watch(attr.amTimeAgo, function (value) {
+					unwatchChanges = scope.$watch(modelName, function (value) {
 						if ((typeof value === 'undefined') || (value === null) || (value === '')) {
 							cancelTimer();
 							if (currentValue) {
 								element.text('');
+								updateDateTimeAttr('');
 								currentValue = null;
 							}
 							return;
@@ -138,6 +227,10 @@
 
 						currentValue = value;
 						updateMoment();
+
+						if (value !== undefined && isBindOnce) {
+							unwatchChanges();
+						}
 					});
 
 					if (angular.isDefined(attr.amWithoutSuffix)) {
@@ -152,8 +245,10 @@
 					}
 
 					attr.$observe('amFormat', function (format) {
-						currentFormat = format;
-						updateMoment();
+						if (typeof format !== 'undefined') {
+							currentFormat = format;
+							updateMoment();
+						}
 					});
 
 					attr.$observe('amPreprocess', function (newValue) {
@@ -165,7 +260,7 @@
 						cancelTimer();
 					});
 
-					scope.$on('amMoment:languageChange', function () {
+					scope.$on('amMoment:localeChanged', function () {
 						updateMoment();
 					});
 				};
@@ -193,19 +288,20 @@
 
 				/**
 				 * @ngdoc function
-				 * @name angularMoment.service.amMoment#changeLanguage
+				 * @name angularMoment.service.amMoment#changeLocale
 				 * @methodOf angularMoment.service.amMoment
 				 *
 				 * @description
-				 * Changes the language for moment.js and updates all the am-time-ago directive instances
-				 * with the new language.
+				 * Changes the locale for moment.js and updates all the am-time-ago directive instances
+				 * with the new locale. Also broadcasts a `amMoment:localeChanged` event on $rootScope.
 				 *
-				 * @param {string} lang 2-letter language code (e.g. en, es, ru, etc.)
+				 * @param {string} locale Locale code (e.g. en, es, ru, pt-br, etc.)
 				 */
-				this.changeLanguage = function (lang) {
-					var result = moment.lang(lang);
-					if (angular.isDefined(lang)) {
-						$rootScope.$broadcast('amMoment:languageChange');
+				this.changeLocale = function (locale) {
+					var result = moment.locale(locale);
+					if (angular.isDefined(locale)) {
+						$rootScope.$broadcast('amMoment:localeChanged');
+
 					}
 					return result;
 				};
@@ -225,6 +321,9 @@
 				 * @return {Moment} A value that can be parsed by the moment library
 				 */
 				this.preprocessDate = function (value, preprocess, format) {
+					if (angular.isUndefined(preprocess)) {
+						preprocess = angularMomentConfig.preprocess;
+					}
 					if (this.preprocessors[preprocess]) {
 						return this.preprocessors[preprocess](value, format);
 					}
@@ -269,8 +368,8 @@
 		 * @name angularMoment.filter:amCalendar
 		 * @module angularMoment
 		 */
-			.filter('amCalendar', ['moment', 'amMoment', function (moment, amMoment) {
-				return function (value, preprocess) {
+			.filter('amCalendar', ['moment', 'amMoment', 'angularMomentConfig', function (moment, amMoment, angularMomentConfig) {
+				function amCalendarFilter(value, preprocess) {
 					if (typeof value === 'undefined' || value === null) {
 						return '';
 					}
@@ -282,7 +381,13 @@
 					}
 
 					return amMoment.applyTimezone(date).calendar();
-				};
+				}
+
+				// Since AngularJS 1.3, filters have to explicitly define being stateful
+				// (this is no longer the default).
+				amCalendarFilter.$stateful = angularMomentConfig.statefulFilters;
+
+				return amCalendarFilter;
 			}])
 
 		/**
@@ -291,8 +396,8 @@
 		 * @module angularMoment
 		 * @function
 		 */
-			.filter('amDateFormat', ['moment', 'amMoment', function (moment, amMoment) {
-				return function (value, format, preprocess) {
+			.filter('amDateFormat', ['moment', 'amMoment', 'angularMomentConfig', function (moment, amMoment, angularMomentConfig) {
+				function amDateFormatFilter(value, format, preprocess) {
 					if (typeof value === 'undefined' || value === null) {
 						return '';
 					}
@@ -304,7 +409,11 @@
 					}
 
 					return amMoment.applyTimezone(date).format(format);
-				};
+				}
+
+				amDateFormatFilter.$stateful = angularMomentConfig.statefulFilters;
+
+				return amDateFormatFilter;
 			}])
 
 		/**
@@ -313,20 +422,53 @@
 		 * @module angularMoment
 		 * @function
 		 */
-			.filter('amDurationFormat', ['moment', function (moment) {
-				return function (value, format, suffix) {
+			.filter('amDurationFormat', ['moment', 'angularMomentConfig', function (moment, angularMomentConfig) {
+				function amDurationFormatFilter(value, format, suffix) {
 					if (typeof value === 'undefined' || value === null) {
 						return '';
 					}
 
 					return moment.duration(value, format).humanize(suffix);
-				};
+				}
+
+				amDurationFormatFilter.$stateful = angularMomentConfig.statefulFilters;
+
+				return amDurationFormatFilter;
+			}])
+
+		/**
+		 * @ngdoc filter
+		 * @name angularMoment.filter:amTimeAgo
+		 * @module angularMoment
+		 * @function
+		 */
+			.filter('amTimeAgo', ['moment', 'amMoment', 'angularMomentConfig', function (moment, amMoment, angularMomentConfig) {
+				function amTimeAgoFilter(value, preprocess, suffix) {
+					if (typeof value === 'undefined' || value === null) {
+						return '';
+					}
+
+					value = amMoment.preprocessDate(value, preprocess);
+					var date = moment(value);
+					if (!date.isValid()) {
+						return '';
+					}
+
+					return amMoment.applyTimezone(date).fromNow(suffix);
+				}
+
+				amTimeAgoFilter.$stateful = angularMomentConfig.statefulFilters;
+
+				return amTimeAgoFilter;
 			}]);
 	}
 
 	if (typeof define === 'function' && define.amd) {
 		define('angular-moment', ['angular', 'moment'], angularMoment);
+	} else if (typeof module !== 'undefined' && module && module.exports) {
+		angularMoment(angular, require('moment'));
 	} else {
 		angularMoment(angular, window.moment);
 	}
 })();
+

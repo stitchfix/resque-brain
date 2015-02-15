@@ -15,5 +15,8 @@ module ExplicitInterfaceImplementation
     end
   end
 
-  MESSAGE_ABOUT_NEGATIVE_ARITY = ". NOTE: For Ruby methods that take a variable number of arguments, a negative value for arity ismeans that for n required arguments, the arity is -n-1.  Not to be confusing, but methods written in C return -1, if the call takes a variable number of arguments."
+  def implement_ghost!(method_name)
+  end
+
+  MESSAGE_ABOUT_NEGATIVE_ARITY = ". NOTE: For Ruby methods that take a variable number of arguments, a negative value for arity means that for n required arguments, the arity is -n-1.  Not to be confusing, but methods written in C return -1, if the call takes a variable number of arguments."
 end

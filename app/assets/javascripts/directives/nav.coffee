@@ -11,6 +11,7 @@ angular.module("directives").directive("rbNav", [
 
       scope.navCollapsed = true
 
+      window.blah = $location.path()
       matched = $location.path().match(/\/([^\/]+)/)
       if matched
         scope.resqueSelected = matched[1]
@@ -22,6 +23,7 @@ angular.module("directives").directive("rbNav", [
         NavElement(scope.resqueSelected,'running','Running Jobs'),
         NavElement(scope.resqueSelected,'waiting','Waiting Jobs'),
         NavElement(scope.resqueSelected,'failed','Failed Jobs')
+        NavElement(scope.resqueSelected,'schedule','Schedule')
       ]
 
       scope.viewResque = (section,resque)->
