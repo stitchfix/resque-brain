@@ -18,10 +18,13 @@ important ways:
   - stale workers
   - large queues
   - failed jobs
+- View [resque-scheduler][scheduler] schedule and manually queue jobs
+
+[scheduler]: https://github.com/resque/resque-scheduler
 
 ## Planned Features
 
-- Visibility for resque-scheduler, if installed
+- Visibility into delayed and retry queues, if using 
 - Extensibility
 
 # UI
@@ -60,6 +63,10 @@ We see a more readable summary of what's going on, along with direct links to se
 We can expand to see exceptions
 
 ![Exception View](https://www.evernote.com/shard/s71/sh/c367b25b-dc5c-4cec-889d-b13af7e61858/13002418848f32f088a4dcdd889e4f03/deep/0/Resque-Brain.png)
+
+## Schedule
+
+![Scheduler](https://cloud.githubusercontent.com/assets/22282/6201079/3158ab44-b464-11e4-870f-c97b07309b46.png)
 
 ## Mobile View
 
