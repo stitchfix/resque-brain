@@ -1,0 +1,22 @@
+<aside>
+  <header class="modal-header">
+    <h1 class="h3">Retry Without Clear is Not Recommended</h1>
+  </header>
+  <section class="modal-body">
+    <p>
+      Retrying jobs without clearing them will create a confusing situation.
+    </p>
+    <p>
+      The job will get retried, but will still be in the failed queue.  It will not be clear to anyone else if the job needs attention.
+    </p>
+    <p>
+      In general, always “Retry &amp; Clear”, which will remove the job from the failed queue and <em>then</em> retry it.
+    </p>
+    <p>
+      <button class="btn btn-danger btn-sm" ng-click="ok()">I know what I'm doing.  Retry and <em>don't</em> clear</button>
+    </p>
+  </section>
+  <footer class="modal-footer">
+    <button class="btn btn-success" ng-click="cancel()">Nevermind</button>
+  </footer>
+</aside>

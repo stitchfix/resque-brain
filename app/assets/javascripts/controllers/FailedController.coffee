@@ -54,36 +54,53 @@ controllers.controller("FailedController", [
         $location.search( page: page )
 
     $scope.retry = (job)->
-      FailedJobs.retry($routeParams.resque,job.id, (
-          ()->
-            FailedJobs.get($routeParams.resque,job.id,
-              (
-                (job)->
-                  index = _.findIndex($scope.jobsFailed, { id: job.id })
-                  if index > -1
-                    $scope.jobsFailed[index] = job
-                  else
-                    flash.warn = "Retried job isn't in our list—try reloading"
-              ),
-              GenericErrorHandling.onFail($scope)
-            )
-        ),
-        GenericErrorHandling.onFail($scope)
+      modalInstance = $modal.open(
+        templateUrl: "confirmRetryFailed.html"
+        controller: "ConfirmDestructiveFailedQueueActionController"
+        backdrop: true
       )
+      modalInstance.result.then ->
+        FailedJobs.retry($routeParams.resque,job.id, (
+            ()->
+              FailedJobs.get($routeParams.resque,job.id,
+                (
+                  (job)->
+                    index = _.findIndex($scope.jobsFailed, { id: job.id })
+                    if index > -1
+                      $scope.jobsFailed[index] = job
+                    else
+                      flash.warn = "Retried job isn't in our list—try reloading"
+                ),
+                GenericErrorHandling.onFail($scope)
+              )
+          ),
+          GenericErrorHandling.onFail($scope)
+        )
 
-    $scope.clear = (job)->
-      FailedJobs.clear($routeParams.resque, job.id, (
-          ()->
-            index = _.indexOf($scope.jobsFailed,job)
-            if index != -1
-              $scope.jobsFailed.splice(index,1)
+    $scope.clear = (job,skipModal=false)->
+      doClear = ->
+        FailedJobs.clear($routeParams.resque, job.id, (
+            ()->
+              index = _.indexOf($scope.jobsFailed,job)
+              if index != -1
+                $scope.jobsFailed.splice(index,1)
 
-            $timeout( ( -> $animate.enabled(false) ), 500 )
-            $timeout( ( -> $animate.enabled(true) ), 1500 )
-            $timeout(loadFailedJobs,1000)
-        ),
-        GenericErrorHandling.onFail($scope)
-      )
+              $timeout( ( -> $animate.enabled(false) ), 500 )
+              $timeout( ( -> $animate.enabled(true) ), 1500 )
+              $timeout(loadFailedJobs,1000)
+          ),
+          GenericErrorHandling.onFail($scope)
+        )
+      if skipModal
+        doClear()
+      else
+        modalInstance = $modal.open(
+          templateUrl: "confirmClearFailed.html"
+          controller: "ConfirmDestructiveFailedQueueActionController"
+          backdrop: true
+        )
+        modalInstance.result.then(doClear)
+
     $scope.retryAndClear = (job)->
       FailedJobs.retry($routeParams.resque,job.id, (
          ()-> $scope.clear(job)
@@ -91,8 +108,24 @@ controllers.controller("FailedController", [
         GenericErrorHandling.onFail($scope)
       )
 
-    $scope.retryAll         = ()-> FailedJobs.retryAll($routeParams.resque,loadFailedJobs,GenericErrorHandling.onFail($scope))
-    $scope.clearAll         = ()-> FailedJobs.clearAll($routeParams.resque,loadFailedJobs,GenericErrorHandling.onFail($scope))
+    $scope.retryAll         = ->
+      modalInstance = $modal.open(
+        templateUrl: "confirmRetryFailed.html"
+        controller: "ConfirmDestructiveFailedQueueActionController"
+        backdrop: true
+      )
+      modalInstance.result.then ->
+        FailedJobs.retryAll($routeParams.resque,loadFailedJobs,GenericErrorHandling.onFail($scope))
+
+    $scope.clearAll         = ->
+      modalInstance = $modal.open(
+        templateUrl: "confirmClearFailed.html"
+        controller: "ConfirmDestructiveFailedQueueActionController"
+        backdrop: true
+      )
+      modalInstance.result.then ->
+        FailedJobs.clearAll($routeParams.resque,loadFailedJobs,GenericErrorHandling.onFail($scope))
+
     $scope.retryAndClearAll = ()-> FailedJobs.retryAndClearAll($routeParams.resque,loadFailedJobs,GenericErrorHandling.onFail($scope))
       
 
