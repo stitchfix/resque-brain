@@ -25,7 +25,9 @@ module ResqueBrain
     config.autoload_paths += %W(#{config.root}/lib)
 
     config.assets.paths << Rails.root.join("vendor","assets","bower_components")
-    config.assets.paths << Rails.root.join("vendor","assets","bower_components","bootstrap-sass-official","vendor","assets","fonts")
+    %w(stylesheets javascripts fonts).each do |dir|
+      config.assets.paths << Rails.root.join("vendor","assets","bower_components","bootstrap-sass-official","assets",dir)
+    end
     config.assets.precompile << Proc.new { |path|
       if path =~ /\.(eot|svg|ttf|woff)\z/
         true
