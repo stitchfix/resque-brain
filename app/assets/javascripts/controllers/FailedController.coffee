@@ -103,7 +103,7 @@ controllers.controller("FailedController", [
 
     $scope.retryAndClear = (job)->
       FailedJobs.retry($routeParams.resque,job.id, (
-         ()-> $scope.clear(job)
+         ()-> $scope.clear(job,true)
         ),
         GenericErrorHandling.onFail($scope)
       )

@@ -18,7 +18,6 @@ group :test, :development do
   gem "capybara"
   gem "selenium-webdriver"
   gem "teaspoon"
-  gem "phantomjs"
   gem "dotenv-rails"
   gem "poltergeist"
 end

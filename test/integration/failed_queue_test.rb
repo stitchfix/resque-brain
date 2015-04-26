@@ -58,6 +58,7 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
 
     assert page.all("[title='Job 1 retried']").empty?
     first("[title='Retry Job 1']").click
+    first("[data-dialog-confirm]").click
     sleep 1
     assert page.has_content?("worker1"), page_assertion_error_message(page)
     assert page.all("[title='Job 1 retried']").present?
@@ -74,6 +75,7 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
     sleep 1
 
     first("[title='Clear Job 2']").click
+    first("[data-dialog-confirm]").click
     sleep 2
     refute page.has_content?("worker2"), page_assertion_error_message(page)
     assert page.has_content?("worker10"), page_assertion_error_message(page)
@@ -92,6 +94,7 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
 
     first("[title='Retry, Then Clear Job 2']").click
     sleep 2
+    refute page.has_selector?("[data-modal]"), "Not expecting a modal dialog\n#{page_assertion_error_message(page)}"
     refute page.has_content?("worker2"), page_assertion_error_message(page)
     assert page.has_content?("worker10"), page_assertion_error_message(page)
 
@@ -108,6 +111,7 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
     sleep 1
 
     first("[title='Retry All']").click
+    first("[data-dialog-confirm]").click
     sleep 2
     (0..9).each do |job_id|
       assert page.all("[title='Job #{job_id} retried']").present?
@@ -126,6 +130,7 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
     sleep 1
 
     first("[title='Clear All']").click
+    first("[data-dialog-confirm]").click
     sleep 2
     assert page.has_content?("0 Jobs Failed"), page_assertion_error_message(page)
   end

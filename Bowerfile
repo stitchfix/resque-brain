@@ -1,5 +1,5 @@
 asset 'angular'
-asset 'bootstrap'
+asset 'bootstrap-sass-official'
 asset 'angular-route'
 asset 'angular-ui-bootstrap-bower'
 asset 'angular-mocks'
