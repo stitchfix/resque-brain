@@ -3,7 +3,7 @@ require 'integration_test_helper'
 class FailedQueueTest < ActionDispatch::IntegrationTest
   setup do
     Capybara.current_driver = Capybara.javascript_driver
-    @redis = Redis::Namespace.new(:resque,Redis.new)
+    @redis = Redis::Namespace.new(:resque,redis: Redis.new)
     @redis.flushall
     @resque_data_store = Resque::DataStore.new(@redis)
 

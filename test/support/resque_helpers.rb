@@ -1,6 +1,6 @@
 module ResqueHelpers
   def resque_instance(name,namespace)
-    redis = Redis::Namespace.new(namespace,Redis.new)
+    redis = Redis::Namespace.new(namespace,redis: Redis.new)
     resque_data_store = Resque::DataStore.new(redis)
     ResqueInstance.new(name: name, resque_data_store: resque_data_store)
   end
