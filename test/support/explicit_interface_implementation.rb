@@ -2,6 +2,13 @@ module ExplicitInterfaceImplementation
   def implements(klass)
     @klass = klass
   end
+
+  # require that the method exist on the faked-out class
+  def implement(method_name)
+    method = @klass.instance_method(method_name)
+  end
+
+  # require that the method exist AND the arity match on the faked-out class
   def implement!(method_name)
     method = @klass.instance_method(method_name)
     my_method = self.instance_method(method_name)
