@@ -3,8 +3,7 @@
 [![Dependency Status](https://gemnasium.com/stitchfix/resque-brain.svg)](https://gemnasium.com/stitchfix/resque-brain)
 ![build status](https://travis-ci.org/stitchfix/resque-brain.svg?branch=master)
 
-resque-brain is a web app to monitor and manage multiple [Resque][resque] instances.  It is superior to resque-web in three
-important ways:
+resque-brain is a web app to monitor and manage multiple [Resque][resque] instances.  It is superior to resque-web in three important ways:
 
 [resque]: https://github.com/resque/resque
 
