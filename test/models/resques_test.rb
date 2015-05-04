@@ -1,6 +1,8 @@
 require 'quick_test_helper'
 require 'minitest/autorun'
 require 'support/fake_resque_data_store'
+rails_require 'models/resque_url'
+rails_require 'models/missing_resque_configuration_error'
 rails_require 'models/resques'
 rails_require 'models/resque_instance'
 
@@ -8,7 +10,7 @@ class ResquesTest < MiniTest::Test
   def teardown
     ENV["RESQUE_BRAIN_INSTANCES"] = nil
     ENV["RESQUE_BRAIN_INSTANCES_env1"] = nil
-    ENV["RESQUE_BRAIN_INSTANCES_env2"] = nil
+    ENV["ENV2_RESQUE_REDIS_URL"] = nil
   end
 
   def test_all
@@ -27,7 +29,7 @@ class ResquesTest < MiniTest::Test
   def test_from_environment
     ENV["RESQUE_BRAIN_INSTANCES"] = "env1,env2"
     ENV["RESQUE_BRAIN_INSTANCES_env1"] = "redis://whatever:supersecret@localhost:1234"
-    ENV["RESQUE_BRAIN_INSTANCES_env2"] = "redis://whatever:megasecret@10.0.0.1:4567"
+    ENV["ENV2_RESQUE_REDIS_URL"] = "redis://whatever:megasecret@10.0.0.1:4567"
 
     resques = Resques.from_environment
 
@@ -53,11 +55,14 @@ class ResquesTest < MiniTest::Test
   def test_from_environment_missing_config
     ENV["RESQUE_BRAIN_INSTANCES"] = "env1,env2"
     ENV["RESQUE_BRAIN_INSTANCES_env1"] = "redis://localhost:1234"
-    ENV["RESQUE_BRAIN_INSTANCES_env2"] = nil
+    ENV["ENV2_RESQUE_REDIS_URL"] = nil
 
-    assert_raises(Resques::MissingResqueConfigurationError) do
+    exception = assert_raises(MissingResqueConfigurationError) do
       Resques.from_environment
     end
+    assert_match /env2/, exception.message
+    assert_match /RESQUE_BRAIN_INSTANCES_env2/, exception.message
+    assert_match /ENV2_RESQUE_REDIS_URL/, exception.message
   end
 
 private
