@@ -19,7 +19,7 @@ gem "cron2english"
 group :test, :development do
   gem "capybara"
   gem "selenium-webdriver"
-  gem "teaspoon"
+  gem "teaspoon-jasmine"
   gem "dotenv-rails"
   gem "poltergeist"
 end
