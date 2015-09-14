@@ -1,8 +1,11 @@
 #/usr/bin/env bash
 
-# Once a minute, emit the number of jobs in each queue to Librato
+# Loop forever, emitting queue sizes to librato then sleeping for the configured
+# number of seconds (default to 60).
+
+RESQUE_BRAIN_MONITOR_QUEUE_WAIT_SECONDS=${RESQUE_BRAIN_MONITOR_QUEUE_WAIT_SECONDS:=60}
 
 while true; do
   bundle exec rake monitor:queue_sizes
-  sleep 60
+  sleep $RESQUE_BRAIN_MONITOR_QUEUE_WAIT_SECONDS
 done
