@@ -1,0 +1,8 @@
+#/usr/bin/env bash
+
+# Once a minute, emit the number of jobs in each queue to Librato
+
+while true; do
+  bundle exec rake monitor:queue_sizes
+  sleep 60
+done
