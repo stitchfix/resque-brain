@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
-ruby '2.1.6'
+ruby '2.2.3'
 
-gem 'rails', '4.1.0'
+gem 'rails', '~> 4.2.0'
 gem 'sass-rails', '~> 4.0.3'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
@@ -19,7 +19,7 @@ gem "cron2english"
 group :test, :development do
   gem "capybara"
   gem "selenium-webdriver"
-  gem "teaspoon"
+  gem "teaspoon-jasmine"
   gem "dotenv-rails"
   gem "poltergeist"
 end
