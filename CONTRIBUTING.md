@@ -1,18 +1,19 @@
 # Contributing
+Thanks for using and improving *resque-brain*! If you'd like to help out, check out [the project's issues list](https://github.com/stitchfix/resque-brain/issues) for ideas on what could be improved.  If there's an idea you'd like to propose, or a design change, feel free to file a new issue or send a pull request:
 
-In general:
+1. [Fork][fork] the repo.
+1. [Create a topic branch.][branch]
+1. Write tests.
+1. Implement your feature or fix bug.
+1. Add, commit, and push your changes.
+1. [Submit a pull request.][pr]
 
-1. Fork it
-2. Make a branch
-3. Write Tests
-4. Implement/Fix Bug
-5. Submit Pull Request.  If you are changing UI, include screenshots or screencasts of the change.
-
-Step 3 is super important, and please do it first.  If you can test via a unit test or via a JavaScript unit test, that is preferable to a full-blown integration test.
+[fork]: https://help.github.com/articles/fork-a-repo/
+[branch]: https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/
+[pr]: https://help.github.com/articles/using-pull-requests/
 
 ## General Guidelines
 
-* When in doubt, test it.  If you can't test it, re-think what you are doing
-* The UI must be kept focused on *quickly* understanding what's going with Resque.  Anything added to the overview, summary, or nav has the potential to take away from that.
-* Code formatting and internal application architecture must be consistent.  When I've deviated from "The Rails Way", I had a good reason.
-
+* When in doubt, test it.  If you can't test it, re-think what you are doing.
+* Code formatting and internal application architecture should be consistent.
+* If you are changing UI, include screenshots or screencasts of the change.
