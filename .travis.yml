@@ -1,3 +1,4 @@
+sudo: false
 notifications:
   email:
     on_success: always
@@ -8,3 +9,5 @@ services:
   - redis-server
 rvm:
   - 2.2.3
+  - 2.1.6
+  - ruby-head
