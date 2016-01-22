@@ -122,3 +122,28 @@ that backend.  [I don't believe you should use the other back-ends](https://gith
 a function of the poor design of the failed queue implementation.  Be warned.
 * The Web UI is not extensible, so currently this is no visibility into resque-scheduler or resque-retry.
 
+# Docker
+
+This repository includes a Dockerfile to quickly test resque-brain. Build the image with `docker build .` and run the resulting image referencing an environmental variables file.
+
+The environmental variables file should be similar to the following:
+
+```
+APP_HOME=/var/www/resque-brain/current/
+RAILS_ROOT=/var/www/resque-brain/current
+RAILS_ENV=development
+APPLICATION_NAME=resque-brain
+SECRET_KEY_BASE=fb99e6dda1e7b710a449f0random77cecfba990738a10b844fbc3ed0091b3613c6f5f538cac03f040a303d4c26e706227ae76dffa09f66f05846d0ce3628b9fe
+HTTP_AUTH_USERNAME=admin
+HTTP_AUTH_PASSWORD=password
+
+RESQUE_BRAIN_INSTANCES=first,second
+FIRST_RESQUE_REDIS_URL=redis://10.10.10.10:6379
+SECOND_RESQUE_REDIS_URL=redis://10.20.20.20:6379
+```
+
+Save the file and reference it when running the Docker image:
+
+`run -d --env-file=/tmp/resque-brain.txt -p 8080:8080 09298ef03207`
+
+You should be able to reach resque-brain through your web browser. 
