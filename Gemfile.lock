@@ -109,7 +109,7 @@ GEM
     minitest (5.8.3)
     mono_logger (1.1.0)
     multi_json (1.11.2)
-    nokogiri (1.6.7.1)
+    nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
     poltergeist (1.8.1)
       capybara (~> 2.1)
@@ -219,6 +219,7 @@ DEPENDENCIES
   foreman
   jbuilder (~> 2.0)
   jquery-rails
+  nokogiri (>= 1.6.7.2)
   poltergeist
   rails (~> 4.2.0)
   rails_12factor
