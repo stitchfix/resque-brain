@@ -15,11 +15,11 @@ end
 class Monitoring::FailedJobCheckTest < MiniTest::Test
   include ResqueHelpers
 
-  def setup_resques(test1: 1, test2: 2)
+  def setup_resques(test1: ["BazJob"], test2: ["FooJob","BarJob"])
     Redis.new.flushall
     Resques.new([
-      add_failed_jobs(num_failed: test1, resque_instance: resque_instance("test1",:resque)),
-      add_failed_jobs(num_failed: test2, resque_instance: resque_instance("test2",:resque2)),
+      add_failed_jobs(job_class_names: test1, resque_instance: resque_instance("test1",:resque)),
+      add_failed_jobs(job_class_names: test2, resque_instance: resque_instance("test2",:resque2)),
     ])
   end
 
@@ -28,7 +28,7 @@ class Monitoring::FailedJobCheckTest < MiniTest::Test
   end
 
   def test_failed_jobs
-    resques = setup_resques(test1: 1, test2: 2)
+    resques = setup_resques
     check = Monitoring::FailedJobCheck.new(resques: resques)
 
     results = check.check!

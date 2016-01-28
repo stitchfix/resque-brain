@@ -5,11 +5,14 @@ module ResqueHelpers
     ResqueInstance.new(name: name, resque_data_store: resque_data_store)
   end
 
-  def add_failed_jobs(num_failed: num_failed, resque_instance: nil)
-    num_failed.times do |i|
+  def add_failed_jobs(num_failed: nil, resque_instance: nil, job_class_names: nil)
+    raise 'you must supply num_failed or job_class_names' if num_failed.nil? && job_class_names.nil?
+    job_class_names ||= num_failed.times.map { "Baz" }
+
+    job_class_names.each_with_index do |class_name,i|
       resque_instance.resque_data_store.push_to_failed_queue(Resque.encode(
         failed_at: Time.now.utc.iso8601,
-        payload: { class: "Baz", args: [ i ]},
+        payload: { class: class_name, args: [ i ]},
         exception: "Resque::TermException",
         error: "SIGTERM",
         backtrace: [ "foo","bar","blah"],
