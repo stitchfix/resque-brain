@@ -3,7 +3,7 @@ namespace :monitor do
   task :failed => :environment do
     monitor = Monitoring::Monitor.new(
        checker: Monitoring::FailedJobCheck.new,
-      notifier: Monitoring::LibratoNotifier.new(prefix: "resque.failed_jobs", unit: "jobs"))
+      notifier: Monitoring::LibratoNotifier.new(unit: "jobs"))
     monitor.monitor!
   end
 
@@ -11,7 +11,7 @@ namespace :monitor do
   task :stale_workers => :environment do
     monitor = Monitoring::Monitor.new(
        checker: Monitoring::StaleWorkerCheck.new,
-      notifier: Monitoring::LibratoNotifier.new(prefix: "resque.stale_workers", type: :measure, unit: "workers"))
+      notifier: Monitoring::LibratoNotifier.new(type: :measure, unit: "workers"))
 
     monitor.monitor!
   end
@@ -20,7 +20,7 @@ namespace :monitor do
   task :queue_sizes => :environment do
     monitor = Monitoring::Monitor.new(
        checker: Monitoring::QueueSizeCheck.new,
-      notifier: Monitoring::PerQueueLibratoNotifier.new(prefix: "resque.queue_size", type: :count, unit: "jobs"))
+      notifier: Monitoring::LibratoNotifier.new(unit: "jobs"))
 
     monitor.monitor!
   end

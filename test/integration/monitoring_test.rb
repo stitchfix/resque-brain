@@ -60,9 +60,9 @@ class MonitoringTest < ActionDispatch::IntegrationTest
 
     Rake::Task['monitor:queue_sizes'].invoke
 
-    assert_equal "source=test1.cache count#resque.queue_size=2jobs" , logger.infos[0]
-    assert_equal "source=test1.mail count#resque.queue_size=4jobs"  , logger.infos[1]
-    assert_equal "source=test2.admin count#resque.queue_size=2jobs" , logger.infos[2]
-    assert_equal "source=test2.mail count#resque.queue_size=1jobs"  , logger.infos[3]
+    assert_equal "source=test1.cache count#resque.queue_size=2jobs" , logger.infos[0], "0" + logger.infos.inspect
+    assert_equal "source=test1.mail count#resque.queue_size=4jobs"  , logger.infos[1], "1" + logger.infos.inspect
+    assert_equal "source=test2.admin count#resque.queue_size=2jobs" , logger.infos[2], "2" + logger.infos.inspect
+    assert_equal "source=test2.mail count#resque.queue_size=1jobs"  , logger.infos[3], "3" + logger.infos.inspect
   end
 end

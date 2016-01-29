@@ -4,6 +4,7 @@ require 'resque'
 require 'support/fake_logger'
 
 lib_require 'monitoring/notifier'
+lib_require 'monitoring/check_result'
 lib_require 'monitoring/librato_notifier'
 
 module Monitoring
@@ -14,26 +15,14 @@ class Monitoring::LibratoNotifierTest < MiniTest::Test
     assert Monitoring::LibratoNotifier.ancestors.include?(Monitoring::Notifier)
   end
 
-  def test_requires_a_prefix
-    assert_raises ArgumentError do
-      Monitoring::LibratoNotifier.new(logger: FakeLogger.new)
-    end
-  end
-
-  def test_prefix_should_just_have_alpha_nums_and_dots
-    assert_raises ArgumentError do
-      Monitoring::LibratoNotifier.new(prefix: "foo bar", logger: FakeLogger.new)
-    end
-  end
-
   def test_logs_results
     logger = FakeLogger.new
-    notifier = Monitoring::LibratoNotifier.new(prefix: "foo.bar", logger: logger, unit: "jobs")
-    notifier.notify!({
-      "test1" => [ Object.new, Object.new, Object.new ],
-      "test2" => [ Object.new ],
-      "test3" => [],
-    })
+    notifier = Monitoring::LibratoNotifier.new(logger: logger, unit: "jobs")
+    notifier.notify!([
+      Monitoring::CheckResult.new(resque_name: "test1", check_name: "foo.bar", check_count: 3),
+      Monitoring::CheckResult.new(resque_name: "test2", check_name: "foo.bar", check_count: 1),
+      Monitoring::CheckResult.new(resque_name: "test3", check_name: "foo.bar", check_count: 0),
+    ])
 
     assert_equal "source=test1 count#foo.bar=3jobs", logger.infos[0]
     assert_equal "source=test2 count#foo.bar=1jobs", logger.infos[1]
@@ -42,15 +31,29 @@ class Monitoring::LibratoNotifierTest < MiniTest::Test
 
   def test_logs_results_as_measure
     logger = FakeLogger.new
-    notifier = Monitoring::LibratoNotifier.new(prefix: "foo.bar", logger: logger, type: :measure, unit: "workers")
-    notifier.notify!({
-      "test1" => [ Object.new, Object.new, Object.new ],
-      "test2" => [ Object.new ],
-      "test3" => [],
-    })
+    notifier = Monitoring::LibratoNotifier.new(logger: logger, type: :measure, unit: "workers")
+    notifier.notify!([
+      Monitoring::CheckResult.new(resque_name: "test1", check_name: "foo.bar", check_count: 3),
+      Monitoring::CheckResult.new(resque_name: "test2", check_name: "foo.bar", check_count: 1),
+      Monitoring::CheckResult.new(resque_name: "test3", check_name: "foo.bar", check_count: 0),
+    ])
 
     assert_equal "source=test1 measure#foo.bar=3workers", logger.infos[0]
     assert_equal "source=test2 measure#foo.bar=1workers", logger.infos[1]
     assert_equal "source=test3 measure#foo.bar=0workers", logger.infos[2]
+  end
+
+  def test_logs_results_with_scope
+    logger = FakeLogger.new
+    notifier = Monitoring::LibratoNotifier.new(logger: logger, unit: "workers")
+    notifier.notify!([
+      Monitoring::CheckResult.new(resque_name: "test1", scope: "baz", check_name: "foo.bar", check_count: 3),
+      Monitoring::CheckResult.new(resque_name: "test2", scope: "baz", check_name: "foo.bar", check_count: 1),
+      Monitoring::CheckResult.new(resque_name: "test3", scope: "baz", check_name: "foo.bar", check_count: 0),
+    ])
+
+    assert_equal "source=test1.baz count#foo.bar=3workers", logger.infos[0]
+    assert_equal "source=test2.baz count#foo.bar=1workers", logger.infos[1]
+    assert_equal "source=test3.baz count#foo.bar=0workers", logger.infos[2]
   end
 end

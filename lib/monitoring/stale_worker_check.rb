@@ -1,9 +1,11 @@
 module Monitoring
   class StaleWorkerCheck < Monitoring::Checker
     def check!
-      Hash[@resques.all.map { |resque_instance|
-        [resque_instance.name,resque_instance.jobs_running.select(&:too_long?)]
-      }]
+      @resques.all.map { |resque_instance|
+        CheckResult.new(resque_name: resque_instance.name,
+                        check_name: "resque.stale_workers",
+                        check_count: resque_instance.jobs_running.select(&:too_long?).size)
+      }
     end
   end
 end

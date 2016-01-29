@@ -1,9 +1,11 @@
 require 'quick_test_helper'
 require 'support/resque_helpers'
+require 'support/monitoring_helpers'
 require 'minitest/autorun'
 require 'resque'
 
 lib_require 'monitoring/checker'
+lib_require 'monitoring/check_result'
 lib_require 'monitoring/failed_job_check'
 rails_require 'models/resque_instance'
 rails_require 'models/job'
@@ -14,6 +16,7 @@ module Monitoring
 end
 class Monitoring::FailedJobCheckTest < MiniTest::Test
   include ResqueHelpers
+  include MonitoringHelpers
 
   def setup_resques(test1: ["BazJob"], test2: ["FooJob","BarJob"])
     Redis.new.flushall
@@ -33,17 +36,17 @@ class Monitoring::FailedJobCheckTest < MiniTest::Test
 
     results = check.check!
 
-    assert_equal 1,results["test1"].size,results["test1"].inspect
-    assert_equal 2,results["test2"].size,results["test2"].inspect
+    assert_check_result results[0], resque_name: "test1", check_count: 1
+    assert_check_result results[1], resque_name: "test2", check_count: 2
   end
 
   def test_no_failed_jobs
-    resques = setup_resques(test1: 0, test2: 0)
+    resques = setup_resques(test1: [], test2: [])
     check = Monitoring::FailedJobCheck.new(resques: resques)
 
     results = check.check!
 
-    assert_equal 0,results["test1"].size,results.inspect
-    assert_equal 0,results["test2"].size,results.inspect
+    assert_check_result results[0], resque_name: "test1", check_count: 0
+    assert_check_result results[1], resque_name: "test2", check_count: 0
   end
 end
