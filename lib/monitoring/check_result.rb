@@ -1,7 +1,7 @@
 module Monitoring
   class CheckResult
     attr_reader :resque_name, # Name of the resque the check checked
-                :scope,       # Refined scope inside this resque, if relevenat (e.g. queue name or class name)
+                :scope,       # Refined scope inside this resque, if relavent (e.g. queue name or class name)
                 :check_name,  # Name of the thing checked
                 :check_count  # Count related to what was being checked
 
