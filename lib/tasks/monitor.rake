@@ -7,6 +7,14 @@ namespace :monitor do
     monitor.monitor!
   end
 
+  desc "Check the number of failed jobs and stat the results per class in the failed queue" 
+  task :failed_by_class => :environment do
+    monitor = Monitoring::Monitor.new(
+       checker: Monitoring::FailedJobByClassCheck.new,
+      notifier: Monitoring::LibratoNotifier.new(unit: "jobs"))
+    monitor.monitor!
+  end
+
   desc "Check the number of stale workers and stat the results to the log in a way Librato can understand"
   task :stale_workers => :environment do
     monitor = Monitoring::Monitor.new(
