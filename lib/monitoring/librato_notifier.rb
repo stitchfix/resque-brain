@@ -1,7 +1,6 @@
 module Monitoring
   class LibratoNotifier < Notifier
-    def initialize(prefix: nil, logger: Rails.logger, type: :count, unit: "")
-      @prefix = validate_prefix!(prefix)
+    def initialize(logger: Rails.logger, type: :count, unit: "")
       @logger = logger
       @type   = type
       @unit   = unit || ""
@@ -11,9 +10,10 @@ module Monitoring
     #
     # results:: a hash where the keys represent the source (the resque instance name) and the values
     #           are lists of items to be counted.  The items won't be examined, just counted and used in the metric
-    def notify!(results)
-      results.each do |resque_name,items|
-        log_to_librato(resque_name,@type,@prefix,items.size)
+    def notify!(check_results)
+      check_results.each do |check_result|
+        source = [check_result.resque_name,check_result.scope].compact.join(".")
+        log_to_librato(source,@type,check_result.check_name,check_result.check_count)
       end
     end
 

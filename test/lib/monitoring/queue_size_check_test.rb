@@ -1,10 +1,12 @@
 require 'quick_test_helper'
 require 'support/resque_helpers'
+require 'support/monitoring_helpers'
 require 'minitest/autorun'
 require 'resque'
 
 lib_require 'monitoring/checker'
 lib_require 'monitoring/queue_size_check'
+lib_require 'monitoring/check_result'
 rails_require 'models/resque_instance'
 rails_require 'models/job'
 rails_require 'models/running_job'
@@ -14,6 +16,7 @@ module Monitoring
 end
 class Monitoring::QueueSizeCheckTest < MiniTest::Test
   include ResqueHelpers
+  include MonitoringHelpers
 
   def setup_resques(test1: {}, test2: {})
     Redis.new.flushall
@@ -32,12 +35,12 @@ class Monitoring::QueueSizeCheckTest < MiniTest::Test
                             test2: { mail: 3, admin: 2 })
     check = Monitoring::QueueSizeCheck.new(resques: resques)
 
-    results = check.check!
+    results = check.check!.sort_by { |result| "#{result.resque_name}.#{result.scope}" }
 
-    assert_equal 10, results["test1"]["mail"].size
-    assert_equal 4 , results["test1"]["cache"].size
+    assert_check_result results[0], resque_name: "test1" , scope: "cache" , check_count: 4
+    assert_check_result results[1], resque_name: "test1" , scope: "mail"  , check_count: 10
+    assert_check_result results[2], resque_name: "test2" , scope: "admin" , check_count: 2
+    assert_check_result results[3], resque_name: "test2" , scope: "mail"  , check_count: 3
 
-    assert_equal 3 , results["test2"]["mail"].size
-    assert_equal 2 , results["test2"]["admin"].size
   end
 end
