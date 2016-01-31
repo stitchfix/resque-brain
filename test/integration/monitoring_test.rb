@@ -34,6 +34,23 @@ class MonitoringTest < ActionDispatch::IntegrationTest
     assert_equal "source=test2 count#resque.failed_jobs=4jobs",logger.infos[1]
   end
 
+  test "failed by class check to librato" do
+    logger = FakeLogger.new
+    Rails.logger = logger
+
+    Object.const_set(:RESQUES,Resques.new([
+      add_failed_jobs(job_class_names: ["FooJob","BarJob","FooJob"], resque_instance: resque_instance("test1",:resque)),
+      add_failed_jobs(job_class_names: ["BazJob","BazJob",nil,"BazJob"], resque_instance: resque_instance("test2",:resque2)),
+    ]))
+
+    Rake::Task['monitor:failed_by_class'].invoke
+
+    assert_equal "source=test1.barjob count#resque.failed_jobs=1jobs",logger.infos[0]
+    assert_equal "source=test1.foojob count#resque.failed_jobs=2jobs",logger.infos[1]
+    assert_equal "source=test2.bazjob count#resque.failed_jobs=3jobs",logger.infos[2]
+    assert_equal "source=test2.noclass count#resque.failed_jobs=1jobs",logger.infos[3]
+  end
+
   test "stale workers to librato" do
     logger = FakeLogger.new
     Rails.logger = logger
