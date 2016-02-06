@@ -45,6 +45,13 @@ class ResqueInstance
     }
   end
 
+  # Return the number of jobs waiting, by queue.  Hash of queue_name => number of jobs waiting
+  def waiting_by_queue
+    Hash[@resque_data_store.queue_names.map { |queue_name|
+      [queue_name,@resque_data_store.queue_size(queue_name)]
+    }]
+  end
+
   # Return all jobs that are currently running as an array of `RunningJob` instances
   def jobs_running
     worker_ids = Array(@resque_data_store.worker_ids)

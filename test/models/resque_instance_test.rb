@@ -127,6 +127,13 @@ class ResqueInstanceTest < MiniTest::Test
     assert_equal 7,create_test_instance.waiting
   end
 
+  def test_waiting_by_queue
+    waiting = create_test_instance.waiting_by_queue
+
+    assert_equal 2,waiting["bar"]
+    assert_equal 5,waiting["foo"]
+  end
+
   def test_retry_job
     resque_data_store = fake_resque_data_store
     instance = create_test_instance(resque_data_store: resque_data_store)

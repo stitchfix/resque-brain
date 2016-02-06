@@ -5,7 +5,7 @@ module Monitoring
       @resques.all.map { |resque_instance|
         CheckResult.new(resque_name: resque_instance.name,
                         check_name: "resque.failed_jobs",
-                        check_count: resque_instance.jobs_failed.size)
+                        check_count: resque_instance.failed)
       }
     end
   end
