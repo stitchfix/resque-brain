@@ -3,12 +3,12 @@ module Monitoring
   class QueueSizeCheck < Monitoring::Checker
     def check!
       @resques.all.map { |resque_instance|
-        resque_instance.jobs_waiting.keys.sort.map { |queue_name|
-          jobs = resque_instance.jobs_waiting[queue_name]
+        waiting_by_queue = resque_instance.waiting_by_queue
+        waiting_by_queue.keys.sort.map { |queue_name|
           CheckResult.new(resque_name: resque_instance.name,
                           scope: queue_name,
                           check_name: "resque.queue_size",
-                          check_count: jobs.size)
+                          check_count: waiting_by_queue[queue_name])
         }
       }.flatten
     end
