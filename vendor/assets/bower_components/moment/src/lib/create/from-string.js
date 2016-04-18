@@ -2,7 +2,6 @@ import { matchOffset } from '../parse/regex';
 import { configFromStringAndFormat } from './from-string-and-format';
 import { hooks } from '../utils/hooks';
 import { deprecate } from '../utils/deprecate';
-import getParsingFlags from './parsing-flags';
 
 // iso 8601 regex
 // 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
@@ -33,17 +32,17 @@ export function configFromISO(config) {
         match = isoRegex.exec(string);
 
     if (match) {
-        getParsingFlags(config).iso = true;
+        config._pf.iso = true;
         for (i = 0, l = isoDates.length; i < l; i++) {
             if (isoDates[i][1].exec(string)) {
-                config._f = isoDates[i][0];
+                // match[5] should be 'T' or undefined
+                config._f = isoDates[i][0] + (match[6] || ' ');
                 break;
             }
         }
         for (i = 0, l = isoTimes.length; i < l; i++) {
             if (isoTimes[i][1].exec(string)) {
-                // match[6] should be 'T' or space
-                config._f += (match[6] || ' ') + isoTimes[i][0];
+                config._f += isoTimes[i][0];
                 break;
             }
         }

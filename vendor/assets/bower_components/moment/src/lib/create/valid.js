@@ -1,24 +1,21 @@
 import extend from '../utils/extend';
 import { createUTC } from './utc';
-import getParsingFlags from '../create/parsing-flags';
 
 export function isValid(m) {
     if (m._isValid == null) {
-        var flags = getParsingFlags(m);
         m._isValid = !isNaN(m._d.getTime()) &&
-            flags.overflow < 0 &&
-            !flags.empty &&
-            !flags.invalidMonth &&
-            !flags.invalidWeekday &&
-            !flags.nullInput &&
-            !flags.invalidFormat &&
-            !flags.userInvalidated;
+            m._pf.overflow < 0 &&
+            !m._pf.empty &&
+            !m._pf.invalidMonth &&
+            !m._pf.nullInput &&
+            !m._pf.invalidFormat &&
+            !m._pf.userInvalidated;
 
         if (m._strict) {
             m._isValid = m._isValid &&
-                flags.charsLeftOver === 0 &&
-                flags.unusedTokens.length === 0 &&
-                flags.bigHour === undefined;
+                m._pf.charsLeftOver === 0 &&
+                m._pf.unusedTokens.length === 0 &&
+                m._pf.bigHour === undefined;
         }
     }
     return m._isValid;
@@ -27,10 +24,10 @@ export function isValid(m) {
 export function createInvalid (flags) {
     var m = createUTC(NaN);
     if (flags != null) {
-        extend(getParsingFlags(m), flags);
+        extend(m._pf, flags);
     }
     else {
-        getParsingFlags(m).userInvalidated = true;
+        m._pf.userInvalidated = true;
     }
 
     return m;

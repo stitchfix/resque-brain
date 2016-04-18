@@ -1,3 +1,4 @@
+import defaultParsingFlags from './default-parsing-flags';
 import isArray from '../utils/is-array';
 import isDate from '../utils/is-date';
 import map from '../utils/map';
@@ -14,19 +15,9 @@ import { configFromArray }           from './from-array';
 import { configFromObject }          from './from-object';
 
 function createFromConfig (config) {
-    var res = new Moment(checkOverflow(prepareConfig(config)));
-    if (res._nextDay) {
-        // Adding is smart enough around DST
-        res.add(1, 'd');
-        res._nextDay = undefined;
-    }
-
-    return res;
-}
-
-export function prepareConfig (config) {
     var input = config._i,
-        format = config._f;
+        format = config._f,
+        res;
 
     config._locale = config._locale || getLocale(config._l);
 
@@ -44,13 +35,18 @@ export function prepareConfig (config) {
         configFromStringAndArray(config);
     } else if (format) {
         configFromStringAndFormat(config);
-    } else if (isDate(input)) {
-        config._d = input;
     } else {
         configFromInput(config);
     }
 
-    return config;
+    res = new Moment(checkOverflow(config));
+    if (res._nextDay) {
+        // Adding is smart enough around DST
+        res.add(1, 'd');
+        res._nextDay = undefined;
+    }
+
+    return res;
 }
 
 function configFromInput(config) {
@@ -91,6 +87,7 @@ export function createLocalOrUTC (input, format, locale, strict, isUTC) {
     c._i = input;
     c._f = format;
     c._strict = strict;
+    c._pf = defaultParsingFlags();
 
     return createFromConfig(c);
 }

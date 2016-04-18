@@ -5,7 +5,6 @@ import { dayOfYearFromWeeks } from '../units/day-of-year';
 import { YEAR, MONTH, DATE, HOUR, MINUTE, SECOND, MILLISECOND } from '../units/constants';
 import { createLocal } from './local';
 import defaults from '../utils/defaults';
-import getParsingFlags from './parsing-flags';
 
 function currentDateArray(config) {
     var now = new Date();
@@ -38,7 +37,7 @@ export function configFromArray (config) {
         yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
 
         if (config._dayOfYear > daysInYear(yearToUse)) {
-            getParsingFlags(config)._overflowDayOfYear = true;
+            config._pf._overflowDayOfYear = true;
         }
 
         date = createUTCDate(yearToUse, 0, config._dayOfYear);

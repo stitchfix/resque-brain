@@ -5,7 +5,6 @@ import { addRegexToken, match1to2, match2 } from '../parse/regex';
 import { addParseToken } from '../parse/token';
 import { HOUR } from './constants';
 import toInt from '../utils/to-int';
-import getParsingFlags from '../create/parsing-flags';
 
 // FORMATTING
 
@@ -47,7 +46,7 @@ addParseToken(['a', 'A'], function (input, array, config) {
 });
 addParseToken(['h', 'hh'], function (input, array, config) {
     array[HOUR] = toInt(input);
-    getParsingFlags(config).bigHour = true;
+    config._pf.bigHour = true;
 });
 
 // LOCALES

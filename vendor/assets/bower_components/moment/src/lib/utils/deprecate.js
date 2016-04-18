@@ -9,10 +9,9 @@ function warn(msg) {
 
 export function deprecate(msg, fn) {
     var firstTime = true;
-
     return extend(function () {
         if (firstTime) {
-            warn(msg + '\n' + (new Error()).stack);
+            warn(msg);
             firstTime = false;
         }
         return fn.apply(this, arguments);
