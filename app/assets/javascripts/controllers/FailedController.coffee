@@ -3,9 +3,15 @@ controllers.controller("FailedController", [
   "$scope", "$modal", "$routeParams", "$location", "$timeout", "$animate", "IntervalRefresh", "Resques", "GenericErrorHandling", "FailedJobs", "flash",
   ($scope ,  $modal ,  $routeParams ,  $location ,  $timeout ,  $animate ,  IntervalRefresh ,  Resques ,  GenericErrorHandling ,  FailedJobs ,  flash)->
 
-    PAGE_SIZE = 10
+    DEFAULT_PAGE_SIZE = 10
 
     backtracesShowing = {}
+
+    $scope.pageSize = $routeParams.pageSize or DEFAULT_PAGE_SIZE
+    $scope.possiblePageSizes = _.sortBy(_.union([ 10, 20, 40, 100 ],[ $scope.pageSize ]))
+
+    $scope.pageSizeChanged = ->
+      $location.search("pageSize",$scope.pageSize)
 
     loadFailedJobs = ->
       $scope.loading = true
@@ -14,13 +20,13 @@ controllers.controller("FailedController", [
           $scope.numJobsFailed = (_.find(summary, (oneSummary)-> oneSummary.name == $routeParams.resque) or {}).failed
           $scope.pages = []
           page = 1
-          numPages = Math.ceil($scope.numJobsFailed / PAGE_SIZE)
+          numPages = Math.ceil($scope.numJobsFailed / $scope.pageSize)
 
           while page <= numPages
             $scope.pages.push(page)
             page += 1
 
-          Resques.jobsFailed( { name: $routeParams.resque },($scope.currentPage - 1) * PAGE_SIZE,PAGE_SIZE,
+          Resques.jobsFailed( { name: $routeParams.resque },($scope.currentPage - 1) * $scope.pageSize,$scope.pageSize,
             ( (jobs)->
               $scope.jobsFailed = jobs
               $scope.loading    = false
@@ -51,7 +57,7 @@ controllers.controller("FailedController", [
 
     $scope.goToPage = (page)->
       if page > 0 and page <= $scope.pages.length
-        $location.search( page: page )
+        $location.search( page: page, pageSize: $scope.pageSize )
 
     $scope.retry = (job)->
       modalInstance = $modal.open(

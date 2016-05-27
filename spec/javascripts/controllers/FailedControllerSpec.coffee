@@ -48,7 +48,7 @@ describe "FailedController", ->
 
   resqueName = 'test'
 
-  setupController = (page,andAlso)->
+  setupController = (page,pageSize,andAlso)->
     inject((Resques, FailedJobs, $rootScope, $routeParams, $location, $controller, $modal)->
       scope      = $rootScope.$new()
       location   = $location
@@ -66,6 +66,7 @@ describe "FailedController", ->
 
       $routeParams.resque = resqueName
       $routeParams.page = page if page
+      $routeParams.pageSize = pageSize if pageSize
 
       if andAlso
         andAlso()
@@ -77,25 +78,49 @@ describe "FailedController", ->
 
   describe 'loading the controller', ->
     describe "without a page specified", ->
-      beforeEach(setupController())
-      it 'exposes the list of jobs running', ->
-        expect(scope.jobsFailed).toEqualData(jobsFailed.slice(0,10))
-        expect(scope.numJobsFailed).toBe(12)
-        expect(scope.pages).toEqualData( [ 1, 2 ] )
-        expect(resques.jobsFailed.mostRecentCall.args[0]).toEqualData({ name: resqueName })
-        expect(resques.jobsFailed.mostRecentCall.args[1]).toBe(0)
-        expect(resques.jobsFailed.mostRecentCall.args[2]).toBe(10)
-        expect(scope.currentPage).toBe(1)
+      describe "without a page size", ->
+        beforeEach(setupController())
+        it 'exposes the list of jobs running', ->
+          expect(scope.jobsFailed).toEqualData(jobsFailed.slice(0,10))
+          expect(scope.numJobsFailed).toBe(12)
+          expect(scope.pages).toEqualData( [ 1, 2 ] )
+          expect(resques.jobsFailed.mostRecentCall.args[0]).toEqualData({ name: resqueName })
+          expect(resques.jobsFailed.mostRecentCall.args[1]).toBe(0)
+          expect(resques.jobsFailed.mostRecentCall.args[2]).toBe(10)
+          expect(scope.currentPage).toBe(1)
+      describe "with a page size", ->
+        beforeEach(setupController(null,5))
+        it 'exposes the list of jobs running', ->
+          expect(scope.jobsFailed).toEqualData(jobsFailed.slice(0,5))
+          expect(scope.numJobsFailed).toBe(12)
+          expect(scope.pages).toEqualData( [ 1, 2, 3 ] )
+          expect(resques.jobsFailed.mostRecentCall.args[0]).toEqualData({ name: resqueName })
+          expect(resques.jobsFailed.mostRecentCall.args[1]).toBe(0)
+          expect(resques.jobsFailed.mostRecentCall.args[2]).toBe(5)
+          expect(scope.currentPage).toBe(1)
+
     describe "with a page specified", ->
-      beforeEach(setupController(2))
-      it 'exposes the list of jobs running', ->
-        expect(scope.jobsFailed).toEqualData(jobsFailed.slice(10,13))
-        expect(scope.numJobsFailed).toBe(12)
-        expect(scope.pages).toEqualData( [ 1, 2 ] )
-        expect(resques.jobsFailed.mostRecentCall.args[0]).toEqualData({ name: resqueName })
-        expect(resques.jobsFailed.mostRecentCall.args[1]).toBe(10)
-        expect(resques.jobsFailed.mostRecentCall.args[2]).toBe(10)
-        expect(scope.currentPage).toBe(2)
+      describe "without a page size", ->
+        beforeEach(setupController(2))
+        it 'exposes the list of jobs running', ->
+          expect(scope.jobsFailed).toEqualData(jobsFailed.slice(10,13))
+          expect(scope.numJobsFailed).toBe(12)
+          expect(scope.pages).toEqualData( [ 1, 2 ] )
+          expect(resques.jobsFailed.mostRecentCall.args[0]).toEqualData({ name: resqueName })
+          expect(resques.jobsFailed.mostRecentCall.args[1]).toBe(10)
+          expect(resques.jobsFailed.mostRecentCall.args[2]).toBe(10)
+          expect(scope.currentPage).toBe(2)
+
+      describe "with a page size", ->
+        beforeEach(setupController(2,5))
+        it 'exposes the list of jobs running', ->
+          expect(scope.jobsFailed).toEqualData(jobsFailed.slice(5,10))
+          expect(scope.numJobsFailed).toBe(12)
+          expect(scope.pages).toEqualData( [ 1, 2, 3 ] )
+          expect(resques.jobsFailed.mostRecentCall.args[0]).toEqualData({ name: resqueName })
+          expect(resques.jobsFailed.mostRecentCall.args[1]).toBe(5)
+          expect(resques.jobsFailed.mostRecentCall.args[2]).toBe(5)
+          expect(scope.currentPage).toBe(2)
 
   describe "goToPage", ->
     beforeEach(setupController())
@@ -105,7 +130,7 @@ describe "FailedController", ->
 
   describe "retry", ->
     beforeEach ->
-      setupController(null, ->
+      setupController(null, null, ->
         spyOn(failedJobs,"retry").andCallFake( (resqueName, jobId, success,failure)-> success() )
         spyOn(failedJobs,"get").andCallFake( (resqueName, jobId, success,failure)-> success(updatedJob) )
         
@@ -124,7 +149,7 @@ describe "FailedController", ->
 
   describe "clear", ->
     beforeEach ->
-      setupController(null, ->
+      setupController(null, null, ->
         spyOn(failedJobs,"clear").andCallFake( (resqueName, jobId, success,failure)-> success() )
       )
     describe "default call", ->
@@ -146,7 +171,7 @@ describe "FailedController", ->
 
   describe "retryAndClear", ->
     beforeEach ->
-      setupController(null, ->
+      setupController(null, null, ->
         spyOn(failedJobs,"retry").andCallFake( (resqueName, jobId, success,failure)-> success() )
         spyOn(failedJobs,"clear").andCallFake( (resqueName, jobId, success,failure)-> success() )
       )
@@ -160,7 +185,7 @@ describe "FailedController", ->
 
   describe "retryAll", ->
     beforeEach ->
-      setupController(null, ->
+      setupController(null, null, ->
         spyOn(failedJobs,"retryAll").andCallFake( (resqueName, success,failure)-> success() )
       )
     it 'calls retry then get on FailedJobs', ->
@@ -173,7 +198,7 @@ describe "FailedController", ->
 
   describe "clearAll", ->
     beforeEach ->
-      setupController(null, ->
+      setupController(null, null, ->
         spyOn(failedJobs,"clearAll").andCallFake( (resqueName, success,failure)-> success() )
       )
     it 'calls clear then re-fetches all jobs', ->
@@ -186,7 +211,7 @@ describe "FailedController", ->
 
   describe "retryAndClearAll", ->
     beforeEach ->
-      setupController(null, ->
+      setupController(null, null, ->
         spyOn(failedJobs,"retryAndClearAll").andCallFake( (resqueName, success,failure)-> success() )
       )
     it 'calls clear then re-fetches all jobs', ->
