@@ -3,9 +3,11 @@ controllers.controller("FailedController", [
   "$scope", "$modal", "$routeParams", "$location", "$timeout", "$animate", "IntervalRefresh", "Resques", "GenericErrorHandling", "FailedJobs", "flash",
   ($scope ,  $modal ,  $routeParams ,  $location ,  $timeout ,  $animate ,  IntervalRefresh ,  Resques ,  GenericErrorHandling ,  FailedJobs ,  flash)->
 
-    PAGE_SIZE = 10
+    DEFAULT_PAGE_SIZE = 10
 
     backtracesShowing = {}
+
+    pageSize = $routeParams.pageSize or DEFAULT_PAGE_SIZE
 
     loadFailedJobs = ->
       $scope.loading = true
@@ -14,13 +16,13 @@ controllers.controller("FailedController", [
           $scope.numJobsFailed = (_.find(summary, (oneSummary)-> oneSummary.name == $routeParams.resque) or {}).failed
           $scope.pages = []
           page = 1
-          numPages = Math.ceil($scope.numJobsFailed / PAGE_SIZE)
+          numPages = Math.ceil($scope.numJobsFailed / pageSize)
 
           while page <= numPages
             $scope.pages.push(page)
             page += 1
 
-          Resques.jobsFailed( { name: $routeParams.resque },($scope.currentPage - 1) * PAGE_SIZE,PAGE_SIZE,
+          Resques.jobsFailed( { name: $routeParams.resque },($scope.currentPage - 1) * pageSize,pageSize,
             ( (jobs)->
               $scope.jobsFailed = jobs
               $scope.loading    = false
