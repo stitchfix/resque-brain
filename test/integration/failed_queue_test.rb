@@ -51,6 +51,34 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
     refute page.has_content?("worker20"), page_assertion_error_message(page)
   end
 
+  test "page size" do
+
+    visit("/")
+    click_link "View Failed Jobs"
+    sleep 1
+
+    assert page.has_text?("21 Jobs Failed"), page_assertion_error_message(page)
+    select "20 jobs per page"
+    sleep 2
+
+    assert_equal 20, page.all("article.failed-job").count
+    assert page.has_content?("worker0"), page_assertion_error_message(page)
+    assert page.has_content?("worker1"), page_assertion_error_message(page)
+    assert page.all("[title='Retry Job 0']").present?
+    assert page.all("[title='Retry Job 19']").present?
+    refute page.all("[title='Retry Job 20']").present?
+    refute page.has_content?("worker21"), page_assertion_error_message(page)
+
+    first("[title='Page 2 of Results']").click
+    sleep 1
+    assert_equal 1, page.all("article.failed-job").count, page_assertion_error_message(page)
+    refute page.has_content?("worker0"), page_assertion_error_message(page)
+    refute page.has_content?("worker19"), page_assertion_error_message(page)
+    refute page.all("[title='Retry Job 19']").present?, page.html
+    assert page.all("[title='Retry Job 20']").present?, page.html
+    assert page.has_content?("worker20"), page_assertion_error_message(page)
+  end
+
   test "retry" do
     visit("/")
     click_link "View Failed Jobs"

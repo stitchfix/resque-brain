@@ -4,6 +4,11 @@
     <header class="col-md-12">
       <h1 class="text-center"><i aria-hidden="true" class="glyphicon glyphicon-ok text-success" ng-if="numJobsFailed == 0"></i> {{numJobsFailed}} Job<span ng-if="numJobsFailed != 1">s</span> Failed <small>{{resqueSelected}}</small></h1>
     </header>
+    <div class="pull-left">
+      <select class="form-control" ng-model="pageSize" ng-change="pageSizeChanged()">
+        <option ng-selected="size == pageSize" ng-repeat="size in possiblePageSizes" value="{{size}}">{{size}} jobs per page</option>
+      </select>
+    </div>
     <div class="pull-right hidden-xs">
       <div class="btn-toolbar" ng-if="numJobsFailed > 0">
         <div class="btn-group">
