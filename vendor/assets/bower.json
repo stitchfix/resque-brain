@@ -1,15 +1,20 @@
 {
-  "name": "dsl-generated dependencies",
+  "name": "dsl-generated-dependencies",
   "dependencies": {
-    "angular": "latest",
-    "bootstrap-sass-official": "latest",
-    "angular-route": "latest",
-    "angular-ui-bootstrap-bower": "latest",
-    "angular-mocks": "latest",
-    "angular-resource": "latest",
-    "angular-animate": "latest",
-    "lodash": "latest",
-    "angular-moment": "latest",
-    "angular-flash": "latest"
+    "angular": "1.3.15",
+    "bootstrap-sass-official": "3.3.4",
+    "angular-route": "1.3.15",
+    "angular-ui-bootstrap-bower": "0.12.1",
+    "angular-mocks": "1.3.15",
+    "angular-resource": "1.3.15",
+    "angular-animate": "1.3.15",
+    "lodash": "3.7.0",
+    "angular-moment": "0.10.0",
+    "angular-flash": "0.1.14",
+    "moment": "2.10.2",
+    "jquery": "2.1.4"
+  },
+  "resolutions": {
+    "angular": "1.3.15"
   }
 }

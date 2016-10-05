@@ -35,7 +35,7 @@
     "tag": "0.1.14",
     "commit": "10f6d2fcd6c30605521d47276473e734d0b6a39c"
   },
-  "_source": "git://github.com/wmluke/angular-flash.git",
-  "_target": "*",
+  "_source": "https://github.com/wmluke/angular-flash.git",
+  "_target": "0.1.14",
   "_originalSource": "angular-flash"
 }
