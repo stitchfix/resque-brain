@@ -17,9 +17,6 @@ machine:
   services:
     - docker
     - redis
-test:
-  post:
-    - bundle exec rake brakeman:run
 
 deployment:
   production:
