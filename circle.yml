@@ -1,0 +1,41 @@
+general:
+  branches:
+    ignore:
+      - /deploy\/.*/
+      - staging
+      - production
+
+dependencies:
+  pre:
+    - gem install bundler
+  override:
+    - bundle install --path=vendor/bundle:
+        timeout: 180
+machine:
+  timezone:
+    America/Los_Angeles
+  services:
+    - docker
+    - redis
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - bundle exec rake assets:precompile
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker build -t stitchfix/resque-brain:$CIRCLE_SHA1 .
+      - docker tag stitchfix/resque-brain:$CIRCLE_SHA1 stitchfix/resque-brain:latest
+      - docker push stitchfix/resque-brain:latest
+      - docker push stitchfix/resque-brain:$CIRCLE_SHA1
+  other:
+    branch: /^((?!master).)*$/
+    commands:
+      - bundle exec rake assets:precompile
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker build -t stitchfix/resque-brain:$CIRCLE_SHA1 .
+      - docker tag stitchfix/resque-brain:$CIRCLE_SHA1 stitchfix/goro:latest
+
+notify:
+  webhooks:
+    - url: https://fixops-service.stitchfix.com/webhooks/circleci

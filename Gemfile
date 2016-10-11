@@ -10,7 +10,7 @@ gem 'spring',        group: :development
 gem 'bower-rails'
 gem 'resque', github: 'resque/resque', branch: 'master'#'https://github.com/stitchfix/resque.git', branch: 'resque-redis-interface'
 gem 'angular-rails-templates', git: "https://github.com/davetron5000/angular-rails-templates.git", branch: "patch-1"
-gem 'unicorn'
+gem 'puma'
 gem "foreman"
 gem "cron2english"
 
