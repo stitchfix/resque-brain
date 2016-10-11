@@ -16,6 +16,7 @@ machine:
     America/Los_Angeles
   services:
     - docker
+    - redis
 test:
   post:
     - bundle exec rake brakeman:run
