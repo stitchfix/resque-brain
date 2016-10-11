@@ -1,0 +1,54 @@
+general:
+  branches:
+    ignore:
+      - /deploy\/.*/
+      - staging
+      - production
+
+dependencies:
+  pre:
+    - gem install bundler
+  override:
+    - bundle install --path=vendor/bundle:
+        timeout: 180
+machine:
+  timezone:
+    America/Los_Angeles
+  environment:
+    SHARED_STITCHFIX_DATABASE_URL: postgres://ubuntu:@localhost:5432/stitchfix_test
+    SHARED_DATABASE_STRUCTURE_FILE: structure.sql
+    DATABASE_URL: postgres://ubuntu:@localhost:5432/resque_brain_test
+  services:
+    - docker
+database:
+  override:
+    - mv config/database.yml.ci config/database.yml
+    - bundle exec rake db:create:all db:structure:load --trace
+test:
+  post:
+    - bundle exec rake brakeman:run
+    - cp spec/pacts/goro-fixops_service.json $CIRCLE_ARTIFACTS
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - bundle exec rake assets:precompile
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker build -t stitchfix/goro:$CIRCLE_SHA1 .
+      - docker tag stitchfix/goro:$CIRCLE_SHA1 stitchfix/goro:latest
+      - docker push stitchfix/goro:latest
+      - docker push stitchfix/goro:$CIRCLE_SHA1
+  other:
+    branch: /^((?!master).)*$/
+    commands:
+      - bundle exec rake assets:precompile
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker build -t stitchfix/goro:$CIRCLE_SHA1 .
+      - docker tag stitchfix/goro:$CIRCLE_SHA1 stitchfix/goro:latest
+      - docker push stitchfix/goro:latest
+      - docker push stitchfix/goro:$CIRCLE_SHA1
+
+notify:
+  webhooks:
+    - url: https://fixops-service.stitchfix.com/webhooks/circleci
