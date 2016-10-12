@@ -4,3 +4,8 @@
 require File.expand_path('../config/application', __FILE__)
 
 Rails.application.load_tasks
+
+task :schedule_background_jobs do
+  Resque.schedule = YAML.load_file("#{Rails.root}/config/scheduler.yml")
+end
+task :'resque:scheduler' => :schedule_background_jobs
