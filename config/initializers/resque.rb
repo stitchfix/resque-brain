@@ -2,7 +2,6 @@ require 'resque/scheduler'
 require 'resque/scheduler/server'
 require 'resque-retry'
 require 'resque-retry/server'
-require 'resque/status_server'
 
 # Point it to redis to go on heroku environments
 if ENV["REDIS_URL"].present?
