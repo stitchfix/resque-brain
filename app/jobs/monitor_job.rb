@@ -3,9 +3,18 @@ class MonitorJob
   def self.perform(checker_name)
     monitor = Monitoring::Monitor.new(
        checker: checker(checker_name),
-       notifier: Monitoring::LibratoNotifier.new(unit: "jobs"))
+       notifier: notifier(name))
     
     monitor.monitor!
+  end
+
+  def self.notifier(name)
+    {
+     failed: Monitoring::LibratoNotifier.new(unit: "jobs"),
+     failed_by_class: Monitoring::LibratoNotifier.new(unit: "jobs"),
+     stale_workers: Monitoring::LibratoNotifier.new(type: :measure, unit: "workers"),
+     queue_sizes: Monitoring::LibratoNotifier.new(unit: "jobs")
+    }[name.to_sym]
   end
 
   def self.checker(name)
