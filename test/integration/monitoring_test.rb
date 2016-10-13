@@ -61,7 +61,7 @@ class MonitoringTest < ActionDispatch::IntegrationTest
     ]))
 
     MonitorJob.perform("stale_workers")
-    
+
     assert_equal "source=test1 measure#resque.stale_workers=1workers",logger.infos[0]
     assert_equal "source=test2 measure#resque.stale_workers=2workers",logger.infos[1]
   end
