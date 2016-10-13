@@ -17,7 +17,6 @@ gem "cron2english"
 gem 'resqutils'
 gem 'resque-retry'
 gem 'resque-scheduler'
-gem 'resque-status'
 
 group :test, :development do
   gem "capybara"

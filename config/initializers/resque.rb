@@ -16,6 +16,4 @@ require 'resque/failure/redis'
 Resque::Failure::MultipleWithRetrySuppression.classes = [Resque::Failure::Redis]
 Resque::Failure.backend = Resque::Failure::MultipleWithRetrySuppression
 
-Resque::Plugins::Status::Hash.expire_in = 24.hours.to_i
-
 Resque.logger.level = Logger::INFO
