@@ -14,6 +14,10 @@ gem 'puma'
 gem "foreman"
 gem "cron2english"
 
+gem 'resqutils'
+gem 'resque-retry'
+gem 'resque-scheduler'
+
 group :test, :development do
   gem "capybara"
   gem "selenium-webdriver"

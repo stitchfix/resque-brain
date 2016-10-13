@@ -1,0 +1,30 @@
+monitor_queue_sizes:
+  cron: "* * * * * America/New_York"
+  class: "MonitorJob"
+  queue: monitor
+  args: queue_sizes
+  description: "Send monitoring results to Librato"
+monitor_failed:
+  cron: "* * * * * America/New_York"
+  class: "MonitorJob"
+  queue: monitor
+  args: failed
+  description: "Send monitoring results to Librato"
+monitor_stale_workers:
+  cron: "* * * * * America/New_York"
+  class: "MonitorJob"
+  queue: monitor
+  args: stale_workers
+  description: "Send monitoring results to Librato"
+monitor_failed_by_class:
+  cron: "* * * * * America/New_York"
+  class: "MonitorJob"
+  queue: monitor
+  args: failed_by_class
+  description: "Send monitoring results to Librato"
+kill_stale_workers:
+  # Every hour on the 8's
+  cron: "8 * * * * America/New_York"
+  class: "Resqutils::StaleWorkersKiller"
+  queue: worker_killer_job
+  description: "Kills any stale workers"
