@@ -22,7 +22,6 @@ deployment:
   production:
     branch: master
     commands:
-      - bundle exec rake assets:precompile
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker build -t stitchfix/resque-brain:$CIRCLE_SHA1 .
       - docker tag stitchfix/resque-brain:$CIRCLE_SHA1 stitchfix/resque-brain:latest
@@ -31,7 +30,6 @@ deployment:
   other:
     branch: /^((?!master).)*$/
     commands:
-      - bundle exec rake assets:precompile
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker build -t stitchfix/resque-brain:$CIRCLE_SHA1 .
       - docker tag stitchfix/resque-brain:$CIRCLE_SHA1 stitchfix/goro:latest
