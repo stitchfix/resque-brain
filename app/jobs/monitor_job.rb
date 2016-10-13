@@ -3,7 +3,7 @@ class MonitorJob
   def self.perform(checker_name)
     monitor = Monitoring::Monitor.new(
        checker: checker(checker_name),
-       notifier: notifier(name))
+       notifier: notifier(checker_name))
     
     monitor.monitor!
   end
