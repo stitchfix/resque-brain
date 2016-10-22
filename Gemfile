@@ -13,6 +13,7 @@ gem 'angular-rails-templates', git: "https://github.com/davetron5000/angular-rai
 gem 'puma'
 gem "foreman"
 gem "cron2english"
+gem "rack-timeout"
 
 gem 'resqutils'
 gem 'resque-retry'
