@@ -14,8 +14,8 @@
         </thead>
         <tbody>
           <tr class="animate-repeat fade-in" ng-repeat="jobsInQueue in jobsWaiting" ng-class="{'success': jobsInQueue.jobs.length == 0, 'warning': jobsInQueue.jobs.length > 0}">
-            <td>{{ jobsInQueue.queue }}</td>
-            <td>{{ jobsInQueue.jobs.length }}</td>
+            <td data-queue-name="{{ jobsInQueue.queue }}">{{ jobsInQueue.queue }}</td>
+            <td data-queue-count="{{ jobsInQueue.queue}}">{{ jobsInQueue.jobs }}</td>
           </tr>
         </tbody>
       </table>

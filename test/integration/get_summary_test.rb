@@ -74,6 +74,12 @@ class GetSummaryTest < ActionDispatch::IntegrationTest
     click_link "View Waiting Jobs"
     assert page.has_text?("3 Jobs Waiting") , page_assertion_error_message(page)
     assert page.has_text?("localhost")      , page_assertion_error_message(page)
-    assert page.has_text?("mail")           , page_assertion_error_message(page)
+    puts page.html
+    within "[data-queue-name='mail']" do
+      assert page.has_text?("mail")      , page_assertion_error_message(page)
+    end
+    within "[data-queue-count='mail']" do
+      assert page.has_text?("3")      , page_assertion_error_message(page)
+    end
   end
 end

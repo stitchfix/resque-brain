@@ -5,10 +5,10 @@ controllers.controller("WaitingController", [
 
     $scope.refresh = ->
       $scope.loading = true
-      Resques.jobsWaiting( { name: $routeParams.resque },
+      Resques.countJobsWaiting( { name: $routeParams.resque },
         ( (jobs)->
             $scope.jobsWaiting      = jobs
-            $scope.totalJobsWaiting = _.reduce($scope.jobsWaiting, ((acc,waitingInQueue)-> acc + waitingInQueue.jobs.length),0)
+            $scope.totalJobsWaiting = _.reduce($scope.jobsWaiting, ((acc,waitingInQueue)-> acc + waitingInQueue.jobs),0)
             $scope.loading          = false
         ),
         GenericErrorHandling.onFail($scope)

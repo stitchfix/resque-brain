@@ -237,6 +237,38 @@ describe "Resques", ->
       expect(receivedJobs).toBe(null)
       expect(errorResponse).toNotBe(null)
 
+  describe 'countJobsWaiting', ->
+    receivedJobs  = null
+    errorResponse = null
+
+    success = (jobs)         -> receivedJobs = jobs
+    failure = (httpResponse) -> errorResponse = httpResponse
+
+    beforeEach ->
+      receivedJobs  = null
+      errorResponse = null
+
+
+    it 'returns from the backend and calls success', ->
+      byQueue = _.chain(fakeJobs).groupBy("queue").map( (queue,jobs)-> { queue: queue, jobs: jobs.length }).value()
+      httpBackend.expectGET(/\/resques\/foobar\/jobs\/waiting.*count_only=true/).respond(byQueue)
+
+      service.countJobsWaiting({ name: "foobar"},success,failure)
+
+      httpBackend.flush()
+
+      expect(receivedJobs).toEqualData(byQueue)
+      expect(errorResponse).toBe(null)
+
+    it 'returns from the backend and calls failure', ->
+      httpBackend.expectGET(/\/resques\/foobar\/jobs\/waiting.*count_only=true/).respond(500)
+
+      service.countJobsWaiting({ name: "foobar" },success,failure)
+      httpBackend.flush()
+
+      expect(receivedJobs).toBe(null)
+      expect(errorResponse).toNotBe(null)
+
   describe 'jobsFailed', ->
     receivedJobs  = null
     errorResponse = null
