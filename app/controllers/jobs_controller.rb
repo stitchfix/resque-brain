@@ -6,7 +6,11 @@ class JobsController < ApplicationController
   end
 
   def waiting
-    @counts_only = params[:count_only] == 'true'
-    @jobs_waiting_by_queue = resque.jobs_waiting
+    if params[:count_only] == 'true'
+      @jobs_waiting_by_queue = resque.waiting_by_queue
+      render :waiting_counts_only
+    else
+      @jobs_waiting_by_queue = resque.jobs_waiting
+    end
   end
 end
