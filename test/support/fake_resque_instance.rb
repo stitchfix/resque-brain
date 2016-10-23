@@ -14,7 +14,7 @@ class FakeResqueInstance
 
   def initialize(attributes)
     @name         = attributes.fetch(:name)
-    @jobs_running = attributes[:jobs_running] || []
+    @jobs_running = attributes[:jobs_running] || {}
     @jobs_waiting = attributes[:jobs_waiting] || []
     @jobs_failed  = attributes[:jobs_failed]  || []
     @workers      = attributes[:workers]      || []
@@ -22,6 +22,10 @@ class FakeResqueInstance
     @retried_jobs = []
     @cleared_jobs = []
     @queued_scheduled_jobs = []
+  end
+  
+  implement! def waiting_by_queue
+    @jobs_waiting.map { |queue,jobs| [queue,jobs.size] }.to_h
   end
 
   implement! def name

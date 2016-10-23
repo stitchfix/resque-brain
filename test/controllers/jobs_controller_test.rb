@@ -126,4 +126,20 @@ class JobsControllerTest < ActionController::TestCase
 
 
   end
+
+  test "waiting with just counts" do
+    get :waiting, resque_id: "test1", format: :json, count_only: "true"
+
+    assert_response :success
+
+    result = JSON.parse(response.body)
+
+    assert_equal 2, result.size
+
+    assert_equal 1      , result[0]["jobs"]
+    assert_equal "cache", result[0]["queue"]
+
+    assert_equal 2    , result[1]["jobs"]
+    assert_equal "pdf", result[1]["queue"]
+  end
 end

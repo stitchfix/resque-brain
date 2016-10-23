@@ -50,6 +50,8 @@ services.factory("Resques", [
         ResqueJobs.query({ resqueName: resque.name, jobType: "running" }, success, failure)
       jobsWaiting: (resque,success,failure)->
         ResqueJobs.query({ resqueName: resque.name, jobType: "waiting" }, success, failure)
+      countJobsWaiting: (resque,success,failure)->
+        ResqueJobs.query({ resqueName: resque.name, jobType: "waiting", count_only: true }, success, failure)
       jobsFailed:  (resque,start,count,success,failure)->
         ResqueJobs.query({ resqueName: resque.name, jobType: "failed", count: count, start: start }, success, failure)
     }
