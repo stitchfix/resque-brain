@@ -112,6 +112,7 @@ GEM
     minitest (5.9.1)
     mono_logger (1.1.0)
     multi_json (1.12.1)
+    newrelic_rpm (3.15.1.316)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
     poltergeist (1.10.0)
@@ -228,6 +229,7 @@ DEPENDENCIES
   foreman
   jbuilder (~> 2.0)
   jquery-rails
+  newrelic_rpm
   nokogiri (>= 1.6.7.2)
   poltergeist
   puma
