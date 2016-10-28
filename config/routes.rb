@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root 'home#index'
+  mount AwsElbHealthCheck::Engine, at: "/aws_elb_health_check"
 
   resources :resques, only: [ :index, :show ] do
     resource :jobs, only: [ :show ] do
