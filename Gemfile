@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.2.5.1'
-gem 'sass-rails', '~> 4.0.3'
-gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.0.0'
+gem 'rails', '~> 4.2'
+gem 'sass-rails'
+gem 'uglifier'
+gem 'coffee-rails'
 gem 'jquery-rails'
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder'
 gem 'spring',        group: :development
 gem 'bower-rails'
 gem 'resque', github: 'resque/resque', branch: 'master'#'https://github.com/stitchfix/resque.git', branch: 'resque-redis-interface'
@@ -14,7 +14,7 @@ gem 'puma'
 gem "foreman"
 gem "cron2english"
 gem "rack-timeout"
-
+gem "aws_elb_health_check"
 gem 'resqutils'
 gem 'resque-retry'
 gem 'resque-scheduler'
