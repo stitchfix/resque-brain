@@ -14,7 +14,7 @@ gem 'puma'
 gem "foreman"
 gem "cron2english"
 gem "rack-timeout"
-gem "aws_elb_health_check"
+gem "aws-healthcheck"
 gem 'resqutils'
 gem 'resque-retry'
 gem 'resque-scheduler'

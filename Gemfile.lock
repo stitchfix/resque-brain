@@ -60,8 +60,8 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.4.0)
     arel (6.0.3)
-    aws_elb_health_check (0.1.0)
-      rails (~> 4.2.7.1)
+    aws-healthcheck (1.0.1)
+      rails (>= 3.0)
     bower-rails (0.11.0)
     builder (3.2.2)
     capybara (2.10.1)
@@ -224,7 +224,7 @@ PLATFORMS
 
 DEPENDENCIES
   angular-rails-templates!
-  aws_elb_health_check
+  aws-healthcheck
   bower-rails
   capybara
   coffee-rails
@@ -254,4 +254,4 @@ DEPENDENCIES
   uglifier
 
 BUNDLED WITH
-   1.12.5
+   1.13.6
