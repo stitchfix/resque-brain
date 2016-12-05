@@ -4,7 +4,7 @@ class MonitorJob
     monitor = Monitoring::Monitor.new(
        checker: checker(checker_name),
        notifier: notifier(checker_name))
-    
+
     monitor.monitor!
   end
 

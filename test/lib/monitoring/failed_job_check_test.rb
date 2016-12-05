@@ -18,12 +18,13 @@ class Monitoring::FailedJobCheckTest < MiniTest::Test
   include ResqueHelpers
   include MonitoringHelpers
 
-  def setup_resques(test1: ["BazJob"], test2: ["FooJob","BarJob"])
+  def setup_resques(test1: ["BazJob"], test2: ["FooJob","BarJob"], test3: :ignore)
     Redis.new.flushall
     Resques.new([
       add_failed_jobs(job_class_names: test1, resque_instance: resque_instance("test1",:resque)),
       add_failed_jobs(job_class_names: test2, resque_instance: resque_instance("test2",:resque2)),
-    ])
+      test3 == :exception ? ExceptionResque.new : nil
+    ].compact)
   end
 
   def test_type
@@ -48,5 +49,21 @@ class Monitoring::FailedJobCheckTest < MiniTest::Test
 
     assert_check_result results[0], resque_name: "test1", check_count: 0
     assert_check_result results[1], resque_name: "test2", check_count: 0
+  end
+
+  def test_exception_on_one_redis
+    resques = setup_resques(test3: :exception)
+    check = Monitoring::FailedJobCheck.new(resques: resques)
+
+
+    exception = begin
+                  check.check!
+                  nil
+                rescue => ex
+                  ex
+                end
+    refute_nil exception,"Expected an exception to be raised"
+    assert_exception exception, message_match: /exception_resque/,
+                                backtrace_includes: /monitoring_helpers.*failed/
   end
 end

@@ -27,14 +27,14 @@ class SchedulesControllerTest < ActionController::TestCase
     result = JSON.parse(response.body)
 
     @schedule.sort_by(&:name).each_with_index do |schedule_element,i|
-      assert_equal schedule_element.name               , result[i]["name"]
-      assert_equal schedule_element.args               , result[i]["args"]
-      assert_equal schedule_element.klass              , result[i]["klass"]
-      assert_equal schedule_element.queue              , result[i]["queue"]
-      assert_equal schedule_element.description        , result[i]["description"]
-      assert_equal schedule_element.every              , result[i]["every"]
-      assert_equal schedule_element.cron               , result[i]["cron"]
-      assert_equal schedule_element.frequency_in_words , result[i]["frequencyEnglish"]
+      fussy_assert_equal schedule_element.name               , result[i]["name"]
+      fussy_assert_equal schedule_element.args               , result[i]["args"]
+      fussy_assert_equal schedule_element.klass              , result[i]["klass"]
+      fussy_assert_equal schedule_element.queue              , result[i]["queue"]
+      fussy_assert_equal schedule_element.description        , result[i]["description"]
+      fussy_assert_equal schedule_element.every              , result[i]["every"]
+      fussy_assert_equal schedule_element.cron               , result[i]["cron"]
+      fussy_assert_equal schedule_element.frequency_in_words , result[i]["frequencyEnglish"]
     end
   end
 
@@ -50,5 +50,13 @@ class SchedulesControllerTest < ActionController::TestCase
     post :queue, resque_id: "test1", format: :json, job_name: @schedule[2].name+"blah"
 
     assert_response 404
+  end
+
+  def fussy_assert_equal(thing_that_may_or_may_not_be_nil,value_under_test)
+    if thing_that_may_or_may_not_be_nil.nil?
+      assert_nil value_under_test
+    else
+      assert_equal thing_that_may_or_may_not_be_nil, value_under_test
+    end
   end
 end

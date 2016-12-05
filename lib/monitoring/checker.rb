@@ -5,7 +5,17 @@ module Monitoring
     end
     # Should return an array of CheckResult representing the results of the check
     def check!
-      raise
+      @resques.all.map { |resque_instance|
+        check_one_resque(resque_instance)
+      }
+    end
+
+  private
+
+    def check_one_resque(resque_instance)
+      do_check(resque_instance)
+    rescue => ex
+      raise Monitoring::WrappedException.new(resque_instance.name,ex)
     end
   end
 end
