@@ -2,9 +2,7 @@ require 'ostruct'
 module Monitoring
   class QueueSizeCheck < Monitoring::Checker
     def check!
-      @resques.all.map { |resque_instance|
-        do_check(resque_instance)
-      }.flatten
+      super.flatten
     end
 
   private
@@ -17,8 +15,6 @@ module Monitoring
                         check_name: "resque.queue_size",
                         check_count: waiting_by_queue[queue_name])
       }
-    rescue => ex
-      raise Monitoring::WrappedException.new(resque_instance.name,ex)
     end
   end
 end
