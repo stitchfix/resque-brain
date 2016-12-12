@@ -31,7 +31,7 @@ group :production, :staging do
     gem "rails_12factor"
     gem "rails_stdout_logging"
     gem "rails_serve_static_assets"
-    gem 'newrelic_rpm', require: false
+    gem 'newrelic_rpm'
 end
 
 gem 'nokogiri', '>= 1.6.7.2'
