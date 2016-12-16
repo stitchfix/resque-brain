@@ -130,6 +130,8 @@ GEM
     rack-test (0.6.3)
       rack (>= 1.0)
     rack-timeout (0.4.2)
+    rack-timeout-puma (0.0.1)
+      rack-timeout (~> 0.2, >= 0.2.0)
     rails (4.2.7.1)
       actionmailer (= 4.2.7.1)
       actionpack (= 4.2.7.1)
@@ -239,7 +241,7 @@ DEPENDENCIES
   nokogiri (>= 1.6.7.2)
   poltergeist
   puma
-  rack-timeout
+  rack-timeout-puma
   rails (~> 4.2)
   rails-html-sanitizer (~> 1.0.3)
   rails_12factor
