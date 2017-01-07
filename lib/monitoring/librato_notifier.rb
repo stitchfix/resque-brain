@@ -1,3 +1,5 @@
+require_relative 'notifier'
+
 module Monitoring
   class LibratoNotifier < Notifier
     def initialize(logger: Rails.logger, type: :count, unit: "")

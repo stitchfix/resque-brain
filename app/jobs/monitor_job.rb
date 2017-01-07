@@ -1,3 +1,10 @@
+require 'monitoring/monitor'
+require 'monitoring/librato_notifier'
+require 'monitoring/failed_job_by_class_check'
+require 'monitoring/failed_job_check'
+require 'monitoring/queue_size_check'
+require 'monitoring/stale_worker_check'
+
 class MonitorJob
 
   def self.perform(checker_name)

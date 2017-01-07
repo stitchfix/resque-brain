@@ -1,4 +1,5 @@
 require_relative "wrapped_exception"
+require_relative 'checker'
 
 module Monitoring
   class StaleWorkerCheck < Monitoring::Checker

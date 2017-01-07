@@ -25,6 +25,7 @@ group :test, :development do
   gem "teaspoon-jasmine"
   gem "dotenv-rails"
   gem "poltergeist"
+  gem "mocha", require: "mocha/setup"
 end
 
 group :production, :staging do
