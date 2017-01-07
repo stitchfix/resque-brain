@@ -53,4 +53,9 @@ class MonitorJobTest < MiniTest::Test
     monitor.expects(:monitor!)
     MonitorJob.perform(:queue_sizes)
   end
+  def test_unhandled_check_name
+    assert_raises(KeyError) do
+      MonitorJob.perform(:foobar)
+    end
+  end
 end
