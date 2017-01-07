@@ -3,25 +3,25 @@ monitor_queue_sizes:
   class: "MonitorJob"
   queue: monitor
   args: queue_sizes
-  description: "Send monitoring results to Librato"
+  description: "Send queue sizes to Librato"
 monitor_failed:
   cron: "* * * * * America/New_York"
   class: "MonitorJob"
   queue: monitor
   args: failed
-  description: "Send monitoring results to Librato"
+  description: "Send failed job counts to Librato"
 monitor_stale_workers:
   cron: "* * * * * America/New_York"
   class: "MonitorJob"
   queue: monitor
   args: stale_workers
-  description: "Send monitoring results to Librato"
+  description: "Send stale worker counts to Librato"
 monitor_failed_by_class:
   cron: "* * * * * America/New_York"
   class: "MonitorJob"
   queue: monitor
   args: failed_by_class
-  description: "Send monitoring results to Librato"
+  description: "Send failed job counts by class to Librato"
 kill_stale_workers:
   # Every hour on the 8's
   cron: "8 * * * * America/New_York"
