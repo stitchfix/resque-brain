@@ -11,12 +11,8 @@ class MonitorJobTest < MiniTest::Test
   def test_failed
     notifier = mock("Monitoring::LibratoNotifier")
     checker = mock("Monitoring::FailedJobCheck")
-    Monitoring::LibratoNotifier.expects(:new).with(unit: "jobs").returns(notifier).at_least_once
-    Monitoring::LibratoNotifier.expects(:new).with(type: :measure, unit: "workers").returns(notifier).at_least_once
+    Monitoring::LibratoNotifier.expects(:new).with(unit: "jobs").returns(notifier)
     Monitoring::FailedJobCheck.expects(:new).returns(checker)
-    Monitoring::FailedJobByClassCheck.expects(:new)
-    Monitoring::StaleWorkerCheck.expects(:new)
-    Monitoring::QueueSizeCheck.expects(:new)
 
     monitor = stub
     Monitoring::Monitor.expects(:new).with(notifier: notifier,checker: checker).returns(monitor)
@@ -27,12 +23,8 @@ class MonitorJobTest < MiniTest::Test
   def test_failed_by_class
     notifier = mock("Monitoring::LibratoNotifier")
     checker = mock("Monitoring::FailedJobByClassCheck")
-    Monitoring::LibratoNotifier.expects(:new).with(unit: "jobs").returns(notifier).at_least_once
-    Monitoring::LibratoNotifier.expects(:new).with(type: :measure, unit: "workers").returns(notifier).at_least_once
     Monitoring::FailedJobByClassCheck.expects(:new).returns(checker)
-    Monitoring::FailedJobCheck.expects(:new)
-    Monitoring::StaleWorkerCheck.expects(:new)
-    Monitoring::QueueSizeCheck.expects(:new)
+    Monitoring::LibratoNotifier.expects(:new).with(unit: "jobs").returns(notifier).returns(notifier)
 
     monitor = stub
     Monitoring::Monitor.expects(:new).with(notifier: notifier,checker: checker).returns(monitor)
@@ -42,12 +34,8 @@ class MonitorJobTest < MiniTest::Test
   def test_stale_workers
     notifier = mock("Monitoring::LibratoNotifier")
     checker = mock("Monitoring::StaleWorkerCheck")
-    Monitoring::LibratoNotifier.expects(:new).with(unit: "jobs").returns(notifier).at_least_once
-    Monitoring::LibratoNotifier.expects(:new).with(type: :measure, unit: "workers").returns(notifier).at_least_once
+    Monitoring::LibratoNotifier.expects(:new).with(type: :measure, unit: "workers").returns(notifier)
     Monitoring::StaleWorkerCheck.expects(:new).returns(checker)
-    Monitoring::FailedJobCheck.expects(:new)
-    Monitoring::FailedJobByClassCheck.expects(:new)
-    Monitoring::QueueSizeCheck.expects(:new)
 
     monitor = stub
     Monitoring::Monitor.expects(:new).with(notifier: notifier,checker: checker).returns(monitor)
@@ -57,11 +45,7 @@ class MonitorJobTest < MiniTest::Test
   def test_queue_sizes
     notifier = mock("Monitoring::LibratoNotifier")
     checker = mock("Monitoring::QueueSizeCheck")
-    Monitoring::LibratoNotifier.expects(:new).with(unit: "jobs").returns(notifier).at_least_once
-    Monitoring::LibratoNotifier.expects(:new).with(type: :measure, unit: "workers").returns(notifier).at_least_once
-    Monitoring::StaleWorkerCheck.expects(:new)
-    Monitoring::FailedJobCheck.expects(:new)
-    Monitoring::FailedJobByClassCheck.expects(:new)
+    Monitoring::LibratoNotifier.expects(:new).with(unit: "jobs").returns(notifier)
     Monitoring::QueueSizeCheck.expects(:new).returns(checker)
 
     monitor = stub
