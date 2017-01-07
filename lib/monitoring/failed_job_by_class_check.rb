@@ -1,4 +1,5 @@
 require 'ostruct'
+require_relative 'checker'
 module Monitoring
   class FailedJobByClassCheck < Monitoring::Checker
     def check!
