@@ -7,9 +7,17 @@ require 'monitoring/stale_worker_check'
 
 class MonitorJob
 
-  def self.perform(checker_name)
+  def self.perform(checker_name, error_handling = :raise)
     checker,notifier = CHECKS_AND_NOTIFIERS.fetch(checker_name.to_sym).()
-    Monitoring::Monitor.new(checker: checker, notifier: notifier).monitor!
+    begin
+      Monitoring::Monitor.new(checker: checker, notifier: notifier).monitor!
+    rescue => ex
+      if error_handling == :ignore_and_log_errors
+        Rails.logger.info("Ignoring #{ex.class} from MonitorJob: #{ex.message}")
+      else
+        raise ex
+      end
+    end
   end
 
   CHECKS_AND_NOTIFIERS = {
