@@ -12,7 +12,7 @@ class MonitorJob
     begin
       Monitoring::Monitor.new(checker: checker, notifier: notifier).monitor!
     rescue => ex
-      if error_handling == :ignore_and_log_errors
+      if error_handling.to_sym == :ignore_and_log_errors
         Rails.logger.info("Ignoring #{ex.class} from MonitorJob: #{ex.message}")
       else
         raise ex
