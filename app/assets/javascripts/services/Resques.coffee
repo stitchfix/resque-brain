@@ -25,8 +25,8 @@ services.factory("Resques", [
       all(
         ( (resques)->
           _.chain(resques).map( (resque)->
-            addToSummaryKeepingSorted(summary,resque)
-          )
+            addToSummaryKeepingSorted(summary,resque).$promise
+          ).value()
           success(summary)
         ),
         ( (httpResponse)-> failure(httpResponse) )
