@@ -24,14 +24,10 @@ services.factory("Resques", [
       summary = []
       all(
         ( (resques)->
-          promises = _.chain(resques).map( (resque)->
-            get(
-              resque.name,
-              ( (resqueSummary)-> addToSummaryKeepingSorted(summary,resqueSummary) ),
-              ( (httpResponse) -> addToSummaryKeepingSorted(summary,{ name: resque.name, error: "Problem retreiving #{resque.name}"}))
-            ).$promise
+          _.chain(resques).map( (resque)->
+            addToSummaryKeepingSorted(summary,resque).$promise
           ).value()
-          $q.all(promises)["finally"]( -> success(summary))
+          success(summary)
         ),
         ( (httpResponse)-> failure(httpResponse) )
       )
