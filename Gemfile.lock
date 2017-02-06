@@ -84,6 +84,8 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     cron2english (0.1.6)
+    ddtrace (0.4.0)
+      msgpack
     dotenv (2.1.1)
     dotenv-rails (2.1.1)
       dotenv (= 2.1.1)
@@ -132,6 +134,7 @@ GEM
     mocha (1.2.1)
       metaclass (~> 0.0.1)
     mono_logger (1.1.0)
+    msgpack (1.0.3)
     multi_json (1.12.1)
     multipart-post (2.0.0)
     newrelic_rpm (3.17.2.327)
@@ -250,6 +253,7 @@ DEPENDENCIES
   capybara
   coffee-rails
   cron2english
+  ddtrace
   dotenv-rails
   foreman
   jbuilder
@@ -277,4 +281,4 @@ DEPENDENCIES
   uglifier
 
 BUNDLED WITH
-   1.13.7
+   1.14.3

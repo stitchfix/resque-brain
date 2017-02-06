@@ -19,6 +19,7 @@ gem 'resqutils'
 gem 'resque-retry'
 gem 'resque-scheduler'
 gem 'librato-rails'
+gem 'ddtrace' # DataDog APM
 
 group :test, :development do
   gem "capybara"
