@@ -18,7 +18,6 @@ gem "aws-healthcheck"
 gem 'resqutils'
 gem 'resque-retry'
 gem 'resque-scheduler'
-gem 'librato-rails'
 
 group :test, :development do
   gem "capybara"
