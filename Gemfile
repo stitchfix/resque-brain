@@ -19,6 +19,7 @@ gem 'resqutils'
 gem 'resque-retry'
 gem 'resque-scheduler'
 gem 'librato-rails'
+gem 'aws-sdk'
 
 group :test, :development do
   gem "capybara"
@@ -26,7 +27,7 @@ group :test, :development do
   gem "teaspoon-jasmine"
   gem "dotenv-rails"
   gem "poltergeist"
-  gem "mocha", require: "mocha/setup"
+  gem "mocha"
 end
 
 group :production, :staging do
