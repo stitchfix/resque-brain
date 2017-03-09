@@ -19,64 +19,57 @@ class MonitorJobTest < MiniTest::Test
 
   def test_failed
     monitor = stub
-    Monitoring::Monitor.expects(:new).with(notifier: mock_notifier,
+    Monitoring::Monitor.expects(:new).with(notifier: mock_librato_notifier,
                                            checker: mock_checker(Monitoring::FailedJobCheck)).returns(monitor)
     monitor.expects(:monitor!)
 
-    MonitorJob.perform(:failed)
+    MonitorJob.perform("Monitoring::FailedJobCheck")
     mocha_verify
   end
 
   def test_failed_by_class
     monitor = stub
-    Monitoring::Monitor.expects(:new).with(notifier: mock_notifier,
+    Monitoring::Monitor.expects(:new).with(notifier: mock_librato_notifier,
                                            checker: mock_checker(Monitoring::FailedJobByClassCheck)).returns(monitor)
     monitor.expects(:monitor!)
-    MonitorJob.perform(:failed_by_class)
+    MonitorJob.perform("Monitoring::FailedJobByClassCheck")
     mocha_verify
   end
 
   def test_stale_workers
     monitor = stub
-    Monitoring::Monitor.expects(:new).with(notifier: mock_notifier(type: :measure, unit: "workers"),
+    Monitoring::Monitor.expects(:new).with(notifier: mock_librato_notifier(type: "measure", unit: "workers"),
                                            checker: mock_checker(Monitoring::StaleWorkerCheck)).returns(monitor)
     monitor.expects(:monitor!)
-    MonitorJob.perform(:stale_workers)
+    MonitorJob.perform("Monitoring::StaleWorkerCheck",
+                       "Monitoring::LibratoNotifier",
+                       {
+                         "type" => "measure",
+                         "unit" => "workers"
+                       }
+                      )
     mocha_verify
   end
 
   def test_queue_sizes
     monitor = stub
-    Monitoring::Monitor.expects(:new).with(notifier: mock_notifier,
+    Monitoring::Monitor.expects(:new).with(notifier: mock_librato_notifier,
                                            checker: mock_checker(Monitoring::QueueSizeCheck)).returns(monitor)
     monitor.expects(:monitor!)
-    MonitorJob.perform(:queue_sizes)
+    MonitorJob.perform("Monitoring::QueueSizeCheck")
     mocha_verify
   end
 
   def test_unhandled_check_name
-    assert_raises(KeyError) do
-      MonitorJob.perform(:foobar)
+    assert_raises(NameError) do
+      MonitorJob.perform("Foobar")
     end
     mocha_verify
   end
 
-  def test_when_check_raises_error_we_raise_it_by_default
+  def test_when_check_raises_error_we_log_and_ignore
     monitor = stub
-    Monitoring::Monitor.expects(:new).with(notifier: mock_notifier,
-                                           checker: mock_checker(Monitoring::QueueSizeCheck)).returns(monitor)
-    monitor.expects(:monitor!).raises("OH NOES!")
-
-    exception = assert_raises do
-      MonitorJob.perform(:queue_sizes)
-    end
-    assert_equal "OH NOES!", exception.message
-    mocha_verify
-  end
-
-  def test_when_check_raises_error_we_log_and_ignore_if_requested_to
-    monitor = stub
-    Monitoring::Monitor.expects(:new).with(notifier: mock_notifier,
+    Monitoring::Monitor.expects(:new).with(notifier: mock_librato_notifier,
                                            checker: mock_checker(Monitoring::QueueSizeCheck)).returns(monitor)
     monitor.expects(:monitor!).raises("OH NOES!")
 
@@ -85,14 +78,40 @@ class MonitorJobTest < MiniTest::Test
     logger.expects(:info).with("Ignoring RuntimeError from MonitorJob: OH NOES!")
 
     refute_raises do
-      MonitorJob.perform(:queue_sizes, :ignore_and_log_errors)
+      MonitorJob.perform("Monitoring::QueueSizeCheck")
     end
+    mocha_verify
+  end
+
+  def test_aws_notifier
+    monitor = stub
+
+    Monitoring::Monitor.expects(:new).with(
+      notifier: mock_aws_notifier(namespace: "StitchFix/iZombie", metric_name: "iz-job-queue-depth"),
+       checker: mock_checker(Monitoring::QueueSizeCheck)
+    ).returns(monitor)
+
+    monitor.expects(:monitor!)
+
+    MonitorJob.perform("Monitoring::QueueSizeCheck",
+                       "Monitoring::AwsNotifier",
+                       {
+                         "namespace"   => "StitchFix/iZombie",
+                         "metric_name" => "iz-job-queue-depth",
+                       }
+                      )
     mocha_verify
   end
 
 private
 
-  def mock_notifier(unit: "jobs", type: :default)
+  def mock_aws_notifier(namespace: , metric_name: )
+    mock("Monitoring::AwsNotifier").tap { |notifier|
+      Monitoring::AwsNotifier.expects(:new).with(namespace: namespace, metric_name: metric_name).returns(notifier)
+    }
+  end
+
+  def mock_librato_notifier(unit: "jobs", type: :default)
     mock("Monitoring::LibratoNotifier").tap { |notifier|
       klass = Monitoring::LibratoNotifier
       if type == :default

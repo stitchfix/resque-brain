@@ -2,25 +2,42 @@ monitor_queue_sizes:
   cron: "* * * * * America/New_York"
   class: "MonitorJob"
   queue: monitor
-  args: [ queue_sizes, ignore_and_log_errors ]
+  args:
+    - "Monitoring::QueueSizeCheck"
   description: "Send queue sizes to Librato"
+monitor_queue_sizes_aws:
+  cron: "* * * * * America/New_York"
+  class: "MonitorJob"
+  queue: monitor
+  args:
+    - "Monitoring::QueueSizeCheck"
+    - "Monitoring::AwsNotifier",
+    - namespace: "StitchFix/iZombie"
+      metric_name: "iz-job-queue-depth"
+  description: "Send queue sizes to Cloudwatch"
 monitor_failed:
   cron: "* * * * * America/New_York"
   class: "MonitorJob"
   queue: monitor
-  args: [ failed, ignore_and_log_errors ]
+  args:
+    - "Monitoring::FailedJobCheck"
   description: "Send failed job counts to Librato"
 monitor_stale_workers:
   cron: "* * * * * America/New_York"
   class: "MonitorJob"
   queue: monitor
-  args: [ stale_workers, ignore_and_log_errors ]
+  args:
+    - "Monitoring::StaleWorkerCheck"
+    - "Monitoring::LibratoNotifier",
+    - type: "measure"
+      unit: "workers"
   description: "Send stale worker counts to Librato"
 monitor_failed_by_class:
   cron: "* * * * * America/New_York"
   class: "MonitorJob"
   queue: monitor
-  args: [ failed_by_class, ignore_and_log_errors ]
+  args:
+    - "Monitoring::FailedJobByClassCheck"
   description: "Send failed job counts by class to Librato"
 kill_stale_workers:
   # Every hour on the 8's

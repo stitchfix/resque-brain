@@ -10,6 +10,10 @@ end
 class Monitoring::AwsNotifierTest < MiniTest::Test
   include Mocha::API
 
+  def teardown
+    mocha_teardown
+  end
+
   def test_should_record_cloudwatch_metrics
     cloudwatch = Aws::CloudWatch::Client.new(stub_responses: true)
     notifier = Monitoring::AwsNotifier.new(cloudwatch: cloudwatch, namespace: "Foobar", metric_name: "blah")
