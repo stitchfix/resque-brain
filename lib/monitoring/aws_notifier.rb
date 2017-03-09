@@ -2,8 +2,10 @@ require_relative 'notifier'
 
 module Monitoring
   class AwsNotifier < Notifier
-    def initialize(cloudwatch: Aws::CloudWatch::Client.new)
-      @cloudwatch = cloudwatch
+    def initialize(cloudwatch: Aws::CloudWatch::Client.new, namespace: , metric_name: )
+      @cloudwatch  = cloudwatch
+      @namespace   = namespace
+      @metric_name = metric_name
     end
 
     def notify!(check_results)
@@ -22,9 +24,9 @@ module Monitoring
 
     def log_to_cloudwatch(app:, queue:, count:, state:)
       @cloudwatch.put_metric_data({
-        namespace: "StitchFix/iZombie",
+        namespace: @namespace,
         metric_data: [{
-          metric_name: "iz-job-queue-depth",
+          metric_name: @metric_name,
           dimensions: [
             {
               name: 'app',
@@ -37,7 +39,7 @@ module Monitoring
               value: queue
             }
           ],
-          timestamp: Time.now,
+          timestamp: Time.zone.now,
           value: count,
           statistic_values: {
             sample_count: 1.0,
