@@ -28,7 +28,7 @@ class MonitoringTest < ActionDispatch::IntegrationTest
       add_failed_jobs(num_failed: 4, resque_instance: resque_instance("test2",:resque2)),
     ]))
 
-    MonitorJob.perform("failed")
+    MonitorJob.perform("Monitoring::FailedJobCheck")
 
     assert_equal "source=test1 count#resque.failed_jobs=3jobs",logger.infos[0]
     assert_equal "source=test2 count#resque.failed_jobs=4jobs",logger.infos[1]
@@ -43,8 +43,8 @@ class MonitoringTest < ActionDispatch::IntegrationTest
       add_failed_jobs(job_class_names: ["BazJob","BazJob",nil,"BazJob"], resque_instance: resque_instance("test2",:resque2)),
     ]))
 
-    MonitorJob.perform("failed_by_class")
-    
+    MonitorJob.perform("Monitoring::FailedJobByClassCheck")
+
     assert_equal "source=test1.barjob count#resque.failed_jobs=1jobs",logger.infos[0]
     assert_equal "source=test1.foojob count#resque.failed_jobs=2jobs",logger.infos[1]
     assert_equal "source=test2.bazjob count#resque.failed_jobs=3jobs",logger.infos[2]
@@ -60,8 +60,14 @@ class MonitoringTest < ActionDispatch::IntegrationTest
       add_workers(num_stale: 2, resque_instance: resque_instance("test2",:resque2)),
     ]))
 
-    MonitorJob.perform("stale_workers")
-    
+    MonitorJob.perform("Monitoring::StaleWorkerCheck",
+                       "Monitoring::LibratoNotifier",
+                       {
+                         "type" => "measure",
+                         "unit" => "workers"
+                       }
+                      )
+
     assert_equal "source=test1 measure#resque.stale_workers=1workers",logger.infos[0]
     assert_equal "source=test2 measure#resque.stale_workers=2workers",logger.infos[1]
   end
@@ -75,8 +81,8 @@ class MonitoringTest < ActionDispatch::IntegrationTest
       add_jobs(jobs: { mail: 1, admin: 2 }, resque_instance: resque_instance("test2",:resque2)),
     ]))
 
-    MonitorJob.perform("queue_sizes")
-    
+    MonitorJob.perform("Monitoring::QueueSizeCheck")
+
     assert_equal "source=test1.cache count#resque.queue_size=2jobs" , logger.infos[0], "0" + logger.infos.inspect
     assert_equal "source=test1.mail count#resque.queue_size=4jobs"  , logger.infos[1], "1" + logger.infos.inspect
     assert_equal "source=test2.admin count#resque.queue_size=2jobs" , logger.infos[2], "2" + logger.infos.inspect
