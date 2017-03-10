@@ -18,7 +18,6 @@ gem "aws-healthcheck"
 gem 'resqutils'
 gem 'resque-retry'
 gem 'resque-scheduler'
-gem 'librato-rails'
 gem 'aws-sdk'
 
 group :test, :development do
