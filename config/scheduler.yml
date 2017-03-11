@@ -11,9 +11,9 @@ monitor_queue_sizes_aws:
   queue: monitor
   args:
     - "Monitoring::QueueSizeCheck"
-    - "Monitoring::AwsNotifier",
+    - "Monitoring::AwsNotifier"
     - namespace: "StitchFix/iZombie"
-      metric_name: "iz-job-queue-depth"
+    - metric_name: "iz-job-queue-depth"
   description: "Send queue sizes to Cloudwatch"
 monitor_failed:
   cron: "* * * * * America/New_York"
@@ -28,9 +28,9 @@ monitor_stale_workers:
   queue: monitor
   args:
     - "Monitoring::StaleWorkerCheck"
-    - "Monitoring::LibratoNotifier",
+    - "Monitoring::LibratoNotifier"
     - type: "measure"
-      unit: "workers"
+    - unit: "workers"
   description: "Send stale worker counts to Librato"
 monitor_failed_by_class:
   cron: "* * * * * America/New_York"
