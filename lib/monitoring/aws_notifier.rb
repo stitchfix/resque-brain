@@ -29,10 +29,10 @@ module Monitoring
           metric_name: @metric_name,
           dimensions: [
             {
-              name: 'app',
+              name: 'application',
               value: app
             }, {
-              name: 'status',
+              name: 'state',
               value: state
             }, {
               name: "queue",
