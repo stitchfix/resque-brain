@@ -33,6 +33,7 @@ deployment:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker build -t stitchfix/resque-brain:$CIRCLE_SHA1 .
       - docker tag stitchfix/resque-brain:$CIRCLE_SHA1 stitchfix/resque-brain:latest
+      - docker push stitchfix/resque-brain:$CIRCLE_SHA1
 
 notify:
   webhooks:
