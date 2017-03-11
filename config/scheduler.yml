@@ -6,7 +6,7 @@ monitor_queue_sizes:
     - "Monitoring::QueueSizeCheck"
   description: "Send queue sizes to Librato"
 monitor_queue_sizes_aws:
-  cron: "* * * * * America/New_York"
+  cron: "*/5 * * * * * America/New_York"
   class: "MonitorJob"
   queue: monitor
   args:
