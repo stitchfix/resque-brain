@@ -44,10 +44,10 @@ private
         metric_name: "blah",
         dimensions: [
           {
-            name: 'app',
+            name: 'application',
             value: resque_name
           }, {
-            name: "status",
+            name: "state",
             value: check_name.split('.')[1],
           }, {
             name: "queue",
