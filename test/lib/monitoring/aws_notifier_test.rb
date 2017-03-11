@@ -56,12 +56,6 @@ private
         ],
         timestamp: now,
         value: check_count,
-        statistic_values: {
-          sample_count: 1.0,
-          sum: check_count,
-          minimum: check_count,
-          maximum: check_count,
-        },
         unit: "Count"
       }]
     }

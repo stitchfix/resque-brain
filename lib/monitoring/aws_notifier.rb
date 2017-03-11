@@ -41,12 +41,6 @@ module Monitoring
           ],
           timestamp: Time.zone.now,
           value: count,
-          statistic_values: {
-            sample_count: 1.0,
-            sum: count,
-            minimum: count,
-            maximum: count,
-          },
           unit: "Count"
         }]
       })
