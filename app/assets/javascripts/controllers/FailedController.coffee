@@ -15,9 +15,9 @@ controllers.controller("FailedController", [
 
     loadFailedJobs = ->
       $scope.loading = true
-      Resques.summary( (
-        (summary)->
-          $scope.numJobsFailed = (_.find(summary, (oneSummary)-> oneSummary.name == $routeParams.resque) or {}).failed
+      Resques.get($routeParams.resque, (
+        (overview)->
+          $scope.numJobsFailed = overview.failed
           $scope.pages = []
           page = 1
           numPages = Math.ceil($scope.numJobsFailed / $scope.pageSize)
@@ -34,8 +34,7 @@ controllers.controller("FailedController", [
             GenericErrorHandling.onFail($scope)
           )
         ),
-        GenericErrorHandling.onFail($scope),
-        "flush"
+        GenericErrorHandling.onFail($scope)
       )
 
     $scope.loading = true
