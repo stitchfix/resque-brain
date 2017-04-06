@@ -1,4 +1,4 @@
-class ResqueInstance
+jlass ResqueInstance
   attr_reader :name,
               :resque_data_store
 
@@ -24,6 +24,8 @@ class ResqueInstance
   def running
     worker_ids = Array(@resque_data_store.worker_ids)
     return 0 if worker_ids.empty?
+    Rails.logger.info("Checking running count for #{name} : #{resque_data_store}")
+
     workers_map(worker_ids).reject { |_,worker_info| worker_info.nil? }.size
   end
 
