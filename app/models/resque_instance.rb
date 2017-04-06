@@ -24,8 +24,6 @@ class ResqueInstance
   def running
     worker_ids = Array(@resque_data_store.worker_ids)
     return 0 if worker_ids.empty?
-    Rails.logger.info("Checking running count for #{name} : #{resque_data_store}")
-
     workers_map(worker_ids).reject { |_,worker_info| worker_info.nil? }.size
   end
 
@@ -172,9 +170,9 @@ private
 
   def workers_map(ids)
     Hash[@resque_data_store.workers_map(ids).map { |id,json| [id,(Resque.decode(json) rescue nil)] }]
-  rescue => e
-    p e
-    []
+  rescue Redis::TimeoutError => e
+    Rails.logger.error("Timed out getting worker data for #{name} #{e.inspect}")
+    {}
   end
 
   class WorkerStartTime
