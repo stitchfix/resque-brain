@@ -1,4 +1,4 @@
-jlass ResqueInstance
+class ResqueInstance
   attr_reader :name,
               :resque_data_store
 
