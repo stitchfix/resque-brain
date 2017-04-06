@@ -172,6 +172,9 @@ private
 
   def workers_map(ids)
     Hash[@resque_data_store.workers_map(ids).map { |id,json| [id,(Resque.decode(json) rescue nil)] }]
+  rescue => e
+    p e
+    []
   end
 
   class WorkerStartTime
