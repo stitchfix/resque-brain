@@ -28,13 +28,13 @@ class ResquesControllerTest < ActionController::TestCase
     assert_equal 2, result.size
   end
 
-  test "a redis connection is timing out, it returns 0 for its running value" do
+  test "a redis connection is timing out, it returns nil for its running value" do
     @resques.all.first.resque_data_store.expects(:workers_map).at_least(1).raises(Redis::TimeoutError)
     get :index, format: :json
     result = JSON.parse(response.body)
     assert_equal result[0]["name"],"Test1"
     assert_equal result[1]["name"],"test2"
-    assert_equal result[1]["running"],0
+    assert_nil result[1]["running"]
     assert_equal 2, result.size
   end
 
