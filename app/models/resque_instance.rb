@@ -73,7 +73,7 @@ class ResqueInstance
     }
   rescue Redis::TimeoutError => e
     Rails.logger.error("Timed out getting worker data for #{name} #{e.inspect}")
-    nil
+    []
   end
 
   # Return a hash of all jobs waiting, where the key is the name of the queue and the value
