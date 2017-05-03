@@ -17,8 +17,9 @@ class ResqueUrl
 
   def environment_variables
     [
-      "RESQUE_BRAIN_INSTANCES_#{@resque_name}", 
+      "RESQUE_BRAIN_INSTANCES_#{@resque_name}",
       "#{@resque_name.gsub(/-/,'_').upcase}_RESQUE_REDIS_URL",
+      "#{@resque_name.gsub(/-/,'_').upcase}_REDIS_URL",
     ]
   end
 end
