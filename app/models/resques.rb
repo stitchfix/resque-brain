@@ -6,12 +6,14 @@ require 'resque/data_store'
 #
 #     RESQUES = Resques.from_environment
 #
-# And then use `RESQUES` to access the configured resques.  
+# And then use `RESQUES` to access the configured resques.
 class Resques
   # Parses the environment, yielding each configured instance to the block
   def self.from_environment
+    namespace = ENV['#{instance_name}_RESQUE_REDIS_URL'] || :resque
     self.new(String(ENV["RESQUE_BRAIN_INSTANCES"]).split(/\s*,\s*/).map { |instance_name|
-      redis = Redis::Namespace.new(:resque,redis: Redis.new(url: ResqueUrl.new(instance_name).url))
+      namespace = ENV['#{instance_name.upcase.gsub(/-/, "_")}_RESQUE_REDIS_URL'] || :resque
+      redis = Redis::Namespace.new(namespace,redis: Redis.new(url: ResqueUrl.new(instance_name).url))
       ResqueInstance.new(name: instance_name, resque_data_store: Resque::DataStore.new(redis))
     })
   end
