@@ -1,4 +1,6 @@
 general:
+  artifacts:
+    - "public/"
   branches:
     ignore:
       - /deploy\/.*/
