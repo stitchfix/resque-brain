@@ -1,2 +1,2 @@
 require 'resqutils/worker_task'
-require 'resque/scheduler/tasks'
+require 'resque_scheduler/tasks'
