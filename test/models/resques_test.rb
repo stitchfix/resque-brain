@@ -31,6 +31,7 @@ class ResquesTest < MiniTest::Test
     ENV["RESQUE_BRAIN_INSTANCES_env1"] = "redis://whatever:supersecret@localhost:1234"
     ENV["ENV2_RESQUE_REDIS_URL"] = "redis://whatever:megasecret@10.0.0.1:4567"
     ENV["ENV3_REDIS_URL"] = "redis://whatever:l33secret@10.0.1.1:4568"
+    ENV["ENV3_NAMESPACE"] = "test"
 
     resques = Resques.from_environment
 
@@ -55,7 +56,7 @@ class ResquesTest < MiniTest::Test
 
     redis_namespace = resques.find("env3").resque_data_store.instance_variable_get("@redis")
     assert       redis_namespace.kind_of?(Redis::Namespace)
-    assert_equal :resque       , redis_namespace.namespace
+    assert_equal "test"        , redis_namespace.namespace
     assert_equal 4568          , redis_namespace.redis.client.port
     assert_equal "10.0.1.1"    , redis_namespace.redis.client.host
     assert_equal "l33secret"   , redis_namespace.redis.client.password
