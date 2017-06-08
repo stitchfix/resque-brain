@@ -36,6 +36,6 @@ group :production, :staging do
     gem 'newrelic_rpm'
 end
 
-gem 'nokogiri', '>= 1.6.7.2'
+gem 'nokogiri', '>= 1.8.0'
 
 gem 'rails-html-sanitizer', '~> 1.0.3'
