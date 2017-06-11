@@ -1,10 +1,21 @@
+require "active_support/core_ext/module/delegation"
+
 class CachedResqueInstance
   def initialize(resque_instance)
     @resque_instance = resque_instance
     @cache_key_base = "ResqueInstance:#{@resque_instance.name}:"
   end
 
-  delegate :retry_job, :clear_job, :retry_all, :clear_all, :kill_worker, :queue_job_from_schedule, to: :@resque_instance
+  delegate :name,
+           :retry_job,
+           :clear_job,
+           :retry_all,
+           :clear_all,
+           :kill_worker,
+           :queue_job_from_schedule,
+           :resque_data_store,
+
+           to: :@resque_instance
 
   def failed
     fetch_from_cache(:failed) do
