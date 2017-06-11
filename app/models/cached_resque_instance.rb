@@ -7,12 +7,7 @@ class CachedResqueInstance
   end
 
   delegate :name,
-           :retry_job,
-           :clear_job,
-           :retry_all,
-           :clear_all,
            :kill_worker,
-           :queue_job_from_schedule,
            :resque_data_store,
 
            to: :@resque_instance
@@ -75,15 +70,43 @@ class CachedResqueInstance
     end
   end
 
+
+  [
+    :retry_job,
+    :clear_job,
+    :retry_all,
+    :clear_all,
+  ].each do |method_that_should_clear_failed_jobs_cache|
+    define_method method_that_should_clear_failed_jobs_cache do |*args|
+      clear_cache_for(:failed)
+      clear_cache_for(:jobs_failed)
+      @resque_instance.send(method_that_should_clear_failed_jobs_cache,*args)
+    end
+  end
+
+  def queue_job_from_schedule(schedule_element)
+    clear_cache_for(:jobs_waiting)
+    clear_cache_for(:jobs_running)
+    clear_cache_for(:waiting_by_queue)
+    @resque_instance.send(:queue_job_from_schedule,schedule_element)
+  end
+
 private
 
   def fetch_from_cache(method,options={},&block)
     options = { race_condition_ttl: 5, expires_in: 5.minutes }.merge(options)
-    cache_key = "#{@cache_key_base}#{method}"
 
-    Rails.cache.fetch(cache_key,options) do
+    Rails.cache.fetch(cache_key(method),options) do
       block.()
     end
+  end
+
+  def clear_cache_for(method)
+    Rails.cache.delete(cache_key(method))
+  end
+
+  def cache_key(method)
+    "#{@cache_key_base}#{method}"
   end
 
 end
