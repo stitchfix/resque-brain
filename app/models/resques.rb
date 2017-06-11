@@ -18,8 +18,6 @@ class Resques
       if ENV["RESQUE_BRAIN_CACHE_RESQUE_CALLS"] == "true"
         Rails.logger.info("Caching of resque calls configured")
         resque_instance = CachedResqueInstance.new(resque_instance)
-      else
-        Rails.logger.info("NOT caching Resque calls.  Set RESQUE_BRAIN_CACHE_RESQUE_CALLS to 'true' to get this")
       end
       resque_instance
     })
