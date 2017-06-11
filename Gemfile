@@ -19,6 +19,7 @@ gem 'resqutils'
 gem 'resque-retry'
 gem 'resque-scheduler'
 gem 'aws-sdk'
+gem 'dalli'
 
 group :test, :development do
   gem "capybara"

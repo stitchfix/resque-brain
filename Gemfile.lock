@@ -90,6 +90,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     cron2english (0.1.6)
+    dalli (2.7.6)
     dotenv (2.2.0)
     dotenv-rails (2.2.0)
       dotenv (= 2.2.0)
@@ -245,6 +246,7 @@ DEPENDENCIES
   capybara
   coffee-rails
   cron2english
+  dalli
   dotenv-rails
   foreman
   jbuilder

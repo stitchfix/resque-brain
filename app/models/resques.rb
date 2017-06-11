@@ -1,6 +1,7 @@
 require 'redis'
 require 'redis/namespace'
 require 'resque/data_store'
+require_relative "cached_resque_instance"
 
 # Repository of configured resques.  In general, you want in an initializer:
 #
@@ -13,7 +14,14 @@ class Resques
     self.new(String(ENV["RESQUE_BRAIN_INSTANCES"]).split(/\s*,\s*/).map { |instance_name|
       namespace = ENV["#{instance_name.upcase.gsub(/-/, '_')}_NAMESPACE"] || :resque
       redis = Redis::Namespace.new(namespace,redis: Redis.new(url: ResqueUrl.new(instance_name).url))
-      ResqueInstance.new(name: instance_name, resque_data_store: Resque::DataStore.new(redis))
+      resque_instance = ResqueInstance.new(name: instance_name, resque_data_store: Resque::DataStore.new(redis))
+      if ENV["RESQUE_BRAIN_CACHE_RESQUE_CALLS"] == "true"
+        Rails.logger.info("Caching of resque calls configured")
+        resque_instance = CachedResqueInstance.new(resque_instance)
+      else
+        Rails.logger.info("NOT caching Resque calls.  Set RESQUE_BRAIN_CACHE_RESQUE_CALLS to 'true' to get this")
+      end
+      resque_instance
     })
   end
 
