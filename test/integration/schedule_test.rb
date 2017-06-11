@@ -4,7 +4,7 @@ class ScheduleTest < ActionDispatch::IntegrationTest
   setup do
     Capybara.current_driver = Capybara.javascript_driver
     @redis = Redis::Namespace.new(:resque,redis: Redis.new)
-    @redis.flushall
+    @redis.redis.flushall
 
     @schedule = [
       ScheduleElement.new(name: "foo", klass: "BarJob", queue: "foo_queue", description: "Some awesome job", args: nil, cron_expression: "3 * * * *"),

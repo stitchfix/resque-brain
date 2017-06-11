@@ -4,7 +4,7 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
   setup do
     Capybara.current_driver = Capybara.javascript_driver
     @redis = Redis::Namespace.new(:resque,redis: Redis.new)
-    @redis.flushall
+    @redis.redis.flushall
     @resque_data_store = Resque::DataStore.new(@redis)
 
     21.times do |i|
@@ -89,7 +89,7 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
     first("[data-dialog-confirm]").click
     sleep 1
     assert page.has_content?("worker1"), page_assertion_error_message(page)
-    assert page.all("[title='Job 1 retried']").present?
+    assert page.all("[title='Job 1 retried']").present?,page.html
 
     click_link "Waiting Jobs"
     sleep 1
@@ -140,9 +140,9 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
 
     first("[title='Retry All']").click
     first("[data-dialog-confirm]").click
-    sleep 2
+    sleep 3
     (0..9).each do |job_id|
-      assert page.all("[title='Job #{job_id} retried']").present?
+      assert page.all("[title='Job #{job_id} retried']").present?,"Could not find 'Job #{job_id} retried' in page:\n#{page.html}"
     end
 
     click_link "Waiting Jobs"
@@ -159,7 +159,7 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
 
     first("[title='Clear All']").click
     first("[data-dialog-confirm]").click
-    sleep 2
+    sleep 3
     assert page.has_content?("0 Jobs Failed"), page_assertion_error_message(page)
   end
 
@@ -170,7 +170,7 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
     sleep 1
 
     first("[title='Retry, Then Clear All']").click
-    sleep 2
+    sleep 3
     assert page.has_content?("0 Jobs Failed")
 
     click_link "Waiting Jobs"
