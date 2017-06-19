@@ -4,7 +4,7 @@ class GetSummaryTest < ActionDispatch::IntegrationTest
   setup do
     Capybara.current_driver = Capybara.javascript_driver
     @redis = Redis::Namespace.new(:resque,redis: Redis.new)
-    @redis.flushall
+    @redis.redis.flushall
     @resque_data_store = Resque::DataStore.new(@redis)
     # 3 jobs waiting
     3.times do |i|
@@ -50,7 +50,7 @@ class GetSummaryTest < ActionDispatch::IntegrationTest
     assert page.has_text?("1 Job Running")  , page_assertion_error_message(page)
     assert page.has_text?("localhost")      , page_assertion_error_message(page)
   end
-    
+
 
   test "can click through to the failed page of that resque" do
     visit("/")
