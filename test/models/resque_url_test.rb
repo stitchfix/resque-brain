@@ -12,6 +12,13 @@ class ResqueUrlTest < MiniTest::Test
     ENV["RESQUE_BRAIN_INSTANCES_foo-bar"] = nil
   end
 
+  def teardown
+    ENV["FOO_BAR_RESQUE_REDIS_URL"] = nil
+    ENV["FOO_BAR_REDIS_URL"] = nil
+    ENV["RESQUE_BRAIN_INSTANCES_foo_bar"] = nil
+    ENV["RESQUE_BRAIN_INSTANCES_foo-bar"] = nil
+  end
+
   def test_recognize_uses_RESQUE_BRAIN_INSTANCES_
     resque_url  = ResqueUrl.recognize("RESQUE_BRAIN_INSTANCES_foo-bar")
     assert_equal "foo-bar", resque_url.resque_name
