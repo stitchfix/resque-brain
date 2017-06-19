@@ -11,10 +11,19 @@ require_relative "cached_resque_instance"
 class Resques
   # Parses the environment, yielding each configured instance to the block
   def self.from_environment
-    self.new(String(ENV["RESQUE_BRAIN_INSTANCES"]).split(/\s*,\s*/).map { |instance_name|
-      namespace = ENV["#{instance_name.upcase.gsub(/-/, '_')}_NAMESPACE"] || :resque
-      redis = Redis::Namespace.new(namespace,redis: Redis.new(url: ResqueUrl.new(instance_name).url))
-      resque_instance = ResqueInstance.new(name: instance_name, resque_data_store: Resque::DataStore.new(redis))
+    resque_urls = if ENV["RESQUE_BRAIN_INSTANCES"] == "DERIVE"
+                    ENV.keys.map { |env_var_name|
+                      ResqueUrl.recognize(env_var_name)
+                    }.compact
+                  else
+                    String(ENV["RESQUE_BRAIN_INSTANCES"]).split(/\s*,\s*/).map { |instance_name|
+                      ResqueUrl.new(instance_name)
+                    }
+                  end
+    self.new(resque_urls.map { |resque_url|
+      namespace = ENV["#{resque_url.namespace_env_var}"] || :resque
+      redis = Redis::Namespace.new(namespace,redis: Redis.new(url: resque_url.url))
+      resque_instance = ResqueInstance.new(name: resque_url.resque_name, resque_data_store: Resque::DataStore.new(redis))
       if ENV["RESQUE_BRAIN_CACHE_RESQUE_CALLS"] == "true"
         Rails.logger.info("Caching of resque calls configured")
         resque_instance = CachedResqueInstance.new(resque_instance)
