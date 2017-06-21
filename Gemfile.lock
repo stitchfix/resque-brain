@@ -90,10 +90,10 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     cron2english (0.1.6)
-    dotenv (2.2.0)
-    dotenv-rails (2.2.0)
-      dotenv (= 2.2.0)
-      railties (>= 3.2, < 5.1)
+    dotenv (2.2.1)
+    dotenv-rails (2.2.1)
+      dotenv (= 2.2.1)
+      railties (>= 3.2, < 5.2)
     erubis (2.7.0)
     et-orbi (1.0.3)
       tzinfo
