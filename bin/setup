@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+require 'pathname'
+require 'fileutils'
+include FileUtils
+
+# path to your application root.
+APP_ROOT = Pathname.new File.expand_path('../../', __FILE__)
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+chdir APP_ROOT do
+  unless File.exists?('.env.development')
+    puts '== Setting up .env.development =='
+    cp '.env.development.example', '.env.development'
+
+    # get aws secret key
+    puts 'Require AWS secret key'
+    aws_secret_key = gets
+    aws_secret_key.chomp # remove newline char at the end
+
+    File.open('.env.development', 'a+') do |file|
+      file.write("AWS_ELB_HEALTH_CHECK_SECRET_KEY=#{aws_secret_key}");
+    end
+  end
+
+  puts 'Setup complete'
+  puts 'Wiki: https://github.com/stitchfix/resque-brain/wiki'
+end

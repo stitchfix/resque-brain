@@ -49,5 +49,6 @@ db/tmp
 spec/file-upload/stylecard-from-db.jpg
 .env
 .env.production
+.env.development
 prod_env
 _site
