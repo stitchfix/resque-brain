@@ -89,7 +89,7 @@ You'll need to do three things:
   Easiest thing is to create a `.env.development` file by running:
 
   ```
-  > ruby bin/setup
+  > bin/setup
   ```
 
   Then:
