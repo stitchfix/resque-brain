@@ -1,9 +1,9 @@
 GIT
-  remote: git://github.com/resque/resque.git
-  revision: 5aa672c100ac5ebc3b8be8a6224f55eb0c6a17e3
-  branch: master
+  remote: git://github.com/stitchfix/resque.git
+  revision: 39ca0c7ad79daa65d09ebe1859035b83046f619f
+  branch: add-logging-for-edge-case-errors
   specs:
-    resque (1.27.3)
+    resque (1.26.0)
       mono_logger (~> 1.0)
       multi_json (~> 1.0)
       redis-namespace (~> 1.3)
@@ -273,4 +273,4 @@ DEPENDENCIES
   uglifier
 
 BUNDLED WITH
-   1.14.6
+   1.15.3

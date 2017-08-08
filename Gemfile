@@ -8,7 +8,7 @@ gem 'jquery-rails'
 gem 'jbuilder'
 gem 'spring',        group: :development
 gem 'bower-rails'
-gem 'resque', github: 'resque/resque', branch: 'master'#'https://github.com/stitchfix/resque.git', branch: 'resque-redis-interface'
+gem 'resque', git: 'git://github.com/stitchfix/resque.git', branch: "add-logging-for-edge-case-errors"
 gem 'angular-rails-templates', git: "https://github.com/davetron5000/angular-rails-templates.git", branch: "patch-1"
 gem 'puma'
 gem "foreman"
