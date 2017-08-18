@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'quick_test_helper'
 require 'minitest/autorun'
 require 'resque'
@@ -25,12 +27,10 @@ class Monitoring::StaleWorkerCheckTest < MiniTest::Test
   def setup_resques(test1: 1, test2: 2, test3: :ignore)
     Redis.new.flushall
     resques = [
-      add_workers(num_stale: test1, resque_instance: resque_instance("test1",:resque)),
-      add_workers(num_stale: test2, resque_instance: resque_instance("test2",:resque2)),
+      add_workers(num_stale: test1, resque_instance: resque_instance('test1', :resque)),
+      add_workers(num_stale: test2, resque_instance: resque_instance('test2', :resque2))
     ]
-    if test3 == :exception
-      resques << ExceptionResque.new
-    end
+    resques << ExceptionResque.new if test3 == :exception
     Resques.new(resques)
   end
 
@@ -44,25 +44,22 @@ class Monitoring::StaleWorkerCheckTest < MiniTest::Test
 
     results = check.check!
 
-    assert_check_result results[0], resque_name: "test1", check_count: 1
-    assert_check_result results[1], resque_name: "test2", check_count: 2
+    assert_check_result results[0], resque_name: 'test1', check_count: 1
+    assert_check_result results[1], resque_name: 'test2', check_count: 2
   end
 
   def test_no_stale_workers
     resques = setup_resques(test1: 0, test2: 0)
     check = Monitoring::StaleWorkerCheck.new(resques: resques)
 
-
     results = check.check!
-    assert_check_result results[0], resque_name: "test1", check_count: 0
-    assert_check_result results[1], resque_name: "test2", check_count: 0
-
+    assert_check_result results[0], resque_name: 'test1', check_count: 0
+    assert_check_result results[1], resque_name: 'test2', check_count: 0
   end
 
   def test_exception_on_one_redis
     resques = setup_resques(test1: 0, test2: 0, test3: :exception)
     check = Monitoring::StaleWorkerCheck.new(resques: resques)
-
 
     exception = begin
                   check.check!
@@ -70,8 +67,8 @@ class Monitoring::StaleWorkerCheckTest < MiniTest::Test
                 rescue => ex
                   ex
                 end
-    refute_nil exception,"Expected an exception to be raised"
+    refute_nil exception, 'Expected an exception to be raised'
     assert_exception exception, message_match: /exception_resque/,
-                           backtrace_includes: /monitoring_helpers.*jobs_running/
+                                backtrace_includes: /monitoring_helpers.*jobs_running/
   end
 end

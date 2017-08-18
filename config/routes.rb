@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   root 'home#index'
 
-  resources :resques, only: [ :index, :show ] do
-    resource :jobs, only: [ :show ] do
-      resources :failed, only: [ :index, :show, :destroy ] do
+  resources :resques, only: %i[index show] do
+    resource :jobs, only: [:show] do
+      resources :failed, only: %i[index show destroy] do
         collection do
           post 'retry_all'
           delete 'clear_all'
@@ -17,8 +19,8 @@ Rails.application.routes.draw do
         get 'waiting'
       end
     end
-    resources :workers, only: [ :destroy ]
-    resource :schedule, only: [ :show ] do
+    resources :workers, only: [:destroy]
+    resource :schedule, only: [:show] do
       post 'queue'
     end
   end

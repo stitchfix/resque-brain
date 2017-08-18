@@ -1,0 +1,14 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: 2.4
+  Exclude:
+    - db/schema.rb
+    - vendor/**/*
+    - tmp/**/*
+
+Style/Documentation:
+  Enabled: false
+
+Metrics:
+  Enabled: false

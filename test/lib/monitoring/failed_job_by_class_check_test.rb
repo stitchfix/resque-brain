@@ -1,4 +1,6 @@
 
+# frozen_string_literal: true
+
 require 'quick_test_helper'
 require 'support/resque_helpers'
 require 'support/monitoring_helpers'
@@ -20,11 +22,11 @@ class Monitoring::FailedJobByClassCheckTest < MiniTest::Test
   include ResqueHelpers
   include MonitoringHelpers
 
-  def setup_resques(test1: ["BazJob", nil], test2: ["FooJob","FooJob", "BarJob"], test3: :ignore)
+  def setup_resques(test1: ['BazJob', nil], test2: %w[FooJob FooJob BarJob], test3: :ignore)
     Redis.new.flushall
     Resques.new([
-      add_failed_jobs(job_class_names: test1, resque_instance: resque_instance("test1",:resque)),
-      add_failed_jobs(job_class_names: test2, resque_instance: resque_instance("test2",:resque2)),
+      add_failed_jobs(job_class_names: test1, resque_instance: resque_instance('test1', :resque)),
+      add_failed_jobs(job_class_names: test2, resque_instance: resque_instance('test2', :resque2)),
       test3 == :exception ? ExceptionResque.new : nil
     ].compact)
   end
@@ -35,10 +37,10 @@ class Monitoring::FailedJobByClassCheckTest < MiniTest::Test
 
     results = check.check!
 
-    assert_check_result results[0], resque_name: "test1", scope: "bazjob", check_count: 1
-    assert_check_result results[1], resque_name: "test1", scope: "noclass", check_count: 1
-    assert_check_result results[2], resque_name: "test2", scope: "barjob", check_count: 1
-    assert_check_result results[3], resque_name: "test2", scope: "foojob", check_count: 2
+    assert_check_result results[0], resque_name: 'test1', scope: 'bazjob', check_count: 1
+    assert_check_result results[1], resque_name: 'test1', scope: 'noclass', check_count: 1
+    assert_check_result results[2], resque_name: 'test2', scope: 'barjob', check_count: 1
+    assert_check_result results[3], resque_name: 'test2', scope: 'foojob', check_count: 2
   end
 
   def test_no_failed_jobs
@@ -47,13 +49,12 @@ class Monitoring::FailedJobByClassCheckTest < MiniTest::Test
 
     results = check.check!
 
-    assert_equal 0,results.size
+    assert_equal 0, results.size
   end
 
   def test_exception_on_one_redis
     resques = setup_resques(test3: :exception)
     check = Monitoring::FailedJobByClassCheck.new(resques: resques)
-
 
     exception = begin
                   check.check!
@@ -61,7 +62,7 @@ class Monitoring::FailedJobByClassCheckTest < MiniTest::Test
                 rescue => ex
                   ex
                 end
-    refute_nil exception,"Expected an exception to be raised"
+    refute_nil exception, 'Expected an exception to be raised'
     assert_exception exception, message_match: /exception_resque/,
                                 backtrace_includes: /monitoring_helpers.*jobs_failed/
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.array! @resques do |resque|
   json.name           resque.name
   json.failed         resque.failed
