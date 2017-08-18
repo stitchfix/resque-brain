@@ -26,6 +26,7 @@ group :test, :development do
   gem "dotenv-rails"
   gem "poltergeist"
   gem "mocha", require: "mocha/setup"
+  gem 'rubocop', require: false
 end
 
 group :production, :staging do
