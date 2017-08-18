@@ -39,13 +39,6 @@ describe "FailedController", ->
     runningTooLong: 3
     waiting: 123
 
-  wwwResque =
-    name: "admin"
-    failed: 2
-    running: 1
-    runningTooLong: 1
-    waiting: 12
-
   resqueName = 'test'
 
   setupController = (page,pageSize,andAlso)->
@@ -58,7 +51,7 @@ describe "FailedController", ->
       spyOn(resques,"jobsFailed").andCallFake( (resque,start,count,success,failure)->
         success(jobsFailed.slice(start,start + count))
       )
-      spyOn(resques,"summary").andCallFake( (success,failure)-> success([testResque,wwwResque]))
+      spyOn(resques,"get").andCallFake( (resque,success,failure)-> success(testResque))
       modalInstance =
         result:
           then: (f)-> f()

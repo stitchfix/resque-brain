@@ -6,9 +6,9 @@ controllers.controller("OverviewController", [
     $scope.refresh = ->
       $scope.loading = true
 
-      Resques.summary(
-        ( (summary)->
-          overview = (_.find(summary, (oneSummary)-> oneSummary.name == $routeParams.resque) or {})
+      Resques.get(
+        $routeParams.resque,
+        ( (overview)->
           $scope.monitors = [
             Monitor(
               name: 'failed'
@@ -40,7 +40,6 @@ controllers.controller("OverviewController", [
           $scope.loading = false
         ),
         GenericErrorHandling.onFail($scope),
-        "flush"
       )
 
     IntervalRefresh($scope.refresh,$scope)

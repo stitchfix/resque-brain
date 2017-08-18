@@ -2,13 +2,6 @@ describe "Resques", ->
   service     = null
   httpBackend = null
 
-  fakeResques = [
-      name: "www"
-    ,
-      name: "admin"
-    ,
-      name: "file-upload"
-  ]
   adminResque =
     name: "admin"
     failed: 12
@@ -29,6 +22,12 @@ describe "Resques", ->
     running: 1
     runningTooLong: 0
     waiting: 23
+
+  fakeResques = [
+    wwwResque,
+    adminResque,
+    fileUploadResque
+  ]
 
   fakeJobs = [
     queue: "mail",
@@ -104,9 +103,6 @@ describe "Resques", ->
 
     it 'returns from the backend and calls success', ->
       httpBackend.expectGET(/\/resques/).respond(fakeResques)
-      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[0].name}")).respond(adminResque)
-      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[1].name}")).respond(wwwResque)
-      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[2].name}")).respond(fileUploadResque)
 
       service.summary(success,failure)
 
@@ -124,28 +120,9 @@ describe "Resques", ->
       expect(receivedResques).toBe(null)
       expect(errorResponse).toNotBe(null)
 
-    it 'returns only those it fetched', ->
-      httpBackend.expectGET(/\/resques/).respond(fakeResques)
-      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[0].name}")).respond(wwwResque)
-      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[1].name}")).respond(500)
-      httpBackend.expectGET(new RegExp("/resques/#{fakeResques[2].name}")).respond(fileUploadResque)
-      
-      service.summary(success,failure)
-      httpBackend.flush()
-
-      expect(receivedResques).toEqualData([
-        {name: fakeResques[1].name, error: "Problem retreiving #{fakeResques[1].name}"},
-        fileUploadResque,
-        wwwResque
-      ]) # still sorted
-      expect(errorResponse).toBe(null)
-
     describe 'when we have already fetched them', ->
       beforeEach ->
         httpBackend.expectGET(/\/resques/).respond(fakeResques)
-        httpBackend.expectGET(new RegExp("/resques/#{fakeResques[0].name}")).respond(adminResque)
-        httpBackend.expectGET(new RegExp("/resques/#{fakeResques[1].name}")).respond(wwwResque)
-        httpBackend.expectGET(new RegExp("/resques/#{fakeResques[2].name}")).respond(fileUploadResque)
 
         service.summary(success,failure)
 
@@ -165,13 +142,12 @@ describe "Resques", ->
           receivedResques = null
 
           httpBackend.expectGET(/\/resques/).respond([ fakeResques[0] ])
-          httpBackend.expectGET(new RegExp("/resques/#{fakeResques[0].name}")).respond(adminResque)
 
           service.summary(success,failure,"flush")
 
           httpBackend.flush()
 
-          expect(receivedResques).toEqualData([adminResque])
+          expect(receivedResques).toEqualData([wwwResque])
           expect(errorResponse).toBe(null)
 
   describe 'jobsRunning', ->
@@ -230,7 +206,7 @@ describe "Resques", ->
 
     it 'returns from the backend and calls failure', ->
       httpBackend.expectGET(/\/resques\/foobar\/jobs\/waiting/).respond(500)
-      
+
       service.jobsWaiting({ name: "foobar" },success,failure)
       httpBackend.flush()
 
@@ -293,7 +269,7 @@ describe "Resques", ->
 
     it 'returns from the backend and calls failure', ->
       httpBackend.expectGET(/\/resques\/foobar\/jobs\/failed/).respond(500)
-      
+
       service.jobsFailed({ name: "foobar" },2,12,success,failure)
       httpBackend.flush()
 
