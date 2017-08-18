@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class JobsController < ApplicationController
   include Concerns::InjectibleResqueInstances
 
   def running
-    @jobs = resque.jobs_running.sort_by { |job| job.queue }
+    @jobs = resque.jobs_running.sort_by(&:queue)
   end
 
   def waiting

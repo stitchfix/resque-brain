@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.name           @resque.name
 json.failed         @resque.failed
 json.running        @resque.running

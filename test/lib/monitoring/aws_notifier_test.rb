@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'quick_test_helper'
 require 'minitest/autorun'
 require 'mocha/setup'
@@ -16,7 +18,7 @@ class Monitoring::AwsNotifierTest < MiniTest::Test
 
   def test_should_record_cloudwatch_metrics
     cloudwatch = Aws::CloudWatch::Client.new(stub_responses: true)
-    notifier = Monitoring::AwsNotifier.new(cloudwatch: cloudwatch, namespace: "Foobar", metric_name: "blah")
+    notifier = Monitoring::AwsNotifier.new(cloudwatch: cloudwatch, namespace: 'Foobar', metric_name: 'blah')
 
     now = Time.now
     time_zone = Object.new
@@ -27,38 +29,37 @@ class Monitoring::AwsNotifierTest < MiniTest::Test
     cloudwatch.expects(:put_metric_data).with(generate_payload(resque_name: 'test2', check_scope: 'queue_name2', check_name: 'foo.bar', check_count: 1, now: now))
     cloudwatch.expects(:put_metric_data).with(generate_payload(resque_name: 'test3', check_scope: 'queue_name3', check_name: 'foo.bar', check_count: 0, now: now))
     notifier.notify!([
-      Monitoring::CheckResult.new(resque_name: "test1", scope: 'queue_name1', check_name: "foo.bar", check_count: 3),
-      Monitoring::CheckResult.new(resque_name: "test2", scope: 'queue_name2', check_name: "foo.bar", check_count: 1),
-      Monitoring::CheckResult.new(resque_name: "test3", scope: 'queue_name3', check_name: "foo.bar", check_count: 0),
-    ])
+                       Monitoring::CheckResult.new(resque_name: 'test1', scope: 'queue_name1', check_name: 'foo.bar', check_count: 3),
+                       Monitoring::CheckResult.new(resque_name: 'test2', scope: 'queue_name2', check_name: 'foo.bar', check_count: 1),
+                       Monitoring::CheckResult.new(resque_name: 'test3', scope: 'queue_name3', check_name: 'foo.bar', check_count: 0)
+                     ])
 
     mocha_verify
   end
 
-private
+  private
 
   def generate_payload(resque_name:, check_scope:, check_name:, check_count:, now:)
     {
-      namespace: "Foobar",
+      namespace: 'Foobar',
       metric_data: [{
-        metric_name: "blah",
+        metric_name: 'blah',
         dimensions: [
           {
             name: 'application',
             value: resque_name
           }, {
-            name: "state",
-            value: check_name.split('.')[1],
+            name: 'state',
+            value: check_name.split('.')[1]
           }, {
-            name: "queue",
+            name: 'queue',
             value: check_scope
           }
         ],
         timestamp: now,
         value: check_count,
-        unit: "Count"
+        unit: 'Count'
       }]
     }
   end
-
 end

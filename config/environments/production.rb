@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -41,7 +43,7 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
-  config.middleware.insert_before ActionDispatch::SSL, "Healthcheck::Middleware"
+  config.middleware.insert_before ActionDispatch::SSL, 'Healthcheck::Middleware'
 
   # Set to :debug to see everything in the log.
   config.log_level = :info
@@ -54,10 +56,10 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
-  config.cache_store = :dalli_store, ENV["MEMCACHED_SERVERS"], {
-    username: ENV["MEMCACHED_USERNAME"],
-    password: ENV["MEMCACHED_PASSWORD"],
-    socket_timeout: 1.5,
+  config.cache_store = :dalli_store, ENV['MEMCACHED_SERVERS'], {
+    username: ENV['MEMCACHED_USERNAME'],
+    password: ENV['MEMCACHED_PASSWORD'],
+    socket_timeout: 1.5
   }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
@@ -85,5 +87,5 @@ Rails.application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   # Do not dump schema after migrations.
-  #config.active_record.dump_schema_after_migration = false
+  # config.active_record.dump_schema_after_migration = false
 end

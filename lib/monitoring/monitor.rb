@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Monitoring
   class Monitor
-    def initialize(checker: nil,notifier: nil)
-      raise ArgumentError, "both checker and notifier are required" if checker.nil? || notifier.nil?
+    def initialize(checker: nil, notifier: nil)
+      raise ArgumentError, 'both checker and notifier are required' if checker.nil? || notifier.nil?
       @checker  = checker
       @notifier = notifier
     end

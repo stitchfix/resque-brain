@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 require 'capybara/rails'
 require 'capybara/poltergeist'
@@ -9,8 +11,8 @@ class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
   include Capybara::DSL
 
-  def sanity_check(&block)
-    block.call
+  def sanity_check
+    yield
   end
 
   def page_assertion_error_message(page)

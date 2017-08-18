@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'quick_test_helper'
 require 'support/resque_helpers'
 require 'support/monitoring_helpers'
@@ -21,8 +23,8 @@ class Monitoring::QueueSizeCheckTest < MiniTest::Test
   def setup_resques(test1: {}, test2: {}, test3: :ignore)
     Redis.new.flushall
     Resques.new([
-      add_jobs(jobs: test1, resque_instance: resque_instance("test1",:resque)),
-      add_jobs(jobs: test2, resque_instance: resque_instance("test2",:resque2)),
+      add_jobs(jobs: test1, resque_instance: resque_instance('test1', :resque)),
+      add_jobs(jobs: test2, resque_instance: resque_instance('test2', :resque2)),
       test3 == :exception ? ExceptionResque.new : nil
     ].compact)
   end
@@ -38,11 +40,10 @@ class Monitoring::QueueSizeCheckTest < MiniTest::Test
 
     results = check.check!.sort_by { |result| "#{result.resque_name}.#{result.scope}" }
 
-    assert_check_result results[0], resque_name: "test1" , scope: "cache" , check_count: 4
-    assert_check_result results[1], resque_name: "test1" , scope: "mail"  , check_count: 10
-    assert_check_result results[2], resque_name: "test2" , scope: "admin" , check_count: 2
-    assert_check_result results[3], resque_name: "test2" , scope: "mail"  , check_count: 3
-
+    assert_check_result results[0], resque_name: 'test1', scope: 'cache', check_count: 4
+    assert_check_result results[1], resque_name: 'test1', scope: 'mail', check_count: 10
+    assert_check_result results[2], resque_name: 'test2', scope: 'admin', check_count: 2
+    assert_check_result results[3], resque_name: 'test2', scope: 'mail', check_count: 3
   end
 
   def test_exception_on_one_redis
@@ -51,14 +52,13 @@ class Monitoring::QueueSizeCheckTest < MiniTest::Test
                             test3: :exception)
     check = Monitoring::QueueSizeCheck.new(resques: resques)
 
-
     exception = begin
                   check.check!
                   nil
                 rescue => ex
                   ex
                 end
-    refute_nil exception,"Expected an exception to be raised"
+    refute_nil exception, 'Expected an exception to be raised'
     assert_exception exception, message_match: /exception_resque/,
                                 backtrace_includes: /monitoring_helpers.*waiting_by_queue/
   end

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require File.expand_path('../boot', __FILE__)
 
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "sprockets/railtie"
-require "rails/test_unit/railtie"
+require 'action_controller/railtie'
+require 'action_mailer/railtie'
+require 'sprockets/railtie'
+require 'rails/test_unit/railtie'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -22,16 +24,14 @@ module ResqueBrain
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
-    config.autoload_paths += %W(#{config.root}/lib)
+    config.autoload_paths += %W[#{config.root}/lib]
 
-    config.assets.paths << Rails.root.join("vendor","assets","bower_components")
-    %w(stylesheets javascripts fonts).each do |dir|
-      config.assets.paths << Rails.root.join("vendor","assets","bower_components","bootstrap-sass-official","assets",dir)
+    config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components')
+    %w[stylesheets javascripts fonts].each do |dir|
+      config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'bootstrap-sass-official', 'assets', dir)
     end
-    config.assets.precompile << Proc.new { |path|
-      if path =~ /\.(eot|svg|ttf|woff)\z/
-        true
-      end
-    }
+    config.assets.precompile << proc do |path|
+      true if path =~ /\.(eot|svg|ttf|woff)\z/
+    end
   end
 end

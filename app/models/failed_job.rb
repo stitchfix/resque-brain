@@ -1,5 +1,6 @@
-class FailedJob < Job
+# frozen_string_literal: true
 
+class FailedJob < Job
   attr_reader :id,
               :failed_at,
               :exception,
@@ -8,7 +9,7 @@ class FailedJob < Job
               :worker,
               :retried_at
 
-  def initialize(attributes={})
+  def initialize(attributes = {})
     super(attributes)
     @id         = attributes[:id]
     @failed_at  = attributes[:failed_at]

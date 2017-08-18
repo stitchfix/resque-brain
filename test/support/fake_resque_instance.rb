@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'support/explicit_interface_implementation'
 
 class FakeResqueInstance
@@ -23,28 +25,22 @@ class FakeResqueInstance
     @cleared_jobs = []
     @queued_scheduled_jobs = []
   end
-  
+
   implement! def waiting_by_queue
-    @jobs_waiting.map { |queue,jobs| [queue,jobs.size] }.to_h
+    @jobs_waiting.map { |queue, jobs| [queue, jobs.size] }.to_h
   end
 
-  implement! def name
-    @name
-  end
+  implement! attr_reader :name
 
-  implement! def jobs_running
-    @jobs_running
-  end
+  implement! attr_reader :jobs_running
 
-  implement! def jobs_waiting
-    @jobs_waiting
-  end
+  implement! attr_reader :jobs_waiting
 
   implement! def kill_worker(worker_id)
     @workers = @workers.reject { |worker| worker.id == worker_id }
   end
 
-  implement! def jobs_failed(start=0,count=:all)
+  implement! def jobs_failed(start = 0, count = :all)
     count = @jobs_failed.size if count == :all
     @jobs_failed[start..(start + count - 1)]
   end
@@ -68,5 +64,4 @@ class FakeResqueInstance
   implement! def queue_job_from_schedule(schedule_element)
     @queued_scheduled_jobs << schedule_element
   end
-
 end

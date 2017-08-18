@@ -1,5 +1,6 @@
-class ScheduleElement
+# frozen_string_literal: true
 
+class ScheduleElement
   attr_reader :name
   attr_reader :klass
   attr_reader :queue
@@ -8,7 +9,7 @@ class ScheduleElement
   attr_reader :args
   attr_reader :cron_expression
 
-  def initialize(attributes={})
+  def initialize(attributes = {})
     @name            = attributes[:name]
     @args            = attributes[:args]
     @klass           = attributes[:klass]
@@ -43,17 +44,21 @@ class ScheduleElement
                               end
     end
 
-  private
+    private
 
     def cron(cron_parts)
-      cron_parts[0..4].join(" ")
+      cron_parts[0..4].join(' ')
     end
 
     def timezone(cron_parts)
       if cron_parts[5].blank?
         cron_parts[5]
       else
-        Time.now.in_time_zone(cron_parts[5]).strftime("%Z") rescue nil
+        begin
+          Time.now.in_time_zone(cron_parts[5]).strftime('%Z')
+        rescue
+          nil
+        end
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FakeLogger
   attr_reader :infos
   def initialize

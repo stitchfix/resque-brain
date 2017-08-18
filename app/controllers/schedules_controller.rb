@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class SchedulesController < ApplicationController
   include Concerns::InjectibleResqueInstances
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
   def show
     @schedule = resque.schedule.sort_by(&:name)
@@ -15,5 +17,4 @@ class SchedulesController < ApplicationController
       render text: "No such job named #{params[:job_name]}", status: 404
     end
   end
-
 end
