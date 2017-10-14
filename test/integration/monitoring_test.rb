@@ -28,7 +28,7 @@ class MonitoringTest < ActionDispatch::IntegrationTest
       add_failed_jobs(num_failed: 4, resque_instance: resque_instance("test2",:resque2)),
     ]))
 
-    MonitorJob.perform("Monitoring::FailedJobCheck")
+    MonitorJob.perform("Monitoring::FailedJobCheck","Monitoring::LibratoNotifier", { "unit" => "jobs" })
 
     assert_equal "source=test1 count#resque.failed_jobs=3jobs",logger.infos[0]
     assert_equal "source=test2 count#resque.failed_jobs=4jobs",logger.infos[1]
@@ -43,7 +43,7 @@ class MonitoringTest < ActionDispatch::IntegrationTest
       add_failed_jobs(job_class_names: ["BazJob","BazJob",nil,"BazJob"], resque_instance: resque_instance("test2",:resque2)),
     ]))
 
-    MonitorJob.perform("Monitoring::FailedJobByClassCheck")
+    MonitorJob.perform("Monitoring::FailedJobByClassCheck","Monitoring::LibratoNotifier", { "unit" => "jobs" })
 
     assert_equal "source=test1.barjob count#resque.failed_jobs=1jobs",logger.infos[0]
     assert_equal "source=test1.foojob count#resque.failed_jobs=2jobs",logger.infos[1]
@@ -81,7 +81,7 @@ class MonitoringTest < ActionDispatch::IntegrationTest
       add_jobs(jobs: { mail: 1, admin: 2 }, resque_instance: resque_instance("test2",:resque2)),
     ]))
 
-    MonitorJob.perform("Monitoring::QueueSizeCheck")
+    MonitorJob.perform("Monitoring::QueueSizeCheck","Monitoring::LibratoNotifier", { "unit" => "jobs" })
 
     assert_equal "source=test1.cache count#resque.queue_size=2jobs" , logger.infos[0], "0" + logger.infos.inspect
     assert_equal "source=test1.mail count#resque.queue_size=4jobs"  , logger.infos[1], "1" + logger.infos.inspect
