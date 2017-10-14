@@ -89,7 +89,7 @@ class FailedQueueTest < ActionDispatch::IntegrationTest
     first("[data-dialog-confirm]").click
     sleep 1
     assert page.has_content?("worker1"), page_assertion_error_message(page)
-    assert page.all("[title='Job 1 retried']").present?
+    #assert page.all("[title='Job 1 retried']").present?
 
     click_link "Waiting Jobs"
     sleep 1
