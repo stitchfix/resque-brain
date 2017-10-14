@@ -15,6 +15,14 @@ monitor_queue_sizes_aws:
     - namespace: "StitchFix/iZombie"
       metric_name: "iz-job-queue-depth"
   description: "Send queue sizes to Cloudwatch"
+monitor_queue_sizes_statsd:
+  cron: "* * * * * America/New_York"
+  class: "MonitorJob"
+  queue: monitor
+  args:
+    - "Monitoring::QueueSizeCheck"
+    - "Monitoring::StatsdNotifier"
+  description: "Send queue sizes to statsd"
 monitor_failed:
   cron: "* * * * * America/New_York"
   class: "MonitorJob"
@@ -22,6 +30,14 @@ monitor_failed:
   args:
     - "Monitoring::FailedJobCheck"
   description: "Send failed job counts to Librato"
+monitor_failed_statsd:
+  cron: "* * * * * America/New_York"
+  class: "MonitorJob"
+  queue: monitor
+  args:
+    - "Monitoring::FailedJobCheck"
+    - "Monitoring::StatsdNotifier"
+  description: "Send failed job counts to Statsd"
 monitor_stale_workers:
   cron: "* * * * * America/New_York"
   class: "MonitorJob"

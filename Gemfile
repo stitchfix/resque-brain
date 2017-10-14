@@ -20,6 +20,7 @@ gem 'resque-retry'
 gem 'resque-scheduler'
 gem 'aws-sdk'
 gem 'dalli'
+gem 'dogstatsd-ruby'
 
 group :test, :development do
   gem "capybara"
