@@ -4,8 +4,7 @@ describe "SummaryController", ->
   resques = null
 
   fakeResques = [
-      name: "www"
-    ,
+      name: "www",
       name: "admin"
   ]
 
@@ -17,17 +16,24 @@ describe "SummaryController", ->
     waiting: 123
 
   wwwResque =
-    name: "admin"
+    name: "www"
     failed: 2
     running: 1
     runningTooLong: 1
     waiting: 12
 
+  timedOutResque =
+    name: "timey"
+    failed: null
+    running: null
+    runningTooLong: null
+    waiting: null
+
   setupController = ()->
     inject((Resques, $rootScope, $controller)->
       scope   = $rootScope.$new()
       resques = Resques
-      spyOn(resques,"summary").andCallFake( (success,failure)-> success([adminResque,wwwResque]))
+      spyOn(resques,"summary").andCallFake( (success,failure)-> success([adminResque,wwwResque,timedOutResque]))
 
       ctrl    = $controller('SummaryController', $scope: scope)
     )
@@ -36,7 +42,7 @@ describe "SummaryController", ->
   beforeEach(setupController())
 
   it 'exposes the list of resques', ->
-    expect(scope.allResques).toEqualData([adminResque,wwwResque])
+    expect(scope.allResques).toEqualData([adminResque,wwwResque,timedOutResque])
 
   it 'summarizes the values across all resques', ->
     expect(scope.totalFailed).toBe(14)

@@ -25,6 +25,9 @@ class ResqueInstance
     worker_ids = Array(@resque_data_store.worker_ids)
     return 0 if worker_ids.empty?
     workers_map(worker_ids).reject { |_,worker_info| worker_info.nil? }.size
+  rescue Redis::TimeoutError => e
+    Rails.logger.error("Timed out getting worker data for #{name} #{e.inspect}")
+    nil
   end
 
   # Return the number of running jobs that are running "too long" based on the `:stale_worker_seconds` configuration value
@@ -36,6 +39,9 @@ class ResqueInstance
     }.select { |_,worker_info|
       WorkerStartTime.new(worker_info,@stale_worker_seconds).too_long?
     }.size
+  rescue Redis::TimeoutError => e
+    Rails.logger.error("Timed out getting worker data for #{name} #{e.inspect}")
+    nil
   end
 
   # Return the number of jobs waiting, in all queues
@@ -65,6 +71,9 @@ class ResqueInstance
                    too_long: start_time.too_long?,
                       queue: worker_info["queue"])
     }
+  rescue Redis::TimeoutError => e
+    Rails.logger.error("Timed out getting worker data for #{name} #{e.inspect}")
+    []
   end
 
   # Return a hash of all jobs waiting, where the key is the name of the queue and the value

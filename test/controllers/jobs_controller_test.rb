@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'mocha/setup'
 require 'support/fake_resque_instance'
 
 class JobsControllerTest < ActionController::TestCase
@@ -52,13 +53,13 @@ class JobsControllerTest < ActionController::TestCase
         )
       ]
     }
-    resques = Resques.new([
+    @resques = Resques.new([
       FakeResqueInstance.new(name: "test1",
                              jobs_running: @jobs_running_unsorted,
                              jobs_waiting: jobs_waiting)
     ])
     @original_resques = JobsController.resques
-    JobsController.resques = resques
+    JobsController.resques = @resques
   end
 
   teardown do
@@ -85,6 +86,16 @@ class JobsControllerTest < ActionController::TestCase
     assert_equal @jobs_running_unsorted[0].payload[:args]         , result[1]["payload"]["args"]
 
     assert_equal 2, result.size
+  end
+
+  test "running (a timeout occurs)" do
+    @resques.all.first.expects(:jobs_running).returns([])
+    get :running, resque_id: "test1", format: :json
+
+    assert_response :success
+
+    result = JSON.parse(response.body)
+    assert_equal result, []
   end
 
   test "waiting" do
