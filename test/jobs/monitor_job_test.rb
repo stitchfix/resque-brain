@@ -23,7 +23,17 @@ class MonitorJobTest < MiniTest::Test
                                            checker: mock_checker(Monitoring::FailedJobCheck)).returns(monitor)
     monitor.expects(:monitor!)
 
-    MonitorJob.perform("Monitoring::FailedJobCheck")
+    MonitorJob.perform("Monitoring::FailedJobCheck","Monitoring::LibratoNotifier", { "unit" => "jobs" })
+    mocha_verify
+  end
+
+  def test_failed_statsd
+    monitor = stub
+    Monitoring::Monitor.expects(:new).with(notifier: mock_statsd_notifier,
+                                           checker: mock_checker(Monitoring::FailedJobCheck)).returns(monitor)
+    monitor.expects(:monitor!)
+
+    MonitorJob.perform("Monitoring::FailedJobCheck","Monitoring::StatsdNotifier")
     mocha_verify
   end
 
@@ -32,7 +42,7 @@ class MonitorJobTest < MiniTest::Test
     Monitoring::Monitor.expects(:new).with(notifier: mock_librato_notifier,
                                            checker: mock_checker(Monitoring::FailedJobByClassCheck)).returns(monitor)
     monitor.expects(:monitor!)
-    MonitorJob.perform("Monitoring::FailedJobByClassCheck")
+    MonitorJob.perform("Monitoring::FailedJobByClassCheck","Monitoring::LibratoNotifier", { "unit" => "jobs" })
     mocha_verify
   end
 
@@ -56,13 +66,22 @@ class MonitorJobTest < MiniTest::Test
     Monitoring::Monitor.expects(:new).with(notifier: mock_librato_notifier,
                                            checker: mock_checker(Monitoring::QueueSizeCheck)).returns(monitor)
     monitor.expects(:monitor!)
-    MonitorJob.perform("Monitoring::QueueSizeCheck")
+    MonitorJob.perform("Monitoring::QueueSizeCheck","Monitoring::LibratoNotifier", { "unit" => "jobs" })
+    mocha_verify
+  end
+
+  def test_queue_sizes_statsd
+    monitor = stub
+    Monitoring::Monitor.expects(:new).with(notifier: mock_statsd_notifier,
+                                           checker: mock_checker(Monitoring::QueueSizeCheck)).returns(monitor)
+    monitor.expects(:monitor!)
+    MonitorJob.perform("Monitoring::QueueSizeCheck","Monitoring::StatsdNotifier")
     mocha_verify
   end
 
   def test_unhandled_check_name
     assert_raises(NameError) do
-      MonitorJob.perform("Foobar")
+      MonitorJob.perform("Foobar","BLAH")
     end
     mocha_verify
   end
@@ -78,7 +97,7 @@ class MonitorJobTest < MiniTest::Test
     logger.expects(:info).with("Ignoring RuntimeError from MonitorJob: OH NOES!")
 
     refute_raises do
-      MonitorJob.perform("Monitoring::QueueSizeCheck")
+      MonitorJob.perform("Monitoring::QueueSizeCheck","Monitoring::LibratoNotifier", { "unit" => "jobs" })
     end
     mocha_verify
   end
@@ -119,6 +138,13 @@ private
       else
         klass.expects(:new).with(type: type, unit: unit).returns(notifier)
       end
+    }
+  end
+
+  def mock_statsd_notifier(unit: "jobs", type: :default)
+    mock("Monitoring::StatsdNotifier").tap { |notifier|
+      klass = Monitoring::StatsdNotifier
+      klass.expects(:new).with().returns(notifier)
     }
   end
 

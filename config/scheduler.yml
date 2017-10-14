@@ -4,6 +4,8 @@ monitor_queue_sizes:
   queue: monitor
   args:
     - "Monitoring::QueueSizeCheck"
+    - "Monitoring::LibratoNotifier"
+    - unit: "jobs"
   description: "Send queue sizes to Librato"
 monitor_queue_sizes_aws:
   cron: "*/5 * * * * * America/New_York"
@@ -29,6 +31,8 @@ monitor_failed:
   queue: monitor
   args:
     - "Monitoring::FailedJobCheck"
+    - "Monitoring::LibratoNotifier"
+    - unit: "jobs"
   description: "Send failed job counts to Librato"
 monitor_failed_statsd:
   cron: "* * * * * America/New_York"
@@ -54,6 +58,8 @@ monitor_failed_by_class:
   queue: monitor
   args:
     - "Monitoring::FailedJobByClassCheck"
+    - "Monitoring::LibratoNotifier"
+    - unit: "jobs"
   description: "Send failed job counts by class to Librato"
 kill_stale_workers:
   # Every hour on the 8's
