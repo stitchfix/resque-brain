@@ -1,5 +1,4 @@
 require 'monitoring/monitor'
-require 'monitoring/librato_notifier'
 require 'monitoring/statsd_notifier'
 require 'monitoring/aws_notifier'
 require 'monitoring/failed_job_by_class_check'
