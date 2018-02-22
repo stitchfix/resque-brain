@@ -1,0 +1,64 @@
+version: 2
+jobs:
+  build:
+    working_directory: /home/circleci/stitchfix/izombie
+    parallelism: 1
+    environment:
+      CIRCLE_ARTIFACTS: /tmp/artifacts
+      CIRCLE_TEST_REPORTS: /tmp/reports
+      RACK_ENV: test
+      RAILS_ENV: test
+      TZ: "America/Los_Angeles"
+    docker:
+      - image: circleci/ruby:2.5-node
+      - image: redis:2.8.21
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dep-{{ .Branch }}-{{ checksum "Gemfile" }}
+          - v1-dep-{{ .Branch }}-
+          - v1-dep-master-
+          - v1-dep-
+      - run: gem install bundler
+      - run: 'bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 '
+      - save_cache:
+          key: v1-dep-{{ .Branch }}-{{ checksum "Gemfile" }}
+          paths:
+          - vendor/bundle
+          - ~/.bundle
+      - run: bundle exec rake test
+      - run: bundle exec rake teaspoon
+      - setup_remote_docker
+      - run: |
+          if [ $CIRCLE_BRANCH = "master" ]; then
+            RAILS_ENV=production bundle exec rake assets:precompile
+            docker login -u $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+            docker build --build-arg BUNDLE_GEM__FURY__IO=${BUNDLE_GEM__FURY__IO} -t stitchfix/izombie:$CIRCLE_SHA1 .
+            docker tag stitchfix/izombie:$CIRCLE_SHA1 stitchfix/izombie:latest
+            docker push stitchfix/izombie:latest
+            docker push stitchfix/izombie:$CIRCLE_SHA1
+          else
+            docker login -u $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+            docker build --build-arg BUNDLE_GEM__FURY__IO=${BUNDLE_GEM__FURY__IO} -t stitchfix/izombie:$CIRCLE_SHA1 .
+            docker push stitchfix/izombie:$CIRCLE_SHA1
+          fi
+      - store_artifacts:
+          path: public/
+      - store_artifacts:
+          path: spec/pacts
+      - store_artifacts:
+          path: /tmp/artifacts
+      - store_artifacts:
+          path: /tmp/reports
+      - store_test_results:
+          path: /tmp/reports
+workflows:
+  version: 2
+  on-commit:
+    jobs:
+    - build:
+      context: org-global
+notify:
+ webhooks:
+ - url: https://fixops-service.stitchfix.com/webhooks/circleci
