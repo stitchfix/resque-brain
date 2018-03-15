@@ -9,7 +9,7 @@ gem 'jbuilder'
 gem 'spring',        group: :development
 gem 'bower-rails'
 gem 'resque'
-gem 'angular-rails-templates', git: "https://github.com/davetron5000/angular-rails-templates.git", branch: "patch-1"
+gem 'angular-rails-templates'
 gem 'puma'
 gem "foreman"
 gem "cron2english"
