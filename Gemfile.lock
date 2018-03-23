@@ -1,5 +1,6 @@
 GEM
   remote: https://rubygems.org/
+  remote: https://gem.fury.io/me/
   specs:
     actionmailer (4.2.10)
       actionpack (= 4.2.10)
@@ -632,6 +633,8 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    stitchfix-env_management (0.4.0)
+      dotenv-rails
     teaspoon (1.1.5)
       railties (>= 3.2.5, < 6)
     teaspoon-jasmine (2.3.4)
@@ -664,7 +667,6 @@ DEPENDENCIES
   cron2english
   dalli
   dogstatsd-ruby
-  dotenv-rails
   foreman
   jbuilder
   jquery-rails
@@ -686,6 +688,7 @@ DEPENDENCIES
   sass-rails
   selenium-webdriver
   spring
+  stitchfix-env_management!
   teaspoon-jasmine
   uglifier
 

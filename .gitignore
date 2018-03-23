@@ -51,3 +51,5 @@ spec/file-upload/stylecard-from-db.jpg
 .env.production
 prod_env
 _site
+.env.development.local
+.env.test.local
