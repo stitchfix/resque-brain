@@ -26,7 +26,6 @@ group :test, :development do
   gem "capybara"
   gem "selenium-webdriver"
   gem "teaspoon-jasmine"
-  gem "dotenv-rails"
   gem "poltergeist"
   gem "mocha"
 end
@@ -41,3 +40,6 @@ end
 gem 'nokogiri', '>= 1.8.0'
 
 gem 'rails-html-sanitizer', '~> 1.0.3'
+source "https://gem.fury.io/me/" do
+  gem "stitchfix-env_management", require: "stitch_fix/env_management", group: [:development, :test]
+end
