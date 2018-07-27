@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+require 'pathname'
+require 'fileutils'
+include FileUtils
+
+# path to your application root.
+APP_ROOT = Pathname.new File.expand_path('../../', __FILE__)
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+chdir APP_ROOT do
+  unless File.exists?('.env.development')
+    puts '== Setting up .env.development =='
+    cp '.env.development.example', '.env.development'
+  end
+
+  puts 'Setup complete'
+  puts 'Wiki: https://github.com/stitchfix/resque-brain/wiki'
+end

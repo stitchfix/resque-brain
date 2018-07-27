@@ -91,13 +91,10 @@ You'll need to do three things:
 * Install PhantomJS
 * Set up your environment:
 
-  Easiest thing is to create a `.env` like so:
+  Easiest thing is to create a `.env.development` file by running:
 
   ```
-  RESQUE_BRAIN_INSTANCES=localhost
-  RESQUE_BRAIN_INSTANCES_localhost=redis://localhost:6379
-  HTTP_AUTH_USERNAME=a
-  HTTP_AUTH_PASSWORD=a
+  > bin/setup
   ```
 
   Then:
